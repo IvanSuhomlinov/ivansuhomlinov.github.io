@@ -1,12 +1,12 @@
 import * as React from 'react';
-import { DatePicker } from '@mui/x-date-pickers';
+import BasicDatePicker from './Components/DatePicker';
 
 function App(){
 
 
   return (
     <div>
-      <DatePicker />
+      <BasicDatePicker />
     </div>
   );
 }
