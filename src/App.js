@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { DatePicker } from '@mui/x-date-pickers';
 
 function App(){
 
