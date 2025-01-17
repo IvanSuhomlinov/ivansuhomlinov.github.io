@@ -11,4 +11,5 @@ export default function BasicDatePicker() {
         <DatePicker label="Basic date picker" />
       </DemoContainer>
     </LocalizationProvider>
-  );}
+  );
+}
