@@ -4,9 +4,10 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
-
+import { duration } from '@mui/material';
 
 const App = (props) =>{
+  const step = 30;
   const timeList = [
     "00:00",
     "00:30",
@@ -176,10 +177,37 @@ const App = (props) =>{
   ]);
 
 
+  const increaseTime = (h, m, step) => {
+    h = Number(h) + Math.floor(step / 60);
+    m = Number(m) + step % 60;
+    if (m >= 60) {
+        h += 1;
+        m -= 60;
+    }
+    return [h, m];
+};
+
+
+
+
+
+  const isReserved = (t1, t2) =>{
+    time.forEach((start, duration)=> {
+      const [startH, startM] = start.split(':').map(Number);
+      const [endH, endM] = increaseTime(startH, startM, Number(duration));
+
+      if(t2[0] < startH || t1[0] > endH[0] || (t2[0] === startH && t2[1] <= startM) || (t1[0] === endH && t1[1] >= endM)) {
+            continue;
+      }
+      return true;
+      })
+      return false;
+  }
 
   const CreateTimeButtons = () => {
     const createTime = timeList.map((time) => {return <div className='div-time'>{time}</div>})
     return createTime;
+    
   } 
 
   const BasicDatePicker = () => {
@@ -196,7 +224,8 @@ const App = (props) =>{
   return (
     <div>
       <BasicDatePicker />
-      <div className='flex-div'><CreateTimeButtons /></div> 
+      <div className='flex-div'><CreateTimeButtons /> </div> 
+    
     </div>
   );
 }
