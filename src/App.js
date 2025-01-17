@@ -1,12 +1,12 @@
-import React from "react";
-//npm  start для запуска проекта 
-function App() {
+import * as React from 'react';
+import BasicDatePicker from './Components/DatePicker';
+
+function App(){
 
 
   return (
-
     <div>
-      
+      <BasicDatePicker />
       
     </div>
   );
