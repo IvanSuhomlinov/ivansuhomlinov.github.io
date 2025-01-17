@@ -178,7 +178,7 @@ const App = (props) =>{
 
 
   const CreateTimeButtons = () => {
-    const createTime = timeList.map((time) => {return <div className='flex-div'><div className='div-time'>{time}</div></div>})
+    const createTime = timeList.map((time) => {return <div className='div-time'>{time}</div>})
     return createTime;
   } 
 
@@ -196,8 +196,7 @@ const App = (props) =>{
   return (
     <div>
       <BasicDatePicker />
-      <CreateTimeButtons />
-      
+      <div className='flex-div'><CreateTimeButtons /></div> 
     </div>
   );
 }
