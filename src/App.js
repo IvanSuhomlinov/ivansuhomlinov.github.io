@@ -195,16 +195,18 @@ const App = (props) =>{
     time.forEach((start, duration)=> {
       const [startH, startM] = start.split(':').map(Number);
       const [endH, endM] = increaseTime(startH, startM, Number(duration));
-
-      if(t2[0] < startH || t1[0] > endH[0] || (t2[0] === startH && t2[1] <= startM) || (t1[0] === endH && t1[1] >= endM)) {
-            continue;
+      
+      if(t2[0] < startH || t1[0] > endH || (t2[0] === startH && t2[1] <= startM) || (t1[0] === endH && t1[1] >= endM)){
+        return;
       }
       return true;
-      })
-      return false;
   }
+)
+  return false;
+}
 
   const CreateTimeButtons = () => {
+    
     const createTime = timeList.map((time) => {return <div className='div-time'>{time}</div>})
     return createTime;
     
