@@ -206,8 +206,9 @@ const App = (props) =>{
 }
 
   const CreateTimeButtons = () => {
-    
-    const createTime = timeList.map((time) => {return <div className='div-time'>{time}</div>})
+    const [hours, minutes] = [0, 0]
+    const newTime = increaseTime(hours, minutes, step)
+    const createTime = timeList.map((time) => { isReserved([hours, minutes], newTime) ? <div className='reserved-div'>{time}</div> : <div className='div-time'>{time}</div> })
     return createTime;
     
   } 
