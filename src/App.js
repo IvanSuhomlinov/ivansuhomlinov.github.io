@@ -177,22 +177,28 @@ const App = (props) => {
     },
   ]);
 
-  React.useEffect(() => {
-    let currentDate = "";
-    console.log(currentDate)
-  }, [])
+  
 
   const getReserves = (date) => {
     setReserves(getCurDate.date)
     setReserves(time.filter(day => day.date === date)[0].reserves)
     
     console.log(reserves)
+    return reserves;
   }
 
   const getCurDate = (arg) => {
-    let dateMDY = `${arg.$d.getFullYear()}-${arg.$d.getMonth() + 1}-${arg.$d.getDate()}`;
-    console.log(dateMDY)
+    const formatMDY = "2025-01-17"
+    /*const formatMDY = `${arg.$d.getFullYear()}-${arg.$d.getMonth() + 1}-${arg.$d.getDate()}`*/ 
+    return formatMDY;
   }
+
+  React.useEffect(() => {
+    let currentDate = getCurDate;
+    console.log(getReserves(currentDate))
+  }, [getCurDate])
+
+  
 
 
   const increaseTime = (h, m, step) => {
