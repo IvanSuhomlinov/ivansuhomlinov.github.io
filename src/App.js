@@ -190,7 +190,7 @@ const App = (props) =>{
 
 
 
-
+//не понятно
   const isReserved = (t1, t2) =>{
     time.forEach((start, duration)=> {
       const [startH, startM] = start.split(':').map(Number);
