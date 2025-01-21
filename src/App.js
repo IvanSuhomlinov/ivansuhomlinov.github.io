@@ -178,19 +178,20 @@ const App = (props) => {
   ]);
 
   React.useEffect(() => {
-    console.log("render")
+    let currentDate = "";
+    console.log(currentDate)
   }, [])
 
   const getReserves = (date) => {
+    setReserves(getCurDate.date)
     setReserves(time.filter(day => day.date === date)[0].reserves)
-
+    
+    console.log(reserves)
   }
 
-  const xyz = (arg) => {
-    const year = arg.$d.getFullYear()
-    const month = arg.$d.getMonth() 
-    const day = arg.$d.getDate()
-    console.log(year,  month, day)
+  const getCurDate = (arg) => {
+    let dateMDY = `${arg.$d.getFullYear()}-${arg.$d.getMonth() + 1}-${arg.$d.getDate()}`;
+    console.log(dateMDY)
   }
 
 
@@ -248,7 +249,7 @@ const App = (props) => {
             label="Введите дату"
             format="DD.MM.YYYY"
             defaultValue={dayjs(Date.now())}
-            onChange={xyz}
+            onChange={getCurDate}
           />
         </DemoContainer>
       </LocalizationProvider>

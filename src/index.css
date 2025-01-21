@@ -21,4 +21,10 @@
 .reserved-div{
     background-color: rgba(0, 0, 0, .3);
     cursor: not-allowed;
+    border: 1px solid #000000;
+    border-radius: 20px;
+    width: 60px;
+    height: 25px;
+    text-align: center;
+    padding-top: 8px;
 }
