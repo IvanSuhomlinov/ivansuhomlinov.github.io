@@ -4,7 +4,6 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
-import { duration } from "@mui/material";
 
 const App = (props) => {
   const step = 30;
@@ -181,26 +180,22 @@ const App = (props) => {
 
   const getReserves = (date) => {
     setReserves(getCurDate.date)
-    setReserves(time.filter(day => day.date === date)[0].reserves)
-    
-    console.log(...reserves)
-    return reserves;
+    setReserves(time.filter(day => day.date === date)[0])
   }
 
   const getCurDate = (arg) => {
-    const year = arg.$d.getFullYear()
-    const day = arg.$d.getDate() < 10? arg.$d.getDate().toString().padStart(2, "0") : arg.$d.getDate(); 
-    const month = (arg.$d.getMonth() + 1) < 10 ? arg.$d.getMonth().toString().padStart(1, '0') + 1 : arg.$d.getMonth() + 1;
-    console.log(year + "-" + month + "-" + day)
+    const year = String(arg.$d.getFullYear())
+    const day = String(arg.$d.getDate()).padStart(2, "0") 
+    const month = String(arg.$d.getMonth() + 1).padStart(2, "0")
     
-    return year + "-" + (month + 1) + "-" + day;
+    return year + "-" + month + "-" + day
   }
 
- /* React.useEffect(() => {
-    let currentDate = getCurDate;
-    console.log(getReserves(currentDate))
-  }, [getCurDate])
-  */
+ React.useEffect(() => {
+    getReserves(getCurDate)
+    console.log(reserves)
+  }, [reserves])
+  
 
   
 
@@ -218,8 +213,8 @@ const App = (props) => {
   };
 
   const isReserved = (t1, t2) => {
-
     for( const {start , duration} of reserves){
+
       const [startH, startM] = start.split(":").map(Number);
       const [endH, endM] = increaseTime(startH, startM, Number(duration));
 
@@ -237,7 +232,6 @@ const App = (props) => {
   };
 
   const CreateTimeButtons = () => {
-   
     
     const createTime = timeList.map((time) => {
       const [hours, minutes] = time.split(':').map((el) => Number(el));
