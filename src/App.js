@@ -7,7 +7,7 @@ import dayjs from "dayjs";
 
 const App = (props) => {
   const step = 30;
-  
+    
   const timeList = [
     "00:00",
     "00:30",
@@ -179,21 +179,20 @@ const App = (props) => {
   
 
   const getReserves = (date) => {
-    setReserves(getCurDate.date)
-    setReserves(time.filter(day => day.date === date)[0])
+    setReserves(time.filter(day => day.date === date)[0]?.reserves)
   }
 
   const getCurDate = (arg) => {
     const year = String(arg.$d.getFullYear())
     const day = String(arg.$d.getDate()).padStart(2, "0") 
     const month = String(arg.$d.getMonth() + 1).padStart(2, "0")
-    
-    return year + "-" + month + "-" + day
+    console.log( year + "-" + month + "-" + day)
+    getReserves(year + "-" + month + "-" + day)
   }
 
+  
  React.useEffect(() => {
-    getReserves(getCurDate)
-    console.log(reserves)
+      console.log(reserves)
   }, [reserves])
   
 
@@ -213,6 +212,7 @@ const App = (props) => {
   };
 
   const isReserved = (t1, t2) => {
+    if(reserves){
     for( const {start , duration} of reserves){
 
       const [startH, startM] = start.split(":").map(Number);
@@ -228,11 +228,11 @@ const App = (props) => {
       }
       return true;
     };
-    return false;
+  }return false;
   };
 
   const CreateTimeButtons = () => {
-    
+
     const createTime = timeList.map((time) => {
       const [hours, minutes] = time.split(':').map((el) => Number(el));
       const newTime = increaseTime(hours, minutes, step);
