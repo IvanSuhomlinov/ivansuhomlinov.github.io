@@ -8,65 +8,54 @@ import dayjs from "dayjs";
 const App = (props) => {
   const step = 30;
   const [period, setPeriod] = React.useState([]);
-  const [nameClass, setNameClass] = React.useState("div-time");
+  
 
   const handleClick = (event) => {
     event.currentTarget.classList.toggle("selected-div");
     const currentTime = event.currentTarget.dataset.time;
     comparePeriod(currentTime);
+    console.log(period)
 
   };
 
   const comparePeriod = (time) => {
     if (period.length === 0) {
-      return period.push(time);
+      setPeriod([time]);
+      
     }
     if (period.length === 1) {
-      const newTime = time.split(":");
-      const periodTime = period[0].split(":");
-      const newPeriodTime = converter(periodTime[0], periodTime[1]);
-      const minutes = converter(newTime[0], newTime[1]);
-      console.log("минуты нажатия: " + minutes);
-      console.log("минуты в периоде: " + newPeriodTime);
+      const selectedTime = converter(time);
+      const periodTime = converter(period[0])
 
-      if (minutes < newPeriodTime) {
-        period.unshift(time);
-        console.log(period);
-      } else {
-        period.push(time);
-        console.log(period);
+      if (selectedTime < periodTime) {
+        setPeriod(prev => [time, ...prev])
+        
+      } 
+      else {
+        setPeriod(prev => [...prev, time])
+        
       }
     }
+
     if (period.length === 2) {
-      const newTime = time.split(":");
-      const periodTime = period[0].split(":");
-      const newPeriodTime = converter(periodTime[0], periodTime[1]);
-
-      const secondPeriodTime = period[1].split(":");
-      const newSecondPeriodTime = converter(secondPeriodTime[0], secondPeriodTime[1]);
-
-      const minutes = converter(newTime[0], newTime[1]);
-
-      if(minutes < newPeriodTime){
-        period[0] = time
-      }
-      if(minutes > newPeriodTime){
-        period[1] = time
-      }
-      if(minutes < newSecondPeriodTime){
-        period[0] = time
-      }
-      else{
-        period[1] = time
-      }
-
+      const selectedTime = converter(time)
+      const periodTime = converter(period[0])
+      const secondPeriodTime = converter(period[1])
+      console.log(period)
+      
+      if (selectedTime < periodTime) {
+      setPeriod(prev => [time, prev[0]]) 
+    } else if (selectedTime > secondPeriodTime) {
+      setPeriod(prev => [prev[1], time])
+    } else {
+      setPeriod(prev => [prev[0], time])
     }
-    console.log(period)
-    
-    
-  };
+  }
+ 
+}
 
-  const converter = (h, m) => {
+  const converter = (time) => {
+    const [h,m] = time.split(":")
     const min = Number(h) * 60;
     return Number(min) + Number(m);
   };
@@ -292,7 +281,7 @@ const App = (props) => {
       return isReserved([hours, minutes], newTime) ? (
         <div className="reserved-div">{time}</div>
       ) : (
-        <div data-time={time} onClick={handleClick} className={nameClass}>
+        <div data-time={time} onClick={handleClick} className="div-time">
           {time}
         </div>
       );
