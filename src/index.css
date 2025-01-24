@@ -34,3 +34,14 @@
     text-align: center;
     padding-top: 8px;
 }
+
+.selected-div{
+    background-color: rgb(255, 255, 107);
+    border: 1px solid #000000;
+    border-radius: 20px;
+    width: 60px;
+    height: 25px;
+    text-align: center;
+    padding-top: 8px;
+    cursor: pointer;
+}

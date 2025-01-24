@@ -7,7 +7,12 @@ import dayjs from "dayjs";
 
 const App = (props) => {
   const step = 30;
-    
+  const [nameClass, setNameClass] = React.useState("div-time")
+  const changeClassName = () => {
+    nameClass === "div-time"? setNameClass("selected-div") : setNameClass("div-time")
+  }
+
+
   const timeList = [
     "00:00",
     "00:30",
@@ -176,7 +181,7 @@ const App = (props) => {
     },
   ]);
 
-  
+ 
 
   const getReserves = (date) => {
     setReserves(time.filter(day => day.date === date)[0]?.reserves)
@@ -233,15 +238,16 @@ const App = (props) => {
 
   const CreateTimeButtons = () => {
 
-    const createTime = timeList.map((time) => {
+    const createTime = timeList.map((time, index) => {
       const [hours, minutes] = time.split(':').map((el) => Number(el));
       const newTime = increaseTime(hours, minutes, step);
       return  isReserved([hours, minutes], newTime) ? (
         <div className="reserved-div">{time}</div>
       ) : (
-        <div className="div-time">{time}</div>
+        <div onClick={changeClassName} id={index} className={nameClass}>{time}</div>
       );
     });
+    
     return createTime;
   };
 
