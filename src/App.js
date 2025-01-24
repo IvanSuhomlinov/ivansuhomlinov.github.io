@@ -46,17 +46,18 @@ const App = (props) => {
       const newSecondPeriodTime = converter(secondPeriodTime[0], secondPeriodTime[1]);
 
       const minutes = converter(newTime[0], newTime[1]);
+
       if(minutes < newPeriodTime){
-        setPeriod(period => [{time}, period[0]])
+        period[0] = time
       }
       if(minutes > newPeriodTime){
-        setPeriod(period => [{time}, period[1]])
+        period[1] = time
       }
       if(minutes < newSecondPeriodTime){
-        setPeriod(period => [{time}, period[0]])
+        period[0] = time
       }
       else{
-        setPeriod(period => [{time}, period[1]])
+        period[1] = time
       }
 
     }
