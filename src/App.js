@@ -7,11 +7,45 @@ import dayjs from "dayjs";
 
 const App = (props) => {
   const step = 30;
-  const [nameClass, setNameClass] = React.useState("div-time")
-  const changeClassName = () => {
-    nameClass === "div-time"? setNameClass("selected-div") : setNameClass("div-time")
-  }
+  const [period, setPeriod] = React.useState([]);
+  const [nameClass, setNameClass] = React.useState("div-time");
 
+  const handleClick = (event) => {
+    event.currentTarget.classList.toggle("selected-div");
+
+    const currentTime = event.currentTarget.dataset.time;
+    comparePeriod(currentTime);
+  };
+
+  const comparePeriod = (time) => {
+    if (period.length === 0) {
+      return period.push(time);
+    }
+    if (period.length === 1) {
+      const newTime = time.split(":");
+      const periodTime = period[0].split(":");
+      const newPeriodTime = converter(periodTime[0], periodTime[1]);
+      const minutes = converter(newTime[0], newTime[1]);
+      console.log("минуты нажатия: " + minutes);
+      console.log("минуты в периоде: " + newPeriodTime);
+
+      if (minutes < newPeriodTime) {
+        period.unshift(time);
+        console.log(period);
+      } else {
+        period.push(time);
+        console.log(period);
+      }
+    }
+    if (period.length === 2) {
+      
+    }
+  };
+
+  const converter = (h, m) => {
+    const min = Number(h) * 60;
+    return Number(min) + Number(m);
+  };
 
   const timeList = [
     "00:00",
@@ -63,7 +97,7 @@ const App = (props) => {
     "23:00",
     "23:30",
   ];
-  const [reserves, setReserves] = React.useState([])
+  const [reserves, setReserves] = React.useState([]);
   const [time, setTime] = React.useState([
     {
       date: "2025-01-17",
@@ -181,31 +215,23 @@ const App = (props) => {
     },
   ]);
 
- 
-
   const getReserves = (date) => {
-    setReserves(time.filter(day => day.date === date)[0]?.reserves)
-  }
+    setReserves(time.filter((day) => day.date === date)[0]?.reserves);
+  };
 
   const getCurDate = (arg) => {
-    const year = String(arg.$d.getFullYear())
-    const day = String(arg.$d.getDate()).padStart(2, "0") 
-    const month = String(arg.$d.getMonth() + 1).padStart(2, "0")
-    console.log( year + "-" + month + "-" + day)
-    getReserves(year + "-" + month + "-" + day)
-  }
+    const year = String(arg.$d.getFullYear());
+    const day = String(arg.$d.getDate()).padStart(2, "0");
+    const month = String(arg.$d.getMonth() + 1).padStart(2, "0");
+    console.log(year + "-" + month + "-" + day);
+    getReserves(year + "-" + month + "-" + day);
+  };
 
-  
- React.useEffect(() => {
-      console.log(reserves)
-  }, [reserves])
-  
-
-  
-
+  React.useEffect(() => {
+    console.log(reserves);
+  }, [reserves]);
 
   const increaseTime = (h, m, step) => {
-    
     h = Number(h) + Math.floor(step / 60);
     m = Number(m) + (step % 60);
     if (m >= 60) {
@@ -213,41 +239,41 @@ const App = (props) => {
       m -= 60;
     }
     return [h, m];
-
   };
 
   const isReserved = (t1, t2) => {
-    if(reserves){
-    for( const {start , duration} of reserves){
+    if (reserves) {
+      for (const { start, duration } of reserves) {
+        const [startH, startM] = start.split(":").map(Number);
+        const [endH, endM] = increaseTime(startH, startM, Number(duration));
 
-      const [startH, startM] = start.split(":").map(Number);
-      const [endH, endM] = increaseTime(startH, startM, Number(duration));
-
-      if (
-        t2[0] < startH ||
-        t1[0] > endH ||
-        (t2[0] === startH && t2[1] <= startM) ||
-        (t1[0] === endH && t1[1] >= endM)
-      ) {
-        continue;
+        if (
+          t2[0] < startH ||
+          t1[0] > endH ||
+          (t2[0] === startH && t2[1] <= startM) ||
+          (t1[0] === endH && t1[1] >= endM)
+        ) {
+          continue;
+        }
+        return true;
       }
-      return true;
-    };
-  }return false;
+    }
+    return false;
   };
 
   const CreateTimeButtons = () => {
-
     const createTime = timeList.map((time, index) => {
-      const [hours, minutes] = time.split(':').map((el) => Number(el));
+      const [hours, minutes] = time.split(":").map((el) => Number(el));
       const newTime = increaseTime(hours, minutes, step);
-      return  isReserved([hours, minutes], newTime) ? (
+      return isReserved([hours, minutes], newTime) ? (
         <div className="reserved-div">{time}</div>
       ) : (
-        <div onClick={changeClassName} id={index} className={nameClass}>{time}</div>
+        <div data-time={time} onClick={handleClick} className={nameClass}>
+          {time}
+        </div>
       );
     });
-    
+
     return createTime;
   };
 
