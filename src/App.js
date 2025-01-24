@@ -12,9 +12,9 @@ const App = (props) => {
 
   const handleClick = (event) => {
     event.currentTarget.classList.toggle("selected-div");
-
     const currentTime = event.currentTarget.dataset.time;
     comparePeriod(currentTime);
+
   };
 
   const comparePeriod = (time) => {
@@ -38,8 +38,31 @@ const App = (props) => {
       }
     }
     if (period.length === 2) {
-      
+      const newTime = time.split(":");
+      const periodTime = period[0].split(":");
+      const newPeriodTime = converter(periodTime[0], periodTime[1]);
+
+      const secondPeriodTime = period[1].split(":");
+      const newSecondPeriodTime = converter(secondPeriodTime[0], secondPeriodTime[1]);
+
+      const minutes = converter(newTime[0], newTime[1]);
+      if(minutes < newPeriodTime){
+        setPeriod(period => [{time}, period[0]])
+      }
+      if(minutes > newPeriodTime){
+        setPeriod(period => [{time}, period[1]])
+      }
+      if(minutes < newSecondPeriodTime){
+        setPeriod(period => [{time}, period[0]])
+      }
+      else{
+        setPeriod(period => [{time}, period[1]])
+      }
+
     }
+    console.log(period)
+    
+    
   };
 
   const converter = (h, m) => {
