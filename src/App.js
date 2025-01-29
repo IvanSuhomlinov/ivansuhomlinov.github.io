@@ -8,18 +8,20 @@ import dayjs from "dayjs";
 const App = (props) => {
   const step = 30;
   const [period, setPeriod] = React.useState([]);
-  
+  const [selectedButton, setSelectedButton] = React.useState([]);
 
   const handleClick = (event) => {
     event.currentTarget.classList.toggle("selected-div");
+
     const currentTime = event.currentTarget.dataset.time;
+    setSelectedButton([currentTime])
+    console.log(event.currentTarget)
     comparePeriod(currentTime);
-    console.log(period)
 
   };
 
   const comparePeriod = (time) => {
-    if (period.length === 0) {
+    if (period.length === 0 || period.length === 2) {
       setPeriod([time]);
       
     }
@@ -37,27 +39,30 @@ const App = (props) => {
       }
     }
 
-    if (period.length === 2) {
+    /*if (period.length === 2) {
+      
       const selectedTime = converter(time)
       const periodTime = converter(period[0])
       const secondPeriodTime = converter(period[1])
       console.log(period)
       
       if (selectedTime < periodTime) {
-      setPeriod(prev => [time, prev[0]]) 
+      setPeriod(prev => [time, prev[1]]) 
     } else if (selectedTime > secondPeriodTime) {
-      setPeriod(prev => [prev[1], time])
-    } else {
       setPeriod(prev => [prev[0], time])
+    } else {
+      setPeriod(prev => [time, prev[1]])
     }
-  }
+  }*/
  
 }
 
   const converter = (time) => {
+    if (!time) return
     const [h,m] = time.split(":")
     const min = Number(h) * 60;
     return Number(min) + Number(m);
+
   };
 
   const timeList = [
@@ -118,6 +123,7 @@ const App = (props) => {
         { start: "08:00", duration: 30 },
         { start: "09:30", duration: 30 },
         { start: "11:00", duration: 30 },
+        { start: "01:00", duration: 60 },
       ],
     },
     {
@@ -244,6 +250,10 @@ const App = (props) => {
     console.log(reserves);
   }, [reserves]);
 
+  React.useEffect(() => {
+    console.log(period);
+  }, [period]);
+
   const increaseTime = (h, m, step) => {
     h = Number(h) + Math.floor(step / 60);
     m = Number(m) + (step % 60);
@@ -281,7 +291,7 @@ const App = (props) => {
       return isReserved([hours, minutes], newTime) ? (
         <div className="reserved-div">{time}</div>
       ) : (
-        <div data-time={time} onClick={handleClick} className="div-time">
+        <div data-time={time} onClick={handleClick} className={`div-time ${period.indexOf(time) >= 0 || period.length === 2 && (converter(time) > converter(period[0]) && converter(time) < converter(period[1])) ? "selected-div" : ""}`}>
           {time}
         </div>
       );
