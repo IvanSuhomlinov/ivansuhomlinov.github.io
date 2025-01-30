@@ -10,12 +10,31 @@ const App = (props) => {
   const [period, setPeriod] = React.useState([]);
   const [selectedButton, setSelectedButton] = React.useState([]);
 
-  const handleClick = (event) => {
-    event.currentTarget.classList.toggle("selected-div");
+  const handleMouseEnter = (e) => {
+    if(e.currentTarget.className === "div-time selected-div"){
+      e.currentTarget.style.background = "rgb(255, 255, 107)"
+    }
+    else{
+      e.currentTarget.style.background = "aquamarine"
+    } 
+    
+  }
 
+  const handleMouseLeave = (e) => {
+    if(e.currentTarget.className === "div-time selected-div"){
+      e.currentTarget.style.background = "rgb(255, 255, 107)"
+    }
+    else{
+      e.currentTarget.style.background = "white"
+    }
+    
+    
+  }
+
+
+  const handleClick = (event) => {
     const currentTime = event.currentTarget.dataset.time;
     setSelectedButton([currentTime])
-    console.log(event.currentTarget)
     comparePeriod(currentTime);
 
   };
@@ -23,8 +42,8 @@ const App = (props) => {
   const comparePeriod = (time) => {
     if (period.length === 0 || period.length === 2) {
       setPeriod([time]);
-      
     }
+
     if (period.length === 1) {
       const selectedTime = converter(time);
       const periodTime = converter(period[0])
@@ -123,7 +142,6 @@ const App = (props) => {
         { start: "08:00", duration: 30 },
         { start: "09:30", duration: 30 },
         { start: "11:00", duration: 30 },
-        { start: "01:00", duration: 60 },
       ],
     },
     {
@@ -254,6 +272,7 @@ const App = (props) => {
     console.log(period);
   }, [period]);
 
+
   const increaseTime = (h, m, step) => {
     h = Number(h) + Math.floor(step / 60);
     m = Number(m) + (step % 60);
@@ -291,7 +310,8 @@ const App = (props) => {
       return isReserved([hours, minutes], newTime) ? (
         <div className="reserved-div">{time}</div>
       ) : (
-        <div data-time={time} onClick={handleClick} className={`div-time ${period.indexOf(time) >= 0 || period.length === 2 && (converter(time) > converter(period[0]) && converter(time) < converter(period[1])) ? "selected-div" : ""}`}>
+        /*написать логику на пересечение period и reserve*/
+        <div data-time={time} onMouseLeave={handleMouseLeave} onMouseEnter={handleMouseEnter} onClick={handleClick} className={`div-time ${period.indexOf(time) >= 0 || period.length === 2 && (converter(time) > converter(period[0]) && converter(time) < converter(period[1])) ? "selected-div" : ""}`}>
           {time}
         </div>
       );
