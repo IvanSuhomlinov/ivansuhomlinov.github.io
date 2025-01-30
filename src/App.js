@@ -9,26 +9,32 @@ const App = (props) => {
   const step = 30;
   const [period, setPeriod] = React.useState([]);
   const [selectedButton, setSelectedButton] = React.useState([]);
+  const [hovered, setHovered] = React.useState("")
 
   const handleMouseEnter = (e) => {
-  if(period.length === 1 || period.length === 2){
+    setHovered(e.currentTarget.dataset.time)
+  /*if(period.length === 1 || period.length === 2){
     if(e.currentTarget.className === "div-time selected-div"){
+      e.currentTarget.style.background = "rgb(255, 255, 107)"
+      
+    }
+    else{
+        
+        e.currentTarget.style.background = "aquamarine"
+    }
+  }*/
+}
+
+  const handleMouseLeave = (e) => {
+    setHovered("")
+    /*if(e.currentTarget.className === "div-time selected-div"){
+
       e.currentTarget.style.background = "rgb(255, 255, 107)"
     }
     else{
       
-      e.currentTarget.style.background = "aquamarine"
-    }
-  }
-}
-
-  const handleMouseLeave = (e) => {
-    if(e.currentTarget.className === "div-time selected-div"){
-      e.currentTarget.style.background = "rgb(255, 255, 107)"
-    }
-    else{
       e.currentTarget.style.background = "white"
-    }
+    }*/
   }
 
 
@@ -251,6 +257,7 @@ const App = (props) => {
       ],
     },
   ]);
+  
 
   const getReserves = (date) => {
     setReserves(reservedTime.filter((day) => day.date === date)[0]?.reserves);
@@ -313,7 +320,8 @@ const App = (props) => {
         <div className="reserved-div">{time}</div>
       ) : (
         /*написать логику на пересечение period и reserve*/
-        <div data-time={time} onMouseLeave={handleMouseLeave} onMouseEnter={handleMouseEnter} onClick={handleClick} className={`div-time ${period.indexOf(time) >= 0 || period.length === 2 && (converter(time) > converter(period[0]) && converter(time) < converter(period[1])) ? "selected-div" : ""}`}>
+        <div id={index} data-time={time} onMouseLeave={handleMouseLeave} onMouseEnter={handleMouseEnter} onClick={handleClick} 
+        className={`div-time ${period.indexOf(time) >= 0 || period.length === 2 && (converter(time) > converter(period[0]) && converter(time) < converter(period[1])) ? "selected-div" : ""} ${time === hovered || period.length === 1 && (converter(time) > Math.min(converter(period[0]), converter(hovered)) && converter(time) < Math.max(converter(period[0]), converter(hovered))) ? "hovered-div" : ""}`}>
           {time}
         </div>
       );
@@ -327,6 +335,7 @@ const App = (props) => {
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <DemoContainer components={["DatePicker"]}>
           <DatePicker
+            closeOnSelect="false"
             label="Введите дату"
             format="DD.MM.YYYY"
             defaultValue={dayjs(Date.now())}
