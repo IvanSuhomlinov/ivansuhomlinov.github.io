@@ -11,14 +11,16 @@ const App = (props) => {
   const [selectedButton, setSelectedButton] = React.useState([]);
 
   const handleMouseEnter = (e) => {
+  if(period.length === 1 || period.length === 2){
     if(e.currentTarget.className === "div-time selected-div"){
       e.currentTarget.style.background = "rgb(255, 255, 107)"
     }
     else{
+      
       e.currentTarget.style.background = "aquamarine"
-    } 
-    
+    }
   }
+}
 
   const handleMouseLeave = (e) => {
     if(e.currentTarget.className === "div-time selected-div"){
@@ -27,8 +29,6 @@ const App = (props) => {
     else{
       e.currentTarget.style.background = "white"
     }
-    
-    
   }
 
 
@@ -36,7 +36,7 @@ const App = (props) => {
     const currentTime = event.currentTarget.dataset.time;
     setSelectedButton([currentTime])
     comparePeriod(currentTime);
-
+    
   };
 
   const comparePeriod = (time) => {
@@ -135,7 +135,7 @@ const App = (props) => {
     "23:30",
   ];
   const [reserves, setReserves] = React.useState([]);
-  const [time, setTime] = React.useState([
+  const [reservedTime, setReservedTime] = React.useState([
     {
       date: "2025-01-17",
       reserves: [
@@ -253,7 +253,7 @@ const App = (props) => {
   ]);
 
   const getReserves = (date) => {
-    setReserves(time.filter((day) => day.date === date)[0]?.reserves);
+    setReserves(reservedTime.filter((day) => day.date === date)[0]?.reserves);
   };
 
   const getCurDate = (arg) => {
@@ -269,7 +269,7 @@ const App = (props) => {
   }, [reserves]);
 
   React.useEffect(() => {
-    console.log(period);
+    console.log("Период равен: " + period);
   }, [period]);
 
 
@@ -302,6 +302,8 @@ const App = (props) => {
     }
     return false;
   };
+
+
 
   const CreateTimeButtons = () => {
     const createTime = timeList.map((time, index) => {
