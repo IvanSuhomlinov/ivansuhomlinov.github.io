@@ -4,6 +4,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
+import { formatMeridiem } from "@mui/x-date-pickers/internals";
 
 const App = (props) => {
   /* period.indexOf(time) >= 0 || period.length === 2 && (converter(time) > converter(period[0]) && converter(time) < converter(period[1])) ? "selected-div" : ""*/
@@ -121,7 +122,7 @@ const App = (props) => {
       ],
     },
     {
-      date: "2025-01-30",
+      date: "2025-01-31",
       reserves: [
         { start: "08:30", duration: 30 },
         { start: "11:00", duration: 30 },
@@ -129,10 +130,49 @@ const App = (props) => {
       ],
     },
   ]);
+  const [currentDate, setCurrentDate] = React.useState(dayjs(Date.now()))
+  
 
   const handleMouseEnter = (e) => {
-    setHovered(e.currentTarget.dataset.time)
-  if(period.length === 1 || period.length === 2){
+    e.currentTarget.classList.add("hovered-div")
+    const currentTime = e.currentTarget.dataset.time;
+    if (period.length === 1) {
+
+      const selectedTime = converter(currentTime);
+      const periodTime = converter(period[0])
+      const arraySelectTime = currentTime.split(":").map(el => Number(el))
+      const arrPeriodTime = period[0].split(":").map(el => Number(el))
+      if (selectedTime < periodTime) {
+        
+        
+        if(!isReserved(arraySelectTime, arrPeriodTime)){
+         
+          setHovered(currentTime)
+        }
+        else{
+          setHovered("")
+        }
+      } 
+      else {
+        
+        if(!isReserved(arrPeriodTime, arraySelectTime)){
+          
+          setHovered(currentTime)
+
+        }
+        else{
+          setHovered("")
+        }
+        
+        
+      }
+    }
+    else{
+      setHovered(e.currentTarget.dataset.time)
+    }
+    
+    
+  /*if(period.length === 1 || period.length === 2){
     if(e.currentTarget.className === "div-time selected-div"){
       e.currentTarget.style.background = "rgb(255, 255, 107)"
       
@@ -141,19 +181,20 @@ const App = (props) => {
         
         e.currentTarget.style.background = "aquamarine"
     }
-  }
+  }*/
 }
 
   const handleMouseLeave = (e) => {
+    e.currentTarget.classList.remove("hovered-div")
     setHovered("")
-    if(e.currentTarget.className === "div-time selected-div"){
+    /*if(e.currentTarget.className === "div-time selected-div"){
 
       e.currentTarget.style.background = "rgb(255, 255, 107)"
     }
     else{
       
       e.currentTarget.style.background = "white"
-    }
+    }*/
   }
 
 
@@ -167,17 +208,37 @@ const App = (props) => {
     if (period.length === 0 || period.length === 2) {
       setPeriod([time]);
     }
-
+    
     if (period.length === 1) {
       const selectedTime = converter(time);
       const periodTime = converter(period[0])
-
+      const arraySelectTime = time.split(":").map(el => Number(el))
+      const arrPeriodTime = period[0].split(":").map(el => Number(el))
       if (selectedTime < periodTime) {
-        setPeriod(prev => [time, ...prev])
+        
+        console.log("isReserved1: " + !isReserved(time, ...period))
+        if(!isReserved(arraySelectTime, arrPeriodTime)){
+          console.log("Вызываем setperiod1")
+          setPeriod(prev => [time, ...prev])
+        }
+        else{
+          setPeriod([time])
+        }
+        
         
       } 
       else {
-        setPeriod(prev => [...prev, time])
+        console.log("isReserved2: " + !isReserved(...period, time))
+        if(!isReserved(arrPeriodTime, arraySelectTime)){
+          console.log("Вызываем setperiod2")
+          setPeriod(prev => [...prev, time])
+
+        }
+
+        else{
+          setPeriod([time])
+        }
+        
         
       }
     }
@@ -260,37 +321,41 @@ const App = (props) => {
   ];
 
   
+  const getFormatDate = (date) => {
+    const year = String(date.$d.getFullYear());
+    const day = String(date.$d.getDate()).padStart(2, "0");
+    const month = String(date.$d.getMonth() + 1).padStart(2, "0");
+    const formatDate = year + "-" + month + "-" + day
 
-  const getReserves = (date) => {
-    setReserves(reservedTime.filter((day) => day.date === date)[0]?.reserves);
+    return formatDate
+  }
+
+  const getReserves = () => {
+    console.log(currentDate)
+    if(currentDate){
+    
+    
+
+    setReserves(reservedTime.filter((day) => day.date === getFormatDate(currentDate))[0]?.reserves);
+    }
+
   };
 
-  const endReservedTime = () => {
-    
-  }
+ 
 
-  const startReservedTime = () => {
-    reserves.map((el) => el.start)
-  }
 
   const getCurDate = (arg) => {
-    const year = String(arg.$d.getFullYear());
-    const day = String(arg.$d.getDate()).padStart(2, "0");
-    const month = String(arg.$d.getMonth() + 1).padStart(2, "0");
-    console.log(year + "-" + month + "-" + day);
-    getReserves(year + "-" + month + "-" + day);
+    console.log(new Date(arg.$d).getTime())
+    setCurrentDate(dayjs(new Date(arg.$d).getTime()))
     
   };
   
 
 
   const paintYellowDiv = (time) => {
-    if(period.indexOf(time) >= 0 || period.length === 2 && (converter(selectedButton) > converter(startReservedTime()) && converter(selectedButton) < converter(endReservedTime()) ) ){
-
-    }
-
+    if(period.length === 2) console.log(isReserved(...period))
     
-    else if(period.indexOf(time) >= 0 || period.length === 2 && (converter(time) > converter(period[0]) && converter(time) < converter(period[1]))){
+    if(period.indexOf(time) >= 0 || period.length === 2 && (converter(time) > converter(period[0]) && converter(time) < converter(period[1]))){
        return "selected-div"
      }
      else{
@@ -298,7 +363,14 @@ const App = (props) => {
      }
    }
 
-  
+  const reserveTime = (e) => {
+    e.preventDefault()
+    const duration = period.length === 2 ? converter(period[1]) - converter(period[0]) + step : step
+    const reserve = {start: period[0], duration: duration}
+    setReservedTime((prev) => [...prev.filter(el => el.date != getFormatDate(currentDate)), {date: getFormatDate(currentDate), reserves:[...reserves, reserve]}])
+    setPeriod([])
+    console.log(`Вы уверены что хотите забронировать ${JSON.stringify(reserve)}?`)
+  }
 
 
    const paintBlueDiv = (time) => {
@@ -318,6 +390,11 @@ const App = (props) => {
   }, [reserves]);
 
   React.useEffect(() => {
+    getReserves()
+  }, [currentDate, reservedTime]);
+
+  React.useEffect(() => {
+    console.log("Период равен: " + period);
     if(period.length === 2){
     console.log("Период равен: " + period);
     }
@@ -335,7 +412,7 @@ const App = (props) => {
   };
 
   const isReserved = (t1, t2) => {
-    if (reserves) {
+    if (reserves.length) {
       for (const { start, duration } of reserves) {
         const [startH, startM] = start.split(":").map(Number);
         const [endH, endM] = increaseTime(startH, startM, Number(duration));
@@ -382,8 +459,9 @@ const App = (props) => {
           <DatePicker
             label="Введите дату"
             format="DD.MM.YYYY"
-            defaultValue={dayjs(Date.now())}
+            /*defaultValue={dayjs(Date.now())}*/
             onChange={getCurDate}
+            value={currentDate}
           />
         </DemoContainer>
       </LocalizationProvider>
@@ -395,6 +473,7 @@ const App = (props) => {
       <BasicDatePicker />
       <div className="flex-div">
         <CreateTimeButtons />
+        <button onClick={reserveTime}>Забронировать</button>
       </div>
     </div>
   );
