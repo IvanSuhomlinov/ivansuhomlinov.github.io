@@ -35,6 +35,16 @@
     padding-top: 8px;
 }
 
+.hovered-div{
+    background-color: aquamarine;
+    border: 1px solid #000000;
+    border-radius: 20px;
+    width: 60px;
+    height: 25px;
+    text-align: center;
+    padding-top: 8px;
+    cursor: pointer;
+}
 
 .selected-div{
     background-color: rgb(255, 255, 107);
@@ -47,13 +57,3 @@
     cursor: pointer;
 }
 
-.hovered-div{
-    background-color: aquamarine;
-    border: 1px solid #000000;
-    border-radius: 20px;
-    width: 60px;
-    height: 25px;
-    text-align: center;
-    padding-top: 8px;
-    cursor: pointer;
-}

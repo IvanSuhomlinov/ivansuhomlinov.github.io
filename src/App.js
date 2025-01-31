@@ -6,140 +6,12 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
 
 const App = (props) => {
+  /* period.indexOf(time) >= 0 || period.length === 2 && (converter(time) > converter(period[0]) && converter(time) < converter(period[1])) ? "selected-div" : ""*/
+  /*time === hovered || period.length === 1 && (converter(time) > Math.min(converter(period[0]), converter(hovered)) && converter(time) < Math.max(converter(period[0]), converter(hovered))) ? "hovered-div" : ""*/
   const step = 30;
   const [period, setPeriod] = React.useState([]);
   const [selectedButton, setSelectedButton] = React.useState([]);
   const [hovered, setHovered] = React.useState("")
-
-  const handleMouseEnter = (e) => {
-    setHovered(e.currentTarget.dataset.time)
-  /*if(period.length === 1 || period.length === 2){
-    if(e.currentTarget.className === "div-time selected-div"){
-      e.currentTarget.style.background = "rgb(255, 255, 107)"
-      
-    }
-    else{
-        
-        e.currentTarget.style.background = "aquamarine"
-    }
-  }*/
-}
-
-  const handleMouseLeave = (e) => {
-    setHovered("")
-    /*if(e.currentTarget.className === "div-time selected-div"){
-
-      e.currentTarget.style.background = "rgb(255, 255, 107)"
-    }
-    else{
-      
-      e.currentTarget.style.background = "white"
-    }*/
-  }
-
-
-  const handleClick = (event) => {
-    const currentTime = event.currentTarget.dataset.time;
-    setSelectedButton([currentTime])
-    comparePeriod(currentTime);
-    
-  };
-
-  const comparePeriod = (time) => {
-    if (period.length === 0 || period.length === 2) {
-      setPeriod([time]);
-    }
-
-    if (period.length === 1) {
-      const selectedTime = converter(time);
-      const periodTime = converter(period[0])
-
-      if (selectedTime < periodTime) {
-        setPeriod(prev => [time, ...prev])
-        
-      } 
-      else {
-        setPeriod(prev => [...prev, time])
-        
-      }
-    }
-
-    /*if (period.length === 2) {
-      
-      const selectedTime = converter(time)
-      const periodTime = converter(period[0])
-      const secondPeriodTime = converter(period[1])
-      console.log(period)
-      
-      if (selectedTime < periodTime) {
-      setPeriod(prev => [time, prev[1]]) 
-    } else if (selectedTime > secondPeriodTime) {
-      setPeriod(prev => [prev[0], time])
-    } else {
-      setPeriod(prev => [time, prev[1]])
-    }
-  }*/
- 
-}
-
-  const converter = (time) => {
-    if (!time) return
-    const [h,m] = time.split(":")
-    const min = Number(h) * 60;
-    return Number(min) + Number(m);
-
-  };
-
-  const timeList = [
-    "00:00",
-    "00:30",
-    "01:00",
-    "01:30",
-    "02:00",
-    "02:30",
-    "03:00",
-    "03:30",
-    "04:00",
-    "04:30",
-    "05:00",
-    "05:30",
-    "06:00",
-    "06:30",
-    "07:00",
-    "07:30",
-    "08:00",
-    "08:30",
-    "09:00",
-    "09:30",
-    "10:00",
-    "10:30",
-    "11:00",
-    "11:30",
-    "12:00",
-    "12:30",
-    "13:00",
-    "13:30",
-    "14:00",
-    "14:30",
-    "15:00",
-    "15:30",
-    "16:00",
-    "16:30",
-    "17:00",
-    "17:30",
-    "18:00",
-    "18:30",
-    "19:00",
-    "19:30",
-    "20:00",
-    "20:30",
-    "21:00",
-    "21:30",
-    "22:00",
-    "22:30",
-    "23:00",
-    "23:30",
-  ];
   const [reserves, setReserves] = React.useState([]);
   const [reservedTime, setReservedTime] = React.useState([
     {
@@ -257,11 +129,149 @@ const App = (props) => {
       ],
     },
   ]);
+
+  const handleMouseEnter = (e) => {
+    setHovered(e.currentTarget.dataset.time)
+  if(period.length === 1 || period.length === 2){
+    if(e.currentTarget.className === "div-time selected-div"){
+      e.currentTarget.style.background = "rgb(255, 255, 107)"
+      
+    }
+    else{
+        
+        e.currentTarget.style.background = "aquamarine"
+    }
+  }
+}
+
+  const handleMouseLeave = (e) => {
+    setHovered("")
+    if(e.currentTarget.className === "div-time selected-div"){
+
+      e.currentTarget.style.background = "rgb(255, 255, 107)"
+    }
+    else{
+      
+      e.currentTarget.style.background = "white"
+    }
+  }
+
+
+  const handleClick = (event) => {
+    const currentTime = event.currentTarget.dataset.time;
+    setSelectedButton([currentTime])
+    comparePeriod(currentTime);
+  };
+
+  const comparePeriod = (time) => {
+    if (period.length === 0 || period.length === 2) {
+      setPeriod([time]);
+    }
+
+    if (period.length === 1) {
+      const selectedTime = converter(time);
+      const periodTime = converter(period[0])
+
+      if (selectedTime < periodTime) {
+        setPeriod(prev => [time, ...prev])
+        
+      } 
+      else {
+        setPeriod(prev => [...prev, time])
+        
+      }
+    }
+
+    /*if (period.length === 2) {
+      
+      const selectedTime = converter(time)
+      const periodTime = converter(period[0])
+      const secondPeriodTime = converter(period[1])
+      console.log(period)
+      
+      if (selectedTime < periodTime) {
+      setPeriod(prev => [time, prev[1]]) 
+    } else if (selectedTime > secondPeriodTime) {
+      setPeriod(prev => [prev[0], time])
+    } else {
+      setPeriod(prev => [time, prev[1]])
+    }
+  }*/
+ 
+}
+
+  const converter = (time) => {
+    if (!time) return
+    const [h,m] = time.split(":")
+    const min = Number(h) * 60;
+    return Number(min) + Number(m);
+    
+  };
+
+  const timeList = [
+    "00:00",
+    "00:30",
+    "01:00",
+    "01:30",
+    "02:00",
+    "02:30",
+    "03:00",
+    "03:30",
+    "04:00",
+    "04:30",
+    "05:00",
+    "05:30",
+    "06:00",
+    "06:30",
+    "07:00",
+    "07:30",
+    "08:00",
+    "08:30",
+    "09:00",
+    "09:30",
+    "10:00",
+    "10:30",
+    "11:00",
+    "11:30",
+    "12:00",
+    "12:30",
+    "13:00",
+    "13:30",
+    "14:00",
+    "14:30",
+    "15:00",
+    "15:30",
+    "16:00",
+    "16:30",
+    "17:00",
+    "17:30",
+    "18:00",
+    "18:30",
+    "19:00",
+    "19:30",
+    "20:00",
+    "20:30",
+    "21:00",
+    "21:30",
+    "22:00",
+    "22:30",
+    "23:00",
+    "23:30",
+  ];
+
   
 
   const getReserves = (date) => {
     setReserves(reservedTime.filter((day) => day.date === date)[0]?.reserves);
   };
+
+  const endReservedTime = () => {
+    
+  }
+
+  const startReservedTime = () => {
+    reserves.map((el) => el.start)
+  }
 
   const getCurDate = (arg) => {
     const year = String(arg.$d.getFullYear());
@@ -269,14 +279,47 @@ const App = (props) => {
     const month = String(arg.$d.getMonth() + 1).padStart(2, "0");
     console.log(year + "-" + month + "-" + day);
     getReserves(year + "-" + month + "-" + day);
+    
   };
+  
+
+
+  const paintYellowDiv = (time) => {
+    if(period.indexOf(time) >= 0 || period.length === 2 && (converter(selectedButton) > converter(startReservedTime()) && converter(selectedButton) < converter(endReservedTime()) ) ){
+
+    
+     if(period.indexOf(time) >= 0 || period.length === 2 && (converter(time) > converter(period[0]) && converter(time) < converter(period[1]))){
+       return "selected-div"
+     }
+     else{
+       return ""
+     }
+    }
+   }
+
+  
+
+
+   const paintBlueDiv = (time) => {
+    
+    
+     if(time === hovered || period.length === 1 && (converter(time) > Math.min(converter(period[0]), converter(hovered)) && converter(time) < Math.max(converter(period[0]), converter(hovered)))){
+       return "hovered-div"
+     }
+     else{
+       return ""
+     }
+
+   }
 
   React.useEffect(() => {
     console.log(reserves);
   }, [reserves]);
 
   React.useEffect(() => {
+    if(period.length === 2){
     console.log("Период равен: " + period);
+    }
   }, [period]);
 
 
@@ -311,6 +354,7 @@ const App = (props) => {
   };
 
 
+  
 
   const CreateTimeButtons = () => {
     const createTime = timeList.map((time, index) => {
@@ -321,7 +365,7 @@ const App = (props) => {
       ) : (
         /*написать логику на пересечение period и reserve*/
         <div id={index} data-time={time} onMouseLeave={handleMouseLeave} onMouseEnter={handleMouseEnter} onClick={handleClick} 
-        className={`div-time ${period.indexOf(time) >= 0 || period.length === 2 && (converter(time) > converter(period[0]) && converter(time) < converter(period[1])) ? "selected-div" : ""} ${time === hovered || period.length === 1 && (converter(time) > Math.min(converter(period[0]), converter(hovered)) && converter(time) < Math.max(converter(period[0]), converter(hovered))) ? "hovered-div" : ""}`}>
+        className={`div-time ${paintYellowDiv(time)} ${paintBlueDiv(time)}`}>
           {time}
         </div>
       );
@@ -335,7 +379,6 @@ const App = (props) => {
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <DemoContainer components={["DatePicker"]}>
           <DatePicker
-            closeOnSelect="false"
             label="Введите дату"
             format="DD.MM.YYYY"
             defaultValue={dayjs(Date.now())}
