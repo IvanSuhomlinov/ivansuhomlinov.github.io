@@ -287,14 +287,15 @@ const App = (props) => {
   const paintYellowDiv = (time) => {
     if(period.indexOf(time) >= 0 || period.length === 2 && (converter(selectedButton) > converter(startReservedTime()) && converter(selectedButton) < converter(endReservedTime()) ) ){
 
+    }
+
     
-     if(period.indexOf(time) >= 0 || period.length === 2 && (converter(time) > converter(period[0]) && converter(time) < converter(period[1]))){
+    else if(period.indexOf(time) >= 0 || period.length === 2 && (converter(time) > converter(period[0]) && converter(time) < converter(period[1]))){
        return "selected-div"
      }
      else{
        return ""
      }
-    }
    }
 
   
