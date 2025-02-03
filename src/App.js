@@ -493,26 +493,27 @@ const App = (props) => {
 
   const CreateTimeBtns = (startTime, endTime, step) => {
     const timeBtns = [];
+    let index;
     let [currentHours, currentMinutes] = startTime.split(":").map(Number);
     const [endHours, endMinutes] = endTime.split(":").map(Number);
     while(currentHours < endHours || (currentHours === endHours && currentMinutes <endMinutes)){
-      let newTime = increaseTime(currentHours, currentMinutes, step)
-      let [newHours, newMinutes] = newTime
+      index += 1
+      const newTime = increaseTime(currentHours, currentMinutes, step)
+      const [newHours, newMinutes] = newTime
       currentHours = newHours
       currentMinutes = newMinutes
-      let time = currentHours + ":" + currentMinutes
-      
+      const time = currentHours + ":" + currentMinutes
+      timeBtns.push(time)
       return isReserved([currentHours, currentMinutes], newTime) ? (
-        <div className="reserved-div">{time}</div>
+        <div className="reserved-div">{timeBtns[index]}</div>
         
       ) : (
         
-        <div data-time={time} onMouseLeave={handleMouseLeave} onMouseEnter={handleMouseEnter} onClick={handleClick} 
-        className={`div-time ${paintYellowDiv(time)} ${paintBlueDiv(time)}`}>
-          {time}
+        <div data-time={timeBtns[index]} onMouseLeave={handleMouseLeave} onMouseEnter={handleMouseEnter} onClick={handleClick} 
+        className={`div-time ${paintYellowDiv(timeBtns[index])} ${paintBlueDiv(timeBtns[index])}`}>
+          {timeBtns[index]}
         </div>
       )
-      timeBtns.push(time)
     }
 
   }
