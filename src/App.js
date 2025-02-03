@@ -16,14 +16,20 @@ const App = (props) => {
   const [reserves, setReserves] = React.useState([]);
   const [reservedTime, setReservedTime] = React.useState([
     {
+      id: null,
       date: "2025-01-17",
       reserves: [
         { start: "08:00", duration: 30 },
         { start: "09:30", duration: 30 },
         { start: "11:00", duration: 30 },
       ],
+      person:{
+        id: 1
+      }
+
     },
     {
+      id: null,
       date: "2025-01-18",
       reserves: [
         { start: "10:00", duration: 30 },
@@ -31,31 +37,47 @@ const App = (props) => {
         { start: "14:00", duration: 30 },
         { start: "16:30", duration: 30 },
       ],
+      person:{
+        id: 1
+      }
     },
     {
+      id: null,
       date: "2025-01-19",
       reserves: [
         { start: "09:00", duration: 30 },
         { start: "13:30", duration: 30 },
       ],
+      person:{
+        id: 1
+      }
     },
     {
+      id: null,
       date: "2025-01-20",
       reserves: [
         { start: "08:30", duration: 30 },
         { start: "10:00", duration: 30 },
         { start: "15:00", duration: 30 },
       ],
+      person:{
+        id: 1
+      }
     },
     {
+      id: null,
       date: "2025-01-21",
       reserves: [
         { start: "11:30", duration: 30 },
         { start: "13:00", duration: 30 },
         { start: "14:30", duration: 30 },
       ],
+      person:{
+        id: 1
+      }
     },
     {
+      id: null,
       date: "2025-01-22",
       reserves: [
         { start: "09:30", duration: 30 },
@@ -63,56 +85,84 @@ const App = (props) => {
         { start: "12:00", duration: 30 },
         { start: "15:30", duration: 30 },
       ],
+      person:{
+        id: 1
+      }
     },
     {
+      id: null,
       date: "2025-01-23",
       reserves: [
         { start: "08:00", duration: 30 },
         { start: "09:00", duration: 30 },
         { start: "16:00", duration: 30 },
       ],
+      person:{
+        id: 1
+      }
     },
     {
+      id: null,
       date: "2025-01-24",
       reserves: [
         { start: "10:00", duration: 30 },
         { start: "13:00", duration: 30 },
         { start: "15:00", duration: 30 },
       ],
+      person:{
+        id: 1
+      }
     },
     {
+      id: null,
       date: "2025-01-25",
       reserves: [
         { start: "09:00", duration: 30 },
         { start: "11:00", duration: 30 },
         { start: "14:30", duration: 30 },
       ],
+      person:{
+        id: 1
+      }
     },
     {
+      id: null,
       date: "2025-01-26",
       reserves: [
         { start: "08:30", duration: 30 },
         { start: "12:00", duration: 30 },
         { start: "15:30", duration: 30 },
       ],
+      person:{
+        id: 1
+      }
     },
     {
+      id: null,
       date: "2025-01-27",
       reserves: [
         { start: "10:00", duration: 30 },
         { start: "14:00", duration: 30 },
         { start: "16:30", duration: 30 },
       ],
+      person:{
+        id: 1
+      }
     },
     {
+      id: null,
       date: "2025-01-28",
       reserves: [
         { start: "09:30", duration: 30 },
         { start: "11:30", duration: 30 },
         { start: "13:00", duration: 30 },
       ],
+      person:{
+        id: 1
+      }
     },
     {
+      id: null,
       date: "2025-01-29",
       reserves: [
         { start: "08:00", duration: 30 },
@@ -120,14 +170,21 @@ const App = (props) => {
         { start: "10:30", duration: 30 },
         { start: "14:30", duration: 30 },
       ],
+      person:{
+        id: 1
+      }
     },
     {
+      id: null,
       date: "2025-01-31",
       reserves: [
         { start: "08:30", duration: 30 },
         { start: "11:00", duration: 30 },
         { start: "13:30", duration: 30 },
       ],
+      person:{
+        id: 1
+      }
     },
   ]);
   const [currentDate, setCurrentDate] = React.useState(dayjs(Date.now()))
@@ -320,6 +377,7 @@ const App = (props) => {
     "23:30",
   ];
 
+
   
   const getFormatDate = (date) => {
     const year = String(date.$d.getFullYear());
@@ -387,6 +445,7 @@ const App = (props) => {
 
   React.useEffect(() => {
     console.log(reserves);
+    
   }, [reserves]);
 
   React.useEffect(() => {
@@ -412,7 +471,7 @@ const App = (props) => {
   };
 
   const isReserved = (t1, t2) => {
-    if (reserves.length) {
+    if (reserves) {
       for (const { start, duration } of reserves) {
         const [startH, startM] = start.split(":").map(Number);
         const [endH, endM] = increaseTime(startH, startM, Number(duration));
@@ -432,24 +491,49 @@ const App = (props) => {
   };
 
 
-  
-
-  const CreateTimeButtons = () => {
-    const createTime = timeList.map((time, index) => {
-      const [hours, minutes] = time.split(":").map((el) => Number(el));
-      const newTime = increaseTime(hours, minutes, step);
-      return isReserved([hours, minutes], newTime) ? (
+  const CreateTimeBtns = (startTime, endTime, step) => {
+    const timeBtns = [];
+    let [currentHours, currentMinutes] = startTime.split(":").map(Number);
+    const [endHours, endMinutes] = endTime.split(":").map(Number);
+    while(currentHours < endHours || (currentHours === endHours && currentMinutes <endMinutes)){
+      let newTime = increaseTime(currentHours, currentMinutes, step)
+      let [newHours, newMinutes] = newTime
+      currentHours = newHours
+      currentMinutes = newMinutes
+      let time = currentHours + ":" + currentMinutes
+      
+      return isReserved([currentHours, currentMinutes], newTime) ? (
         <div className="reserved-div">{time}</div>
+        
       ) : (
-        /*написать логику на пересечение period и reserve*/
-        <div id={index} data-time={time} onMouseLeave={handleMouseLeave} onMouseEnter={handleMouseEnter} onClick={handleClick} 
+        
+        <div data-time={time} onMouseLeave={handleMouseLeave} onMouseEnter={handleMouseEnter} onClick={handleClick} 
         className={`div-time ${paintYellowDiv(time)} ${paintBlueDiv(time)}`}>
           {time}
         </div>
-      );
-    });
+      )
+      timeBtns.push(time)
+    }
 
-    return createTime;
+  }
+
+  const CreateTimeButtons = () => {
+    // const createTime = timeList.map((time, index) => {
+    //   const [hours, minutes] = time.split(":").map((el) => Number(el));
+    //   const newTime = increaseTime(hours, minutes, step);
+    //   return isReserved([hours, minutes], newTime) ? (
+    //     <div className="reserved-div">{time}</div>
+    //   ) : (
+        
+    //     <div id={index} data-time={time} onMouseLeave={handleMouseLeave} onMouseEnter={handleMouseEnter} onClick={handleClick} 
+    //     className={`div-time ${paintYellowDiv(time)} ${paintBlueDiv(time)}`}>
+    //       {time}
+    //     </div>
+    //   );
+    // });
+
+    // return createTime;
+    CreateTimeBtns("6:00", "23:00", step)
   };
 
   const BasicDatePicker = () => {
