@@ -492,17 +492,19 @@ const App = (props) => {
 
 
   const CreateTimeBtns = (startTime, endTime, step) => {
-    const timeBtns = [];
-    let index;
-    let [currentHours, currentMinutes] = startTime.split(":").map(Number);
-    const [endHours, endMinutes] = endTime.split(":").map(Number);
-    while(currentHours < endHours || (currentHours === endHours && currentMinutes <endMinutes)){
+    
+    let index = 0;
+    let [currentHours, currentMinutes] = startTime.split(":").map((el) => Number(el));
+    const [endHours, endMinutes] = endTime.split(":").map((el) => Number(el));
+    while(currentHours < endHours || (currentHours === endHours && currentMinutes < endMinutes)){
+      let timeBtns = [];
       index += 1
+      console.log(index)
       const newTime = increaseTime(currentHours, currentMinutes, step)
       const [newHours, newMinutes] = newTime
       currentHours = newHours
       currentMinutes = newMinutes
-      const time = currentHours + ":" + currentMinutes
+      const time = currentHours + ":" + currentMinutes                                                                                                                                                                                                                                                                    
       timeBtns.push(time)
       return isReserved([currentHours, currentMinutes], newTime) ? (
         <div className="reserved-div">{timeBtns[index]}</div>
