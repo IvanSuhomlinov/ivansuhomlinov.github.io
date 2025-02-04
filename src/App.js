@@ -9,227 +9,278 @@ import { formatMeridiem } from "@mui/x-date-pickers/internals";
 const App = (props) => {
   /* period.indexOf(time) >= 0 || period.length === 2 && (converter(time) > converter(period[0]) && converter(time) < converter(period[1])) ? "selected-div" : ""*/
   /*time === hovered || period.length === 1 && (converter(time) > Math.min(converter(period[0]), converter(hovered)) && converter(time) < Math.max(converter(period[0]), converter(hovered))) ? "hovered-div" : ""*/
+  const [reservedTime, setReservedTime] = React.useState([
+    {
+      reserves: [
+        {
+          id: "30013",
+          date: "2025-02-17",
+          time: {
+            start: "08:00",
+            duration: "30",
+          },
+          free: false,
+          service: "1",
+          person: {
+            id: "4937",
+            name: "Ческидов Александр Леонидович",
+          },
+        },
+
+        {
+          id: "30013",
+          date: "2025-02-17",
+          time: {
+            start: "09:30", 
+            duration: 30
+          },
+          free: false,
+          service: "1",
+          person: {
+            id: "4937",
+            name: "Ческидов Александр Леонидович",
+          },
+        },
+
+        {
+          id: "30013",
+          date: "2024-02-17",
+          time: {
+            start: "10:00",
+            duration: 30,
+          },
+          free: false,
+          service: "1",
+          person: {
+            id: "4937",
+            name: "Ческидов Александр Леонидович",
+          },
+        },
+
+        {
+          id: "30013",
+          date: "2025-02-17",
+          time: {
+            start: "11:00",
+            duration: 30 
+          },
+          free: false,
+          service: "1",
+          person: {
+            id: "4937",
+            name: "Ческидов Александр Леонидович",
+          },
+        }
+      ],
+    },
+      
+
+    // {
+    //   id: null,
+    //   date: "2025-02-18",
+    //   reserves: [
+    //     { start: "10:00", duration: 30 },
+    //     { start: "12:30", duration: 30 },
+    //     { start: "14:00", duration: 30 },
+    //     { start: "16:30", duration: 30 },
+    //   ],
+    //   person: {
+    //     id: 1,
+    //   },
+    // },
+    // {
+    //   id: null,
+    //   date: "2025-02-19",
+    //   reserves: [
+    //     { start: "09:00", duration: 30 },
+    //     { start: "13:30", duration: 30 },
+    //   ],
+    //   person: {
+    //     id: 1,
+    //   },
+    // },
+    // {
+    //   id: null,
+    //   date: "2025-02-20",
+    //   reserves: [
+    //     { start: "08:30", duration: 30 },
+    //     { start: "10:00", duration: 30 },
+    //     { start: "15:00", duration: 30 },
+    //   ],
+    //   person: {
+    //     id: 1,
+    //   },
+    // },
+    // {
+    //   id: null,
+    //   date: "2025-02-21",
+    //   reserves: [
+    //     { start: "11:30", duration: 30 },
+    //     { start: "13:00", duration: 30 },
+    //     { start: "14:30", duration: 30 },
+    //   ],
+    //   person: {
+    //     id: 1,
+    //   },
+    // },
+    // {
+    //   id: null,
+    //   date: "2025-02-22",
+    //   reserves: [
+    //     { start: "09:30", duration: 30 },
+    //     { start: "10:30", duration: 30 },
+    //     { start: "12:00", duration: 30 },
+    //     { start: "15:30", duration: 30 },
+    //   ],
+    //   person: {
+    //     id: 1,
+    //   },
+    // },
+    // {
+    //   id: null,
+    //   date: "2025-02-23",
+    //   reserves: [
+    //     { start: "08:00", duration: 30 },
+    //     { start: "09:00", duration: 30 },
+    //     { start: "16:00", duration: 30 },
+    //   ],
+    //   person: {
+    //     id: 1,
+    //   },
+    // },
+    // {
+    //   id: null,
+    //   date: "2025-02-24",
+    //   reserves: [
+    //     { start: "10:00", duration: 30 },
+    //     { start: "13:00", duration: 30 },
+    //     { start: "15:00", duration: 30 },
+    //   ],
+    //   person: {
+    //     id: 1,
+    //   },
+    // },
+    // {
+    //   id: null,
+    //   date: "2025-02-25",
+    //   reserves: [
+    //     { start: "09:00", duration: 30 },
+    //     { start: "11:00", duration: 30 },
+    //     { start: "14:30", duration: 30 },
+    //   ],
+    //   person: {
+    //     id: 1,
+    //   },
+    // },
+    // {
+    //   id: null,
+    //   date: "2025-02-26",
+    //   reserves: [
+    //     { start: "08:30", duration: 30 },
+    //     { start: "12:00", duration: 30 },
+    //     { start: "15:30", duration: 30 },
+    //   ],
+    //   person: {
+    //     id: 1,
+    //   },
+    // },
+    // {
+    //   id: null,
+    //   date: "2025-02-27",
+    //   reserves: [
+    //     { start: "10:00", duration: 30 },
+    //     { start: "14:00", duration: 30 },
+    //     { start: "16:30", duration: 30 },
+    //   ],
+    //   person: {
+    //     id: 1,
+    //   },
+    // },
+    // {
+    //   id: null,
+    //   date: "2025-02-28",
+    //   reserves: [
+    //     { start: "09:30", duration: 30 },
+    //     { start: "11:30", duration: 30 },
+    //     { start: "13:00", duration: 30 },
+    //   ],
+    //   person: {
+    //     id: 1,
+    //   },
+    // },
+    // {
+    //   id: null,
+    //   date: "2025-02-29",
+    //   reserves: [
+    //     { start: "08:00", duration: 30 },
+    //     { start: "09:00", duration: 30 },
+    //     { start: "10:30", duration: 30 },
+    //     { start: "14:30", duration: 30 },
+    //   ],
+    //   person: {
+    //     id: 1,
+    //   },
+    // },
+    // {
+    //   id: null,
+    //   date: "2025-02-31",
+    //   reserves: [
+    //     { start: "08:30", duration: 30 },
+    //     { start: "11:00", duration: 30 },
+    //     { start: "13:30", duration: 30 },
+    //   ],
+    //   person: {
+    //     id: 1,
+    //   },
+    // },
+  ]);
   const step = 30;
   const [period, setPeriod] = React.useState([]);
   const [selectedButton, setSelectedButton] = React.useState([]);
-  const [hovered, setHovered] = React.useState("")
+  const [hovered, setHovered] = React.useState("");
   const [reserves, setReserves] = React.useState([]);
-  const [reservedTime, setReservedTime] = React.useState([
-    {
-      id: null,
-      date: "2025-01-17",
-      reserves: [
-        { start: "08:00", duration: 30 },
-        { start: "09:30", duration: 30 },
-        { start: "11:00", duration: 30 },
-      ],
-      person:{
-        id: 1
-      }
-
-    },
-    {
-      id: null,
-      date: "2025-01-18",
-      reserves: [
-        { start: "10:00", duration: 30 },
-        { start: "12:30", duration: 30 },
-        { start: "14:00", duration: 30 },
-        { start: "16:30", duration: 30 },
-      ],
-      person:{
-        id: 1
-      }
-    },
-    {
-      id: null,
-      date: "2025-01-19",
-      reserves: [
-        { start: "09:00", duration: 30 },
-        { start: "13:30", duration: 30 },
-      ],
-      person:{
-        id: 1
-      }
-    },
-    {
-      id: null,
-      date: "2025-01-20",
-      reserves: [
-        { start: "08:30", duration: 30 },
-        { start: "10:00", duration: 30 },
-        { start: "15:00", duration: 30 },
-      ],
-      person:{
-        id: 1
-      }
-    },
-    {
-      id: null,
-      date: "2025-01-21",
-      reserves: [
-        { start: "11:30", duration: 30 },
-        { start: "13:00", duration: 30 },
-        { start: "14:30", duration: 30 },
-      ],
-      person:{
-        id: 1
-      }
-    },
-    {
-      id: null,
-      date: "2025-01-22",
-      reserves: [
-        { start: "09:30", duration: 30 },
-        { start: "10:30", duration: 30 },
-        { start: "12:00", duration: 30 },
-        { start: "15:30", duration: 30 },
-      ],
-      person:{
-        id: 1
-      }
-    },
-    {
-      id: null,
-      date: "2025-01-23",
-      reserves: [
-        { start: "08:00", duration: 30 },
-        { start: "09:00", duration: 30 },
-        { start: "16:00", duration: 30 },
-      ],
-      person:{
-        id: 1
-      }
-    },
-    {
-      id: null,
-      date: "2025-01-24",
-      reserves: [
-        { start: "10:00", duration: 30 },
-        { start: "13:00", duration: 30 },
-        { start: "15:00", duration: 30 },
-      ],
-      person:{
-        id: 1
-      }
-    },
-    {
-      id: null,
-      date: "2025-01-25",
-      reserves: [
-        { start: "09:00", duration: 30 },
-        { start: "11:00", duration: 30 },
-        { start: "14:30", duration: 30 },
-      ],
-      person:{
-        id: 1
-      }
-    },
-    {
-      id: null,
-      date: "2025-01-26",
-      reserves: [
-        { start: "08:30", duration: 30 },
-        { start: "12:00", duration: 30 },
-        { start: "15:30", duration: 30 },
-      ],
-      person:{
-        id: 1
-      }
-    },
-    {
-      id: null,
-      date: "2025-01-27",
-      reserves: [
-        { start: "10:00", duration: 30 },
-        { start: "14:00", duration: 30 },
-        { start: "16:30", duration: 30 },
-      ],
-      person:{
-        id: 1
-      }
-    },
-    {
-      id: null,
-      date: "2025-01-28",
-      reserves: [
-        { start: "09:30", duration: 30 },
-        { start: "11:30", duration: 30 },
-        { start: "13:00", duration: 30 },
-      ],
-      person:{
-        id: 1
-      }
-    },
-    {
-      id: null,
-      date: "2025-01-29",
-      reserves: [
-        { start: "08:00", duration: 30 },
-        { start: "09:00", duration: 30 },
-        { start: "10:30", duration: 30 },
-        { start: "14:30", duration: 30 },
-      ],
-      person:{
-        id: 1
-      }
-    },
-    {
-      id: null,
-      date: "2025-01-31",
-      reserves: [
-        { start: "08:30", duration: 30 },
-        { start: "11:00", duration: 30 },
-        { start: "13:30", duration: 30 },
-      ],
-      person:{
-        id: 1
-      }
-    },
-  ]);
-  const [currentDate, setCurrentDate] = React.useState(dayjs(Date.now()))
   
+  const [currentDate, setCurrentDate] = React.useState(dayjs(Date.now()));
+  const [currentUser, setCurrentUser] = React.useState([])
+  const [users, setUsers] = React.useState([
+    {
+      name: "Ческидов Александр Леонидович",
+      id: 4937,
+      logo: "/src/imgs/orange.jpg"
+    },
+    {
+      name: "Иванов Андрей Петрович",
+      id: 4938,
+      logo: "/src/imgs/kran.jpeg"
+    }
+  ])
 
   const handleMouseEnter = (e) => {
-    e.currentTarget.classList.add("hovered-div")
+    e.currentTarget.classList.add("hovered-div");
     const currentTime = e.currentTarget.dataset.time;
     if (period.length === 1) {
-
       const selectedTime = converter(currentTime);
-      const periodTime = converter(period[0])
-      const arraySelectTime = currentTime.split(":").map(el => Number(el))
-      const arrPeriodTime = period[0].split(":").map(el => Number(el))
+      const periodTime = converter(period[0]);
+      const arraySelectTime = currentTime.split(":").map((el) => Number(el));
+      const arrPeriodTime = period[0].split(":").map((el) => Number(el));
       if (selectedTime < periodTime) {
-        
-        
-        if(!isReserved(arraySelectTime, arrPeriodTime)){
-         
-          setHovered(currentTime)
+        if (!isReserved(arraySelectTime, arrPeriodTime)) {
+          setHovered(currentTime);
+        } else {
+          setHovered("");
         }
-        else{
-          setHovered("")
+      } else {
+        if (!isReserved(arrPeriodTime, arraySelectTime)) {
+          setHovered(currentTime);
+        } else {
+          setHovered("");
         }
-      } 
-      else {
-        
-        if(!isReserved(arrPeriodTime, arraySelectTime)){
-          
-          setHovered(currentTime)
-
-        }
-        else{
-          setHovered("")
-        }
-        
-        
       }
+    } else {
+      setHovered(e.currentTarget.dataset.time);
     }
-    else{
-      setHovered(e.currentTarget.dataset.time)
-    }
-    
-    
-  /*if(period.length === 1 || period.length === 2){
+
+    /*if(period.length === 1 || period.length === 2){
     if(e.currentTarget.className === "div-time selected-div"){
       e.currentTarget.style.background = "rgb(255, 255, 107)"
       
@@ -239,11 +290,11 @@ const App = (props) => {
         e.currentTarget.style.background = "aquamarine"
     }
   }*/
-}
+  };
 
   const handleMouseLeave = (e) => {
-    e.currentTarget.classList.remove("hovered-div")
-    setHovered("")
+    e.currentTarget.classList.remove("hovered-div");
+    setHovered("");
     /*if(e.currentTarget.className === "div-time selected-div"){
 
       e.currentTarget.style.background = "rgb(255, 255, 107)"
@@ -252,12 +303,11 @@ const App = (props) => {
       
       e.currentTarget.style.background = "white"
     }*/
-  }
-
+  };
 
   const handleClick = (event) => {
     const currentTime = event.currentTarget.dataset.time;
-    setSelectedButton([currentTime])
+    setSelectedButton([currentTime]);
     comparePeriod(currentTime);
   };
 
@@ -265,38 +315,28 @@ const App = (props) => {
     if (period.length === 0 || period.length === 2) {
       setPeriod([time]);
     }
-    
+
     if (period.length === 1) {
       const selectedTime = converter(time);
-      const periodTime = converter(period[0])
-      const arraySelectTime = time.split(":").map(el => Number(el))
-      const arrPeriodTime = period[0].split(":").map(el => Number(el))
+      const periodTime = converter(period[0]);
+      const arraySelectTime = time.split(":").map((el) => Number(el));
+      const arrPeriodTime = period[0].split(":").map((el) => Number(el));
       if (selectedTime < periodTime) {
-        
-        console.log("isReserved1: " + !isReserved(time, ...period))
-        if(!isReserved(arraySelectTime, arrPeriodTime)){
-          console.log("Вызываем setperiod1")
-          setPeriod(prev => [time, ...prev])
+        console.log("isReserved1: " + !isReserved(time, ...period));
+        if (!isReserved(arraySelectTime, arrPeriodTime)) {
+          console.log("Вызываем setperiod1");
+          setPeriod((prev) => [time, ...prev]);
+        } else {
+          setPeriod([time]);
         }
-        else{
-          setPeriod([time])
+      } else {
+        console.log("isReserved2: " + !isReserved(...period, time));
+        if (!isReserved(arrPeriodTime, arraySelectTime)) {
+          console.log("Вызываем setperiod2");
+          setPeriod((prev) => [...prev, time]);
+        } else {
+          setPeriod([time]);
         }
-        
-        
-      } 
-      else {
-        console.log("isReserved2: " + !isReserved(...period, time))
-        if(!isReserved(arrPeriodTime, arraySelectTime)){
-          console.log("Вызываем setperiod2")
-          setPeriod(prev => [...prev, time])
-
-        }
-
-        else{
-          setPeriod([time])
-        }
-        
-        
       }
     }
 
@@ -315,150 +355,98 @@ const App = (props) => {
       setPeriod(prev => [time, prev[1]])
     }
   }*/
- 
-}
-
-  const converter = (time) => {
-    if (!time) return
-    const [h,m] = time.split(":")
-    const min = Number(h) * 60;
-    return Number(min) + Number(m);
-    
   };
 
-  const timeList = [
-    "00:00",
-    "00:30",
-    "01:00",
-    "01:30",
-    "02:00",
-    "02:30",
-    "03:00",
-    "03:30",
-    "04:00",
-    "04:30",
-    "05:00",
-    "05:30",
-    "06:00",
-    "06:30",
-    "07:00",
-    "07:30",
-    "08:00",
-    "08:30",
-    "09:00",
-    "09:30",
-    "10:00",
-    "10:30",
-    "11:00",
-    "11:30",
-    "12:00",
-    "12:30",
-    "13:00",
-    "13:30",
-    "14:00",
-    "14:30",
-    "15:00",
-    "15:30",
-    "16:00",
-    "16:30",
-    "17:00",
-    "17:30",
-    "18:00",
-    "18:30",
-    "19:00",
-    "19:30",
-    "20:00",
-    "20:30",
-    "21:00",
-    "21:30",
-    "22:00",
-    "22:30",
-    "23:00",
-    "23:30",
-  ];
+  const converter = (time) => {
+    if (!time) return;
+    const [h, m] = time.split(":");
+    const min = Number(h) * 60;
+    return Number(min) + Number(m);
+  };
 
 
-  
   const getFormatDate = (date) => {
     const year = String(date.$d.getFullYear());
     const day = String(date.$d.getDate()).padStart(2, "0");
     const month = String(date.$d.getMonth() + 1).padStart(2, "0");
-    const formatDate = year + "-" + month + "-" + day
-
-    return formatDate
-  }
+    const formatDate = year + "-" + month + "-" + day;
+    return formatDate;
+  };
 
   const getReserves = () => {
-    console.log(currentDate)
-    if(currentDate){
-    
-    
-
-    setReserves(reservedTime.filter((day) => day.date === getFormatDate(currentDate))[0]?.reserves);
+    console.log(currentDate);
+    if (currentDate) {
+      setReserves(
+        reservedTime.filter((el) => el.reserves.date === getFormatDate(currentDate))[0]?.reserves
+      );
     }
-
   };
-
- 
-
 
   const getCurDate = (arg) => {
-    console.log(new Date(arg.$d).getTime())
-    setCurrentDate(dayjs(new Date(arg.$d).getTime()))
-    
+    console.log(new Date(arg.$d).getTime());
+    setCurrentDate(dayjs(new Date(arg.$d).getTime()));
   };
-  
-
 
   const paintYellowDiv = (time) => {
-    if(period.length === 2) console.log(isReserved(...period))
-    
-    if(period.indexOf(time) >= 0 || period.length === 2 && (converter(time) > converter(period[0]) && converter(time) < converter(period[1]))){
-       return "selected-div"
-     }
-     else{
-       return ""
-     }
-   }
+    if (period.length === 2) console.log(isReserved(...period));
+
+    if (
+      period.indexOf(time) >= 0 ||
+      (period.length === 2 &&
+        converter(time) > converter(period[0]) &&
+        converter(time) < converter(period[1]))
+    ) {
+      return "selected-div";
+    } else {
+      return "";
+    }
+  };
 
   const reserveTime = (e) => {
-    e.preventDefault()
-    const duration = period.length === 2 ? converter(period[1]) - converter(period[0]) + step : step
-    const reserve = {start: period[0], duration: duration}
-    setReservedTime((prev) => [...prev.filter(el => el.date != getFormatDate(currentDate)), {date: getFormatDate(currentDate), reserves:[...reserves, reserve]}])
-    setPeriod([])
-    console.log(`Вы уверены что хотите забронировать ${JSON.stringify(reserve)}?`)
-  }
+    e.preventDefault();
+    const duration =
+      period.length === 2
+        ? converter(period[1]) - converter(period[0]) + step
+        : step;
+    const reserve = { start: period[0], duration: duration };
+    setReservedTime((prev) => [
+      ...prev.filter((el) => el.date != getFormatDate(currentDate)),
+      { date: getFormatDate(currentDate), reserves: [...reserves, reserve] },
+    ]);
+    setPeriod([]);
+    console.log(
+      `Вы уверены что хотите забронировать ${JSON.stringify(reserve)}?`
+    );
+  };
 
-
-   const paintBlueDiv = (time) => {
-    
-    
-     if(time === hovered || period.length === 1 && (converter(time) > Math.min(converter(period[0]), converter(hovered)) && converter(time) < Math.max(converter(period[0]), converter(hovered)))){
-       return "hovered-div"
-     }
-     else{
-       return ""
-     }
-
-   }
+  const paintBlueDiv = (time) => {
+    if (
+      time === hovered ||
+      (period.length === 1 &&
+        converter(time) > Math.min(converter(period[0]), converter(hovered)) &&
+        converter(time) < Math.max(converter(period[0]), converter(hovered)))
+    ) {
+      return "hovered-div";
+    } else {
+      return "";
+    }
+  };
 
   React.useEffect(() => {
-    console.log(reserves);
-    
+    console.log("Резервированое время: " + reserves);
   }, [reserves]);
 
   React.useEffect(() => {
-    getReserves()
+    getReserves();
+    console.log(...reservedTime)
   }, [currentDate, reservedTime]);
 
   React.useEffect(() => {
     console.log("Период равен: " + period);
-    if(period.length === 2){
-    console.log("Период равен: " + period);
+    if (period.length === 2) {
+      console.log("Период равен: " + period);
     }
   }, [period]);
-
 
   const increaseTime = (h, m, step) => {
     h = Number(h) + Math.floor(step / 60);
@@ -490,35 +478,43 @@ const App = (props) => {
     return false;
   };
 
-
   const CreateTimeBtns = (startTime, endTime, step) => {
-    
+    let timeBtns = [];
     let index = 0;
-    let [currentHours, currentMinutes] = startTime.split(":").map((el) => Number(el));
+    
+    let [currentHours, currentMinutes] = String(startTime)
+      .split(":")
+      .map((el) => Number(el));
     const [endHours, endMinutes] = endTime.split(":").map((el) => Number(el));
-    while(currentHours < endHours || (currentHours === endHours && currentMinutes < endMinutes)){
-      let timeBtns = [];
-      index += 1
-      console.log(index)
-      const newTime = increaseTime(currentHours, currentMinutes, step)
-      const [newHours, newMinutes] = newTime
+    while (
+      currentHours < endHours ||
+      (currentHours === endHours && currentMinutes <= endMinutes)
+    ) {
+      index += 1;
+      const newTime = increaseTime(currentHours, currentMinutes, step);
+      const [newHours, newMinutes] = newTime;
+      
+      const time = String(currentHours).padStart(2,'0') + ":" + String(currentMinutes).padStart(2,'0');
+      const btn = isReserved([currentHours, currentMinutes], newTime) ? (
+        <div className="reserved-div">{timeBtns[index]}</div>
+      ) : (
+        <div
+          data-time={time}
+          onMouseLeave={handleMouseLeave}
+          onMouseEnter={handleMouseEnter}
+          onClick={handleClick}
+          className={`div-time ${paintYellowDiv(time)} ${paintBlueDiv(time)}`}
+        >
+          {time}
+        </div>
+      );
+      
+      timeBtns.push(btn);
       currentHours = newHours
       currentMinutes = newMinutes
-      const time = currentHours + ":" + currentMinutes                                                                                                                                                                                                                                                                    
-      timeBtns.push(time)
-      return isReserved([currentHours, currentMinutes], newTime) ? (
-        <div className="reserved-div">{timeBtns[index]}</div>
-        
-      ) : (
-        
-        <div data-time={timeBtns[index]} onMouseLeave={handleMouseLeave} onMouseEnter={handleMouseEnter} onClick={handleClick} 
-        className={`div-time ${paintYellowDiv(timeBtns[index])} ${paintBlueDiv(timeBtns[index])}`}>
-          {timeBtns[index]}
-        </div>
-      )
     }
-
-  }
+    return timeBtns;
+  };
 
   const CreateTimeButtons = () => {
     // const createTime = timeList.map((time, index) => {
@@ -527,8 +523,8 @@ const App = (props) => {
     //   return isReserved([hours, minutes], newTime) ? (
     //     <div className="reserved-div">{time}</div>
     //   ) : (
-        
-    //     <div id={index} data-time={time} onMouseLeave={handleMouseLeave} onMouseEnter={handleMouseEnter} onClick={handleClick} 
+
+    //     <div id={index} data-time={time} onMouseLeave={handleMouseLeave} onMouseEnter={handleMouseEnter} onClick={handleClick}
     //     className={`div-time ${paintYellowDiv(time)} ${paintBlueDiv(time)}`}>
     //       {time}
     //     </div>
@@ -536,7 +532,7 @@ const App = (props) => {
     // });
 
     // return createTime;
-    CreateTimeBtns("6:00", "23:00", step)
+    return CreateTimeBtns("06:00", "23:30", step);
   };
 
   const BasicDatePicker = () => {
