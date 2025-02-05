@@ -11,6 +11,7 @@ const App = (props) => {
   /*time === hovered || period.length === 1 && (converter(time) > Math.min(converter(period[0]), converter(hovered)) && converter(time) < Math.max(converter(period[0]), converter(hovered))) ? "hovered-div" : ""*/
   const [reservedTime, setReservedTime] = React.useState([
     {
+      date:"2025-02-17",
       reserves: [
         {
           id: "30013",
@@ -71,8 +72,9 @@ const App = (props) => {
             name: "Ческидов Александр Леонидович",
           },
         }
-      ],
-    },
+      ]
+        
+      }
       
 
     // {
@@ -366,10 +368,7 @@ const App = (props) => {
 
 
   const getFormatDate = (date) => {
-    const year = String(date.$d.getFullYear());
-    const day = String(date.$d.getDate()).padStart(2, "0");
-    const month = String(date.$d.getMonth() + 1).padStart(2, "0");
-    const formatDate = year + "-" + month + "-" + day;
+    const formatDate = date.format('YYYY-MM-DD')
     return formatDate;
   };
 
@@ -377,7 +376,7 @@ const App = (props) => {
     console.log(currentDate);
     if (currentDate) {
       setReserves(
-        reservedTime.filter((el) => el.reserves.date === getFormatDate(currentDate))[0]?.reserves
+        reservedTime.filter((el) => el.date === getFormatDate(currentDate))[0]?.reserves
       );
     }
   };
@@ -459,8 +458,13 @@ const App = (props) => {
   };
 
   const isReserved = (t1, t2) => {
+    
     if (reserves) {
-      for (const { start, duration } of reserves) {
+      for (const reserve of reserves) {
+
+        const {start, duration} = reserve.time
+        console.log(start, duration)
+        
         const [startH, startM] = start.split(":").map(Number);
         const [endH, endM] = increaseTime(startH, startM, Number(duration));
 
@@ -495,8 +499,9 @@ const App = (props) => {
       const [newHours, newMinutes] = newTime;
       
       const time = String(currentHours).padStart(2,'0') + ":" + String(currentMinutes).padStart(2,'0');
+      const endTime = String(newHours).padStart(2,'0') + ":" + String(newMinutes).padStart(2,'0');
       const btn = isReserved([currentHours, currentMinutes], newTime) ? (
-        <div className="reserved-div">{timeBtns[index]}</div>
+        <div className="reserved-div div-time">{time} - {endTime}</div>
       ) : (
         <div
           data-time={time}
@@ -505,7 +510,7 @@ const App = (props) => {
           onClick={handleClick}
           className={`div-time ${paintYellowDiv(time)} ${paintBlueDiv(time)}`}
         >
-          {time}
+          {time} - {endTime}
         </div>
       );
       

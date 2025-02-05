@@ -1,7 +1,7 @@
 .div-time{
     border: 1px solid #000000;
     border-radius: 20px;
-    width: 60px;
+    width: 120px;
     height: 25px;
     text-align: center;
     padding-top: 8px;
@@ -27,33 +27,15 @@
 .reserved-div{
     background-color: rgba(0, 0, 0, .3);
     cursor: not-allowed;
-    border: 1px solid #000000;
-    border-radius: 20px;
-    width: 60px;
-    height: 25px;
-    text-align: center;
-    padding-top: 8px;
 }
 
 .hovered-div{
     background-color: aquamarine;
-    border: 1px solid #000000;
-    border-radius: 20px;
-    width: 60px;
-    height: 25px;
-    text-align: center;
-    padding-top: 8px;
-    cursor: pointer;
+    
 }
 
 .selected-div{
     background-color: rgb(255, 255, 107);
-    border: 1px solid #000000;
-    border-radius: 20px;
-    width: 60px;
-    height: 25px;
-    text-align: center;
-    padding-top: 8px;
-    cursor: pointer;
+    
 }
 
