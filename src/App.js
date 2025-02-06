@@ -5,6 +5,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
 import { formatMeridiem } from "@mui/x-date-pickers/internals";
+import { renderTimeViewClock } from "@mui/x-date-pickers";
 
 const App = (props) => {
   /* period.indexOf(time) >= 0 || period.length === 2 && (converter(time) > converter(period[0]) && converter(time) < converter(period[1])) ? "selected-div" : ""*/
@@ -23,13 +24,13 @@ const App = (props) => {
           free: false,
           service: "1",
           person: {
-            id: "4937",
-            name: "Ческидов Александр Леонидович",
+            id: "4938",
+            name: "Иванов Андрей Петрович",
           },
         },
 
         {
-          id: "30013",
+          id: "09821",
           date: "2025-02-17",
           time: {
             start: "09:30", 
@@ -38,13 +39,13 @@ const App = (props) => {
           free: false,
           service: "1",
           person: {
-            id: "4937",
-            name: "Ческидов Александр Леонидович",
+            id: "4938",
+            name: "Иванов Андрей Петрович",
           },
         },
 
         {
-          id: "30013",
+          id: "31013",
           date: "2024-02-17",
           time: {
             start: "10:00",
@@ -59,7 +60,7 @@ const App = (props) => {
         },
 
         {
-          id: "30013",
+          id: "32333",
           date: "2025-02-17",
           time: {
             start: "11:00",
@@ -247,12 +248,12 @@ const App = (props) => {
   const [users, setUsers] = React.useState([
     {
       name: "Ческидов Александр Леонидович",
-      id: 4937,
+      id: "4937",
       logo: "https://avatars.mds.yandex.net/i?id=238b2b70a2e06e504bb39372d79b19a8_l-3598775-images-thumbs&n=13"
     },
     {
       name: "Иванов Андрей Петрович",
-      id: 4938,
+      id: "4938",
       logo: "https://i.pinimg.com/originals/82/ec/87/82ec8770fec12e698bd634de368cfa9a.jpg"
     }
   ])
@@ -458,12 +459,10 @@ const App = (props) => {
   };
 
   const isReserved = (t1, t2) => {
-    
     if (reserves) {
       for (const reserve of reserves) {
 
         const {start, duration} = reserve.time
-        console.log(start, duration)
         
         const [startH, startM] = start.split(":").map(Number);
         const [endH, endM] = increaseTime(startH, startM, Number(duration));
@@ -482,9 +481,20 @@ const App = (props) => {
     return false;
   };
 
+  const paintUserDiv = () => {
+    // currentUser?.person?.id === reserves?.person?.id ? "reserved-div div-time" : "current-userDiv div-time";
+    // if(currentUser.person.id === reserves.person.id){
+    //   return "reserved-div div-time"
+    // }
+    // else{
+    //   return "current-userDiv div-time"
+    // }
+
+    console.log(currentUser + reserves)
+  }
+
   const CreateTimeBtns = (startTime, endTime, step) => {
     let timeBtns = [];
-    let index = 0;
     
     let [currentHours, currentMinutes] = String(startTime)
       .split(":")
@@ -494,14 +504,13 @@ const App = (props) => {
       currentHours < endHours ||
       (currentHours === endHours && currentMinutes <= endMinutes)
     ) {
-      index += 1;
       const newTime = increaseTime(currentHours, currentMinutes, step);
       const [newHours, newMinutes] = newTime;
       
       const time = String(currentHours).padStart(2,'0') + ":" + String(currentMinutes).padStart(2,'0');
       const endTime = String(newHours).padStart(2,'0') + ":" + String(newMinutes).padStart(2,'0');
       const btn = isReserved([currentHours, currentMinutes], newTime) ? (
-        <div className="reserved-div div-time">{time} - {endTime}</div>
+        <div className={paintUserDiv()}>{time} - {endTime}</div>
       ) : (
         <div
           data-time={time}
@@ -550,6 +559,7 @@ const App = (props) => {
   }
   React.useEffect(() => {
     console.log(currentUser)
+    console.log(reserves)
   }, [changeUser]);
   
   const UserLogo = () => {

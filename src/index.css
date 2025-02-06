@@ -57,3 +57,7 @@
 .user-div{
     display: flex;
 }
+
+.current-userDiv{
+    background-color: rgb(65, 251, 65);
+}
