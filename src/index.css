@@ -39,3 +39,21 @@
     
 }
 
+.user-logo{
+    height: 30px;
+    width: 30px;
+    border-radius: 50%;
+    margin: 5px;
+}
+
+.dropdown{
+    width: 200px;
+    height: 30px;
+    background-color: antiquewhite;
+    border-radius: 20px;
+    margin: 5px;
+}
+
+.user-div{
+    display: flex;
+}

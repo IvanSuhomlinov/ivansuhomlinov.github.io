@@ -248,12 +248,12 @@ const App = (props) => {
     {
       name: "Ческидов Александр Леонидович",
       id: 4937,
-      logo: "/src/imgs/orange.jpg"
+      logo: "https://avatars.mds.yandex.net/i?id=238b2b70a2e06e504bb39372d79b19a8_l-3598775-images-thumbs&n=13"
     },
     {
       name: "Иванов Андрей Петрович",
       id: 4938,
-      logo: "/src/imgs/kran.jpeg"
+      logo: "https://i.pinimg.com/originals/82/ec/87/82ec8770fec12e698bd634de368cfa9a.jpg"
     }
   ])
 
@@ -540,6 +540,37 @@ const App = (props) => {
     return CreateTimeBtns("06:00", "23:30", step);
   };
 
+  
+
+  const changeUser = (event) => {
+    setCurrentUser(
+      users.filter((el) => el.name === event.currentTarget.value)[0]
+    )
+   
+  }
+  React.useEffect(() => {
+    console.log(currentUser)
+  }, [changeUser]);
+  
+  const UserLogo = () => {
+    return(
+      <div>
+        <img className="user-logo" src={currentUser.logo}></img>
+      </div>
+    )
+  }
+
+  const UserDropdown = () => {
+    return(
+      <div>
+          <select className="dropdown" onChange={changeUser} id="users">
+            <option value="">{currentUser.name}</option>
+            {users.map((e, idx) => <option value={e.name} key={idx}>{e.name}</option>)}
+          </select>
+        </div>
+    )
+  }
+
   const BasicDatePicker = () => {
     return (
       <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -558,6 +589,11 @@ const App = (props) => {
 
   return (
     <div>
+      <div className="user-div">
+      <UserLogo />
+      <UserDropdown />
+      </div>
+      
       <BasicDatePicker />
       <div className="flex-div">
         <CreateTimeButtons />
