@@ -482,15 +482,18 @@ const App = (props) => {
   };
 
   const paintUserDiv = () => {
-    // currentUser?.person?.id === reserves?.person?.id ? "reserved-div div-time" : "current-userDiv div-time";
-    // if(currentUser.person.id === reserves.person.id){
-    //   return "reserved-div div-time"
-    // }
-    // else{
-    //   return "current-userDiv div-time"
-    // }
+    // currentUser?.id === reserves?.person?.id ? "reserved-div div-time" : "current-userDiv div-time";
+    for(let i = 0; i < reserves.length; i++){
+     if(currentUser.id === reserves[i].person.id){
+      return "reserved-div"
+    }
+      else{
+      return "current-userDiv"
+    }
+  }
+  
 
-    console.log(currentUser + reserves)
+    
   }
 
   const CreateTimeBtns = (startTime, endTime, step) => {
@@ -504,13 +507,14 @@ const App = (props) => {
       currentHours < endHours ||
       (currentHours === endHours && currentMinutes <= endMinutes)
     ) {
+      
       const newTime = increaseTime(currentHours, currentMinutes, step);
       const [newHours, newMinutes] = newTime;
       
       const time = String(currentHours).padStart(2,'0') + ":" + String(currentMinutes).padStart(2,'0');
       const endTime = String(newHours).padStart(2,'0') + ":" + String(newMinutes).padStart(2,'0');
       const btn = isReserved([currentHours, currentMinutes], newTime) ? (
-        <div className={paintUserDiv()}>{time} - {endTime}</div>
+        <div className={`div-time ${paintUserDiv}`}>{time} - {endTime}</div>
       ) : (
         <div
           data-time={time}
