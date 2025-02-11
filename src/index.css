@@ -1,4 +1,4 @@
-.div-time{
+.btn{
     border: 1px solid #000000;
     border-radius: 20px;
     width: 120px;
@@ -7,6 +7,10 @@
     padding-top: 8px;
     cursor: pointer;
     transition: 0.2s;
+}
+.current-userDiv{
+    cursor: not-allowed;
+    
 }
 
 .div-time:hover{
@@ -58,6 +62,24 @@
     display: flex;
 }
 
-.current-userDiv{
+.current-reserve{
     background-color: rgb(65, 251, 65);
+}
+
+.delete-button{
+    border-radius: 15px;
+    border-width: 1px;
+}
+
+.delete-button:hover{
+    background-color: #ff000056;
+    cursor: pointer;
+}
+
+.book-btn{
+    border-radius: 15px;
+}
+.book-btn:hover{
+    background-color: aquamarine;
+    cursor: pointer;
 }

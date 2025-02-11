@@ -10,241 +10,20 @@ import { renderTimeViewClock } from "@mui/x-date-pickers";
 const App = (props) => {
   /* period.indexOf(time) >= 0 || period.length === 2 && (converter(time) > converter(period[0]) && converter(time) < converter(period[1])) ? "selected-div" : ""*/
   /*time === hovered || period.length === 1 && (converter(time) > Math.min(converter(period[0]), converter(hovered)) && converter(time) < Math.max(converter(period[0]), converter(hovered))) ? "hovered-div" : ""*/
-  const [reservedTime, setReservedTime] = React.useState([
-    {
-      date:"2025-02-17",
-      reserves: [
-        {
-          id: "30013",
-          date: "2025-02-17",
-          time: {
-            start: "08:00",
-            duration: "30",
-          },
-          free: false,
-          service: "1",
-          person: {
-            id: "4938",
-            name: "Иванов Андрей Петрович",
-          },
-        },
-
-        {
-          id: "09821",
-          date: "2025-02-17",
-          time: {
-            start: "09:30", 
-            duration: 30
-          },
-          free: false,
-          service: "1",
-          person: {
-            id: "4938",
-            name: "Иванов Андрей Петрович",
-          },
-        },
-
-        {
-          id: "31013",
-          date: "2024-02-17",
-          time: {
-            start: "10:00",
-            duration: 30,
-          },
-          free: false,
-          service: "1",
-          person: {
-            id: "4937",
-            name: "Ческидов Александр Леонидович",
-          },
-        },
-
-        {
-          id: "32333",
-          date: "2025-02-17",
-          time: {
-            start: "11:00",
-            duration: 30 
-          },
-          free: false,
-          service: "1",
-          person: {
-            id: "4937",
-            name: "Ческидов Александр Леонидович",
-          },
-        }
-      ]
-        
-      }
-      
-
-    // {
-    //   id: null,
-    //   date: "2025-02-18",
-    //   reserves: [
-    //     { start: "10:00", duration: 30 },
-    //     { start: "12:30", duration: 30 },
-    //     { start: "14:00", duration: 30 },
-    //     { start: "16:30", duration: 30 },
-    //   ],
-    //   person: {
-    //     id: 1,
-    //   },
-    // },
-    // {
-    //   id: null,
-    //   date: "2025-02-19",
-    //   reserves: [
-    //     { start: "09:00", duration: 30 },
-    //     { start: "13:30", duration: 30 },
-    //   ],
-    //   person: {
-    //     id: 1,
-    //   },
-    // },
-    // {
-    //   id: null,
-    //   date: "2025-02-20",
-    //   reserves: [
-    //     { start: "08:30", duration: 30 },
-    //     { start: "10:00", duration: 30 },
-    //     { start: "15:00", duration: 30 },
-    //   ],
-    //   person: {
-    //     id: 1,
-    //   },
-    // },
-    // {
-    //   id: null,
-    //   date: "2025-02-21",
-    //   reserves: [
-    //     { start: "11:30", duration: 30 },
-    //     { start: "13:00", duration: 30 },
-    //     { start: "14:30", duration: 30 },
-    //   ],
-    //   person: {
-    //     id: 1,
-    //   },
-    // },
-    // {
-    //   id: null,
-    //   date: "2025-02-22",
-    //   reserves: [
-    //     { start: "09:30", duration: 30 },
-    //     { start: "10:30", duration: 30 },
-    //     { start: "12:00", duration: 30 },
-    //     { start: "15:30", duration: 30 },
-    //   ],
-    //   person: {
-    //     id: 1,
-    //   },
-    // },
-    // {
-    //   id: null,
-    //   date: "2025-02-23",
-    //   reserves: [
-    //     { start: "08:00", duration: 30 },
-    //     { start: "09:00", duration: 30 },
-    //     { start: "16:00", duration: 30 },
-    //   ],
-    //   person: {
-    //     id: 1,
-    //   },
-    // },
-    // {
-    //   id: null,
-    //   date: "2025-02-24",
-    //   reserves: [
-    //     { start: "10:00", duration: 30 },
-    //     { start: "13:00", duration: 30 },
-    //     { start: "15:00", duration: 30 },
-    //   ],
-    //   person: {
-    //     id: 1,
-    //   },
-    // },
-    // {
-    //   id: null,
-    //   date: "2025-02-25",
-    //   reserves: [
-    //     { start: "09:00", duration: 30 },
-    //     { start: "11:00", duration: 30 },
-    //     { start: "14:30", duration: 30 },
-    //   ],
-    //   person: {
-    //     id: 1,
-    //   },
-    // },
-    // {
-    //   id: null,
-    //   date: "2025-02-26",
-    //   reserves: [
-    //     { start: "08:30", duration: 30 },
-    //     { start: "12:00", duration: 30 },
-    //     { start: "15:30", duration: 30 },
-    //   ],
-    //   person: {
-    //     id: 1,
-    //   },
-    // },
-    // {
-    //   id: null,
-    //   date: "2025-02-27",
-    //   reserves: [
-    //     { start: "10:00", duration: 30 },
-    //     { start: "14:00", duration: 30 },
-    //     { start: "16:30", duration: 30 },
-    //   ],
-    //   person: {
-    //     id: 1,
-    //   },
-    // },
-    // {
-    //   id: null,
-    //   date: "2025-02-28",
-    //   reserves: [
-    //     { start: "09:30", duration: 30 },
-    //     { start: "11:30", duration: 30 },
-    //     { start: "13:00", duration: 30 },
-    //   ],
-    //   person: {
-    //     id: 1,
-    //   },
-    // },
-    // {
-    //   id: null,
-    //   date: "2025-02-29",
-    //   reserves: [
-    //     { start: "08:00", duration: 30 },
-    //     { start: "09:00", duration: 30 },
-    //     { start: "10:30", duration: 30 },
-    //     { start: "14:30", duration: 30 },
-    //   ],
-    //   person: {
-    //     id: 1,
-    //   },
-    // },
-    // {
-    //   id: null,
-    //   date: "2025-02-31",
-    //   reserves: [
-    //     { start: "08:30", duration: 30 },
-    //     { start: "11:00", duration: 30 },
-    //     { start: "13:30", duration: 30 },
-    //   ],
-    //   person: {
-    //     id: 1,
-    //   },
-    // },
-  ]);
+  
   const step = 30;
+  const settings = {
+    classes: {
+      btn: {
+        default: props.customClasses?.btn?.default || "div-time",
+        reserve: props.customClasses?.btn?.reserved || "reserved-div",
+      }
+    }
+  }
   const [period, setPeriod] = React.useState([]);
   const [selectedButton, setSelectedButton] = React.useState([]);
   const [hovered, setHovered] = React.useState("");
   const [reserves, setReserves] = React.useState([]);
-  
-  const [currentDate, setCurrentDate] = React.useState(dayjs(Date.now()));
-  const [currentUser, setCurrentUser] = React.useState([])
   const [users, setUsers] = React.useState([
     {
       name: "Ческидов Александр Леонидович",
@@ -253,12 +32,19 @@ const App = (props) => {
     },
     {
       name: "Иванов Андрей Петрович",
-      id: "4938",
+      id: "78",
       logo: "https://i.pinimg.com/originals/82/ec/87/82ec8770fec12e698bd634de368cfa9a.jpg"
     }
   ])
+  const [currentDate, setCurrentDate] = React.useState(dayjs(Date.now()));
+  const [currentUserId, setCurrentUserId] = React.useState(0)
+  const [currentUser, setCurrentUser] = React.useState(users[currentUserId])
+
+  
 
   const handleMouseEnter = (e) => {
+    e.preventDefault()
+    e.stopPropagation()
     e.currentTarget.classList.add("hovered-div");
     const currentTime = e.currentTarget.dataset.time;
     if (period.length === 1) {
@@ -267,13 +53,14 @@ const App = (props) => {
       const arraySelectTime = currentTime.split(":").map((el) => Number(el));
       const arrPeriodTime = period[0].split(":").map((el) => Number(el));
       if (selectedTime < periodTime) {
-        if (!isReserved(arraySelectTime, arrPeriodTime)) {
+        if (!isReserved(arraySelectTime, arrPeriodTime).result) {
           setHovered(currentTime);
         } else {
           setHovered("");
         }
       } else {
-        if (!isReserved(arrPeriodTime, arraySelectTime)) {
+        if (!isReserved(arrPeriodTime, arraySelectTime).result
+      ) {
           setHovered(currentTime);
         } else {
           setHovered("");
@@ -325,17 +112,15 @@ const App = (props) => {
       const arraySelectTime = time.split(":").map((el) => Number(el));
       const arrPeriodTime = period[0].split(":").map((el) => Number(el));
       if (selectedTime < periodTime) {
-        console.log("isReserved1: " + !isReserved(time, ...period));
-        if (!isReserved(arraySelectTime, arrPeriodTime)) {
-          console.log("Вызываем setperiod1");
+        
+        if (!isReserved(arraySelectTime, arrPeriodTime).result) {
           setPeriod((prev) => [time, ...prev]);
         } else {
           setPeriod([time]);
         }
       } else {
-        console.log("isReserved2: " + !isReserved(...period, time));
-        if (!isReserved(arrPeriodTime, arraySelectTime)) {
-          console.log("Вызываем setperiod2");
+        
+        if (!isReserved(arrPeriodTime, arraySelectTime).result) {
           setPeriod((prev) => [...prev, time]);
         } else {
           setPeriod([time]);
@@ -373,14 +158,75 @@ const App = (props) => {
     return formatDate;
   };
 
-  const getReserves = () => {
+  const getReserves = async () => {
     console.log(currentDate);
-    if (currentDate) {
-      setReserves(
-        reservedTime.filter((el) => el.date === getFormatDate(currentDate))[0]?.reserves
-      );
-    }
+    const data = await fetch(`http://localhost:8080/https://molot.papillon.ru/rty/wht/reserv/get.php?dates=[${getFormatDate(currentDate)}]&box=1`,{
+   headers: {
+    'Content-Type': 'application/json',
+    'X-Requested-With': 'XMLHttpRequest', 
+  }, 
+  }).then((data) => data.json()).then((data) => setReserves(
+    data[0]?.intervals
+    // reservedTime.filter((el) => el.date === getFormatDate(currentDate))[0]?.reserves
+  ))
+  // console.log(data)  
+  // if (currentDate) {
+      
+  //   }
   };
+
+  const deleteReserve = async (e, currentReserve) => {
+    e.preventDefault()
+    const reserve = {
+      ...currentReserve,
+      free: true  
+    }
+    
+      
+      await fetch(`http://localhost:8080/https://molot.papillon.ru/rty/wht/reserv/set.php?box=1`,
+        {
+          method: "POST",
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest', 
+          }, 
+          body: JSON.stringify(reserve)
+        }
+      ).then(data => console.log(data))
+      await getReserves()
+      console.log(reserve)
+  }
+
+  const addReserve = async () => {
+
+    const duration =
+      period.length === 2
+        ? converter(period[1]) - converter(period[0]) + step
+        : step
+
+    
+    const reserve = {
+      id: null,
+      date: getFormatDate(currentDate),
+      time: { start: period[0], duration: duration },
+      free: false,
+      person: {
+        id: currentUser.id,
+      },
+    }
+
+    
+    await fetch(`http://localhost:8080/https://molot.papillon.ru/rty/wht/reserv/set.php?box=1`,
+      {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Requested-With': 'XMLHttpRequest', 
+        }, 
+        body: JSON.stringify(reserve)
+      }
+    )
+  }
 
   const getCurDate = (arg) => {
     console.log(new Date(arg.$d).getTime());
@@ -388,7 +234,7 @@ const App = (props) => {
   };
 
   const paintYellowDiv = (time) => {
-    if (period.length === 2) console.log(isReserved(...period));
+    
 
     if (
       period.indexOf(time) >= 0 ||
@@ -402,21 +248,12 @@ const App = (props) => {
     }
   };
 
-  const reserveTime = (e) => {
+  const reserveTime = async (e) => {
     e.preventDefault();
-    const duration =
-      period.length === 2
-        ? converter(period[1]) - converter(period[0]) + step
-        : step;
-    const reserve = { start: period[0], duration: duration };
-    setReservedTime((prev) => [
-      ...prev.filter((el) => el.date != getFormatDate(currentDate)),
-      { date: getFormatDate(currentDate), reserves: [...reserves, reserve] },
-    ]);
+    await addReserve();
     setPeriod([]);
-    console.log(
-      `Вы уверены что хотите забронировать ${JSON.stringify(reserve)}?`
-    );
+    await getReserves();
+    
   };
 
   const paintBlueDiv = (time) => {
@@ -438,8 +275,7 @@ const App = (props) => {
 
   React.useEffect(() => {
     getReserves();
-    console.log(...reservedTime)
-  }, [currentDate, reservedTime]);
+  }, [currentDate]);
 
   React.useEffect(() => {
     console.log("Период равен: " + period);
@@ -447,6 +283,10 @@ const App = (props) => {
       console.log("Период равен: " + period);
     }
   }, [period]);
+
+  React.useEffect(() => {
+    console.log(currentUser)
+  }, [currentUser]);
 
   const increaseTime = (h, m, step) => {
     h = Number(h) + Math.floor(step / 60);
@@ -475,26 +315,29 @@ const App = (props) => {
         ) {
           continue;
         }
-        return true;
+        return {
+          result: true,
+          isCurrentUser: reserve.person.id === currentUser.id
+        };
       }
     }
-    return false;
+    return {
+      result: false
+    }
   };
 
-  const paintUserDiv = () => {
+  const paintUserDiv = (isCurrentUser) => {
     // currentUser?.id === reserves?.person?.id ? "reserved-div div-time" : "current-userDiv div-time";
-    for(let i = 0; i < reserves.length; i++){
-     if(currentUser.id === reserves[i].person.id){
-      return "reserved-div"
-    }
-      else{
-      return "current-userDiv"
-    }
+    // for(let i = 0; i < reserves.length; i++){
+    //  if(currentUser.id === reserves[i].person.id){
+    //   return "current-userDiv"
+    // }
+    //   else{
+    //   return "reserved-div"
+    // }
+    return isCurrentUser ? "btn--current-reserve" : "btn--reserve"
   }
   
-
-    
-  }
 
   const CreateTimeBtns = (startTime, endTime, step) => {
     let timeBtns = [];
@@ -513,15 +356,16 @@ const App = (props) => {
       
       const time = String(currentHours).padStart(2,'0') + ":" + String(currentMinutes).padStart(2,'0');
       const endTime = String(newHours).padStart(2,'0') + ":" + String(newMinutes).padStart(2,'0');
-      const btn = isReserved([currentHours, currentMinutes], newTime) ? (
-        <div className={`div-time ${paintUserDiv}`}>{time} - {endTime}</div>
+      const reserved = isReserved([currentHours, currentMinutes], newTime)
+      const btn = reserved.result ? (
+        <div className={`${settings.classes.btn.reserve} ${paintUserDiv(reserved.isCurrentUser)}`}>{time} - {endTime}</div>
       ) : (
         <div
           data-time={time}
           onMouseLeave={handleMouseLeave}
           onMouseEnter={handleMouseEnter}
           onClick={handleClick}
-          className={`div-time ${paintYellowDiv(time)} ${paintBlueDiv(time)}`}
+          className={`${settings.classes.btn.default} ${paintYellowDiv(time)} ${paintBlueDiv(time)}`}
         >
           {time} - {endTime}
         </div>
@@ -556,30 +400,46 @@ const App = (props) => {
   
 
   const changeUser = (event) => {
+    
+    const id = event.currentTarget.value
+    setCurrentUserId(id)
     setCurrentUser(
-      users.filter((el) => el.name === event.currentTarget.value)[0]
+      users[id]
     )
-   
   }
+
   React.useEffect(() => {
-    console.log(currentUser)
+    
     console.log(reserves)
   }, [changeUser]);
-  
-  const UserLogo = () => {
+
+  const UserReserveList = (props) => {
     return(
       <div>
-        <img className="user-logo" src={currentUser.logo}></img>
+        <ul className="user-list">
+          {props.reserves?.map((el) => <li>{el.name}{el.date},{" " + el.time.start}<button className="delete-button" onClick={(event) => deleteReserve(event, el)}>Удалить резерв</button></li>)}
+        </ul>
+      </div>
+    )
+  }
+  
+  const UserLogo = (props) => {
+    return(
+      <div>
+        <img className="user-logo" src={props.logo}></img>
       </div>
     )
   }
 
-  const UserDropdown = () => {
+  const UserDropdown = (props) => {
     return(
       <div>
-          <select className="dropdown" onChange={changeUser} id="users">
-            <option value="">{currentUser.name}</option>
-            {users.map((e, idx) => <option value={e.name} key={idx}>{e.name}</option>)}
+          <select name="select-user" className="dropdown" 
+          onChange={props.changeUser} 
+          // value={currentUser.name}
+          value={props.id}
+          id="users">
+            {props.users.map((e, idx) => <option value={idx} key={idx}>{e.name}</option>)}
           </select>
         </div>
     )
@@ -590,6 +450,7 @@ const App = (props) => {
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <DemoContainer components={["DatePicker"]}>
           <DatePicker
+            style={{width: "max-content"}}
             label="Введите дату"
             format="DD.MM.YYYY"
             /*defaultValue={dayjs(Date.now())}*/
@@ -604,15 +465,17 @@ const App = (props) => {
   return (
     <div>
       <div className="user-div">
-      <UserLogo />
-      <UserDropdown />
+      <UserLogo logo={currentUser.logo} />
+      <UserDropdown users={users} changeUser={changeUser} id={currentUserId}/>
       </div>
       
       <BasicDatePicker />
       <div className="flex-div">
         <CreateTimeButtons />
-        <button onClick={reserveTime}>Забронировать</button>
+        <button className="book-btn" onClick={reserveTime}>Забронировать</button>
+        {/* <button onClick={deleteReserve}>Удалить</button> */}
       </div>
+      <UserReserveList reserves={reserves?.filter((reserve) => reserve.person.id === currentUser.id )} />
     </div>
   );
 };
