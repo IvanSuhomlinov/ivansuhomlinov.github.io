@@ -15,13 +15,16 @@ const App = (props) => {
   const settings = {
     classes: {
       btn: {
-        default: props.customClasses?.btn?.default || "div-time",
-        reserve: props.customClasses?.btn?.reserved || "reserved-div",
+        default: props.customClasses?.btn?.default || "btn",
+        reserve: props.customClasses?.btn?.reserved || "btn--reserved",
+        currentReserve: props.customClasses?.btn.currentReserve || "btn--current-reserve",
+        hovered: props.customClasses?.btn.hovered || "btn--hovered",
+        selected: props.customClasses?.btn.seleted || "btn--selected"
       }
     }
   }
   const [period, setPeriod] = React.useState([]);
-  const [selectedButton, setSelectedButton] = React.useState([]);
+  // const [selectedButton, setSelectedButton] = React.useState([]);
   const [hovered, setHovered] = React.useState("");
   const [reserves, setReserves] = React.useState([]);
   const [users, setUsers] = React.useState([
@@ -83,7 +86,7 @@ const App = (props) => {
   };
 
   const handleMouseLeave = (e) => {
-    e.currentTarget.classList.remove("hovered-div");
+    e.currentTarget.classList.remove(settings.classes.btn.hovered);
     setHovered("");
     /*if(e.currentTarget.className === "div-time selected-div"){
 
@@ -97,7 +100,7 @@ const App = (props) => {
 
   const handleClick = (event) => {
     const currentTime = event.currentTarget.dataset.time;
-    setSelectedButton([currentTime]);
+    // setSelectedButton([currentTime]);
     comparePeriod(currentTime);
   };
 
@@ -160,7 +163,7 @@ const App = (props) => {
 
   const getReserves = async () => {
     console.log(currentDate);
-    const data = await fetch(`http://localhost:8080/https://molot.papillon.ru/rty/wht/reserv/get.php?dates=[${getFormatDate(currentDate)}]&box=1`,{
+    await fetch(`http://localhost:8080/https://molot.papillon.ru/rty/wht/reserv/get.php?dates=[${getFormatDate(currentDate)}]&box=1`,{
    headers: {
     'Content-Type': 'application/json',
     'X-Requested-With': 'XMLHttpRequest', 
@@ -235,14 +238,14 @@ const App = (props) => {
 
   const paintYellowDiv = (time) => {
     
-
-    if (
+    if ( 
       period.indexOf(time) >= 0 ||
       (period.length === 2 &&
         converter(time) > converter(period[0]) &&
         converter(time) < converter(period[1]))
+
     ) {
-      return "selected-div";
+      return settings.classes.btn.selected;
     } else {
       return "";
     }
@@ -263,7 +266,7 @@ const App = (props) => {
         converter(time) > Math.min(converter(period[0]), converter(hovered)) &&
         converter(time) < Math.max(converter(period[0]), converter(hovered)))
     ) {
-      return "hovered-div";
+      return settings.classes.btn.hovered;
     } else {
       return "";
     }
@@ -335,7 +338,7 @@ const App = (props) => {
     //   else{
     //   return "reserved-div"
     // }
-    return isCurrentUser ? "btn--current-reserve" : "btn--reserve"
+    return isCurrentUser ? settings.classes.btn.currentReserve : settings.classes.btn.reserve
   }
   
 
@@ -358,7 +361,7 @@ const App = (props) => {
       const endTime = String(newHours).padStart(2,'0') + ":" + String(newMinutes).padStart(2,'0');
       const reserved = isReserved([currentHours, currentMinutes], newTime)
       const btn = reserved.result ? (
-        <div className={`${settings.classes.btn.reserve} ${paintUserDiv(reserved.isCurrentUser)}`}>{time} - {endTime}</div>
+        <div className={`${settings.classes.btn.default} ${paintUserDiv(reserved.isCurrentUser)}`}>{time} - {endTime}</div>
       ) : (
         <div
           data-time={time}

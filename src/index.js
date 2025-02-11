@@ -5,8 +5,11 @@ import App from './App';
 
 const customClasses = {
   btn: {
-    default: "div-time",
-    reserved: "reserved-div",
+    default: "btn",
+    reserved: "btn--reserved",
+    currentReserve:"btn--current-reserve",
+    hovered:  "btn--hovered",
+    selected: "btn--selected"
   }
 }
 
