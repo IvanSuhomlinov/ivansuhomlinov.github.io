@@ -9,7 +9,16 @@ const customClasses = {
     reserved: "btn--reserved",
     currentReserve:"btn--current-reserve",
     hovered:  "btn--hovered",
-    selected: "btn--selected"
+    selected: "btn--selected",
+    flexDiv: "btn--flex-div",
+    book: "btn--book",
+    delete: "btn--delete"
+  }
+  ,
+  dropdown: {
+    userList: "dropdown--user-list",
+    userDiv: "dropdown--user-div",
+    logo:  "dropdown--user-logo"
   }
 }
 
