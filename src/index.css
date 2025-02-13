@@ -94,7 +94,20 @@
     border: 1px solid grey;
     padding: 0;
     position: absolute;
-    border-radius: 20px;
+    border-radius: 2px;
+    width: 100px;
+}
+
+.context__item{
+    width: calc(100%-20px);
+    cursor: pointer;
+    list-style: none;
+    margin: 0;
+    padding: 10px 20px;
+}
+
+.context__item:hover{
+    background-color: #b6eef8;
 }
 
 

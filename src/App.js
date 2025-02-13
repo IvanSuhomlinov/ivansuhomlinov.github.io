@@ -52,16 +52,26 @@ const App = (props) => {
   const [currentUserId, setCurrentUserId] = React.useState(0);
   const [currentUser, setCurrentUser] = React.useState(users[currentUserId]);
   const [isVisible, setIsVisible] = React.useState(false);
-  const [position, setPosition] = React.useState({ x: 0, y: 0 })
+  const [position, setPosition] = React.useState({ x: 0, y: 0 });
+  const [reserveForDel, setReserveForDel] = React.useState({})
+
   
-  const handleContextMenuClick = () => {
-    setIsVisible(false)
+  const contextMenuClick = (e, action = "default") => {
+    e.stopPropagation();
+    switch(action){
+    case "delete" :   deleteReserve(e, reserveForDel);
+    default: console.log("default")
+    }
   }
 
-  const handleContextMenu = (e) => {
+  const handleContextMenu = (e, isCurrentUser) => {
+    if(isCurrentUser){
     e.preventDefault();
+    const id = e.currentTarget.dataset.id
+    setReserveForDel(...reserves.filter((el) => el.id === id))
     setPosition({x : e.clientX, y:e.clientY});
-    setIsVisible(true)
+    setIsVisible(true);
+    }
 
     
   }
@@ -354,7 +364,9 @@ const App = (props) => {
         }
         return {
           result: true,
-          isCurrentUser: reserve.person.id === currentUser.id
+          isCurrentUser: reserve.person.id === currentUser.id,
+          reserveId: reserve.id,
+          personId: reserve.person.id,
         };
       }
     }
@@ -395,7 +407,7 @@ const App = (props) => {
       const endTime = String(newHours).padStart(2,'0') + ":" + String(newMinutes).padStart(2,'0');
       const reserved = isReserved([currentHours, currentMinutes], newTime)
       const btn = reserved.result ? (
-        <div onContextMenu={handleContextMenu} onClick={handleContextMenuClick} className={`${settings.classes.btn.default} ${paintUserDiv(reserved.isCurrentUser)}`}>{time} - {endTime}</div>
+        <div data-id={reserved.reserveId} onContextMenu={(e) => handleContextMenu(e, reserved.isCurrentUser)} className={`${settings.classes.btn.default} ${paintUserDiv(reserved.isCurrentUser)}`}>{time} - {endTime}</div>
       ) : (
         <div
           onContextMenu={contextMenuDiv}
@@ -451,15 +463,6 @@ const App = (props) => {
     console.log(reserves)
   }, [changeUser]);
 
-  const UserReserveList = (props) => {
-    return(
-      <div>
-        <ul className="">
-          {props.reserves?.map((el) => <li>{el.name}{el.date},{" " + el.time.start}<button className={settings.classes.btn.delete} onClick={(event)  => deleteReserve(event, el)}>Удалить резерв</button></li>)}
-        </ul>
-      </div>
-    )
-  }
   
   const UserLogo = (props) => {
     return(
@@ -501,13 +504,11 @@ const App = (props) => {
   };
 
   return (
-    <div>
-      <div
-      onClick={handleContextMenuClick}
-      onContextMenu={handleContextMenu}>
+    <div  onClick={() => setIsVisible(false)}>
+      <div onClick={contextMenuClick}>
         {isVisible && (
         <ul className="context" style={{top: position.y - 25, left: position.x -30, zIndex:1000}}>
-          <button  style={{width: '100px', height:'40px', border: '1px solid', borderRadius:'20px', cursor: 'pointer'}}>Удалить</button>
+          <li title={`Дата: ${reserveForDel.date.split('-').reverse().join('.')}\nВремя начала: ${reserveForDel.time.start}\nПродолжительность: ${reserveForDel.time.duration} минут`} className="context__item" onClick={(e) => contextMenuClick(e, "delete")}>Удалить</li>
         </ul>
         )}
       </div>
@@ -519,10 +520,10 @@ const App = (props) => {
       <BasicDatePicker />
       <div className={settings.classes.btn.flexDiv}>
         <CreateTimeButtons />
-        <button className={settings.classes.btn.book} onClick={reserveTime}>Забронировать</button>
         {/* <button onClick={deleteReserve}>Удалить</button> */}
       </div>
-      <UserReserveList reserves={reserves?.filter((reserve) => reserve.person.id === currentUser.id )} />
+      <button className={settings.classes.btn.book} onClick={reserveTime}>Забронировать</button>
+      
         
         
     </div>
