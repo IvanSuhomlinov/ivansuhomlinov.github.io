@@ -4,7 +4,8 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton, Stack, TextField } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close"
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, IconButton, InputLabel, List, MenuItem, Select, Stack, TextField } from "@mui/material";
 
 
 
@@ -487,6 +488,11 @@ const App = (props) => {
         </div>
     )
   }
+  const [peopleAmount, setPeopleAmount] = React.useState();
+
+  const getPeopleNumber = (e) => {
+    setPeopleAmount(e.target.value)
+  }
 
   const Modalpopup = (props) => {
     const reserveButton = () => {
@@ -497,10 +503,21 @@ const App = (props) => {
       <div>
         <Button onClick={() => period.length > 1 ? setOpen(true) : alert("Выберите время начала и время окончания!")} variant="contained">Перейти к бронированию</Button>
         <Dialog open={open} fullWidth>
-          <DialogTitle>Бронирование с {props.period[0]} по {props.period[1]}</DialogTitle>
+          <DialogTitle>Бронирование с {props.period[0]} по {props.period[1]}<IconButton style={{float:'right'}}><CloseIcon onClick={() => setOpen(false)} color="primary"></CloseIcon></IconButton></DialogTitle>
           <DialogContent>
             <Stack spacing={2} margin={2}>
-              <TextField variant="outlined" label="Количество человек"></TextField>
+              <InputLabel id="peopleAmount">Введите количество человек</InputLabel>
+              <Select
+              value={peopleAmount}
+              onChange={getPeopleNumber}
+              >
+                <MenuItem value={1}>1</MenuItem>
+                <MenuItem value={2}>2</MenuItem>
+                <MenuItem value={3}>3</MenuItem>
+                <MenuItem value={4}>4</MenuItem>
+                <MenuItem value={5}>5</MenuItem>
+                <MenuItem value={6}>6</MenuItem>
+              </Select>
               <TextField variant="outlined" label="Аппаратура"></TextField>
             </Stack>
           </DialogContent>
