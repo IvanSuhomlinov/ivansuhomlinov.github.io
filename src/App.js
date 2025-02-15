@@ -4,8 +4,10 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
-import { formatMeridiem } from "@mui/x-date-pickers/internals";
-import { renderTimeViewClock } from "@mui/x-date-pickers";
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton, Stack, TextField } from "@mui/material";
+
+
+
 
 const App = (props) => {
   /* period.indexOf(time) >= 0 || period.length === 2 && (converter(time) > converter(period[0]) && converter(time) < converter(period[1])) ? "selected-div" : ""*/
@@ -54,6 +56,7 @@ const App = (props) => {
   const [isVisible, setIsVisible] = React.useState(false);
   const [position, setPosition] = React.useState({ x: 0, y: 0 });
   const [reserveForDel, setReserveForDel] = React.useState({})
+  const [open, setOpen] = React.useState(false)
 
   
   const contextMenuClick = (e, action = "default") => {
@@ -296,7 +299,6 @@ const App = (props) => {
   };
 
   const reserveTime = async (e) => {
-    e.preventDefault();
     await addReserve();
     setPeriod([]);
     await getReserves();
@@ -486,6 +488,32 @@ const App = (props) => {
     )
   }
 
+  const Modalpopup = (props) => {
+    const reserveButton = () => {
+      reserveTime()
+      setOpen(false)
+    }
+    return (
+      <div>
+        <Button onClick={() => period.length > 1 ? setOpen(true) : alert("Выберите время начала и время окончания!")} variant="contained">Перейти к бронированию</Button>
+        <Dialog open={open} fullWidth>
+          <DialogTitle>Бронирование с {props.period[0]} по {props.period[1]}</DialogTitle>
+          <DialogContent>
+            <Stack spacing={2} margin={2}>
+              <TextField variant="outlined" label="Количество человек"></TextField>
+              <TextField variant="outlined" label="Аппаратура"></TextField>
+            </Stack>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setOpen(false)} color="error" variant="contained">Отмена</Button>
+            <Button onClick={reserveButton} color="success" variant="contained">Забронировать</Button>
+          </DialogActions>
+        </Dialog>
+      </div>
+    );
+
+  }
+
   const BasicDatePicker = () => {
     return (
       <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -522,7 +550,8 @@ const App = (props) => {
         <CreateTimeButtons />
         {/* <button onClick={deleteReserve}>Удалить</button> */}
       </div>
-      <button className={settings.classes.btn.book} onClick={reserveTime}>Забронировать</button>
+      {/* <button className={settings.classes.btn.book} onClick={reserveTime}>Забронировать</button> */}
+      <Modalpopup period={period} />
       
         
         
