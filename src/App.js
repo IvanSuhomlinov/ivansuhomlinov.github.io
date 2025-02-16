@@ -36,7 +36,6 @@ const App = (props) => {
     }
   }
   const [period, setPeriod] = React.useState([]);
-  // const [selectedButton, setSelectedButton] = React.useState([]);
   const [hovered, setHovered] = React.useState("");
   const [reserves, setReserves] = React.useState([]);
   const [users, setUsers] = React.useState([
@@ -56,8 +55,20 @@ const App = (props) => {
   const [currentUser, setCurrentUser] = React.useState(users[currentUserId]);
   const [isVisible, setIsVisible] = React.useState(false);
   const [position, setPosition] = React.useState({ x: 0, y: 0 });
-  const [reserveForDel, setReserveForDel] = React.useState({})
-  const [open, setOpen] = React.useState(false)
+  const [reserveForDel, setReserveForDel] = React.useState({});
+  const [open, setOpen] = React.useState(false);
+  const [peopleAmount, setPeopleAmount] = React.useState(1);
+  const [inventory, setInventory] = React.useState("none");
+  const [personReserve, setPersonReserve] = React.useState(
+    {
+      person: {
+        inventory: false,
+        people: 1
+      }
+    }
+  )
+  
+  
 
   
   const contextMenuClick = (e, action = "default") => {
@@ -488,17 +499,41 @@ const App = (props) => {
         </div>
     )
   }
-  const [peopleAmount, setPeopleAmount] = React.useState();
+  
+  
 
   const getPeopleNumber = (e) => {
-    setPeopleAmount(e.target.value)
+    const people = e.target.value
+    setPeopleAmount(people)
+    setPersonReserve((prev) => ({
+      ...prev,
+      person: {
+        ...prev.person,
+        people: people
+      }
+    }))
   }
 
+  
+
+  const getInventory = (e) => {
+    const inventory = e.target.value
+    setInventory(inventory)
+    setPersonReserve((prev) => ({
+      ...prev,
+      person: {
+        ...prev.person,
+        inventory: inventory
+      }
+    }))
+  }
+
+  const demoReserve = () => {
+    console.log(personReserve)
+  }
+
+
   const Modalpopup = (props) => {
-    const reserveButton = () => {
-      reserveTime()
-      setOpen(false)
-    }
     return (
       <div>
         <Button onClick={() => period.length > 1 ? setOpen(true) : alert("Выберите время начала и время окончания!")} variant="contained">Перейти к бронированию</Button>
@@ -506,8 +541,9 @@ const App = (props) => {
           <DialogTitle>Бронирование с {props.period[0]} по {props.period[1]}<IconButton style={{float:'right'}}><CloseIcon onClick={() => setOpen(false)} color="primary"></CloseIcon></IconButton></DialogTitle>
           <DialogContent>
             <Stack spacing={2} margin={2}>
-              <InputLabel id="peopleAmount">Введите количество человек</InputLabel>
+              <InputLabel id="peopleAmount">Выберите количество человек</InputLabel>
               <Select
+              
               value={peopleAmount}
               onChange={getPeopleNumber}
               >
@@ -517,13 +553,26 @@ const App = (props) => {
                 <MenuItem value={4}>4</MenuItem>
                 <MenuItem value={5}>5</MenuItem>
                 <MenuItem value={6}>6</MenuItem>
+                <MenuItem value={7}>7</MenuItem>
+                <MenuItem value={8}>8</MenuItem>
+                <MenuItem value={9}>9</MenuItem>
+                <MenuItem value={10}>10</MenuItem>
+                <MenuItem value={11}>11</MenuItem>
+                <MenuItem value={12}>12</MenuItem>
               </Select>
-              <TextField variant="outlined" label="Аппаратура"></TextField>
+              <InputLabel>Дополнительные услуги</InputLabel>
+              <Select
+              value={inventory}
+              onChange={getInventory}
+              >
+                <MenuItem value="none">Без доп. услуг</MenuItem>
+                <MenuItem value="tshirts">Манишки на {peopleAmount} {peopleAmount === 1 ? "человека" : "человек"}</MenuItem>
+              </Select>
             </Stack>
           </DialogContent>
           <DialogActions>
             <Button onClick={() => setOpen(false)} color="error" variant="contained">Отмена</Button>
-            <Button onClick={reserveButton} color="success" variant="contained">Забронировать</Button>
+            <Button onClick={demoReserve} color="success" variant="contained">Забронировать</Button>
           </DialogActions>
         </Dialog>
       </div>
