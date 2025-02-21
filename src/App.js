@@ -4,37 +4,122 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
-import CloseIcon from "@mui/icons-material/Close"
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, IconButton, InputLabel, List, MenuItem, Select, Stack, TextField } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  FormControl,
+  IconButton,
+  InputLabel,
+  List,
+  MenuItem,
+  Select,
+  Stack,
+  TextField,
+} from "@mui/material";
 
+const Modalpopup = (props) => {
+  const [peopleAmount, setPeopleAmount] = React.useState(1);
+  const [inventory, setInventory] = React.useState("none");
+  const handleReserve = React.useCallback(() => {
+    props.onReserve(peopleAmount, inventory);
+    refresh();
+  }, [peopleAmount, inventory, props.onReserve]);
 
+  const handlePeopleChange = (e) => {
+    setPeopleAmount(e.target.value);
+  };
 
+  const handleInventoryChange = (e) => {
+    setInventory(e.target.value);
+  };
+
+  const refresh = () => {
+    setPeopleAmount(1);
+    setInventory("none");
+  };
+
+  const handleClose = () => {
+    refresh();
+    props.onClose();
+  };
+
+  return (
+    <Dialog open={props.isOpen} fullWidth>
+      <DialogTitle>
+        Бронирование с {props.period[0]} по {props.period[1]} на дату{" "}
+        {props.date.split("-").reverse().join(".")}
+        <IconButton style={{ float: "right" }}>
+          <CloseIcon onClick={handleClose} color="primary"></CloseIcon>
+        </IconButton>
+      </DialogTitle>
+      <DialogContent>
+        <Stack spacing={2} margin={2}>
+          <InputLabel id="peopleAmount">Выберите количество человек</InputLabel>
+          <Select value={peopleAmount} onChange={handlePeopleChange}>
+            <MenuItem value={1}>1</MenuItem>
+            <MenuItem value={2}>2</MenuItem>
+            <MenuItem value={3}>3</MenuItem>
+            <MenuItem value={4}>4</MenuItem>
+            <MenuItem value={5}>5</MenuItem>
+            <MenuItem value={6}>6</MenuItem>
+            <MenuItem value={7}>7</MenuItem>
+            <MenuItem value={8}>8</MenuItem>
+            <MenuItem value={9}>9</MenuItem>
+            <MenuItem value={10}>10 и более</MenuItem>
+          </Select>
+          <InputLabel>Дополнительные услуги</InputLabel>
+          <Select value={inventory} onChange={handleInventoryChange}>
+            <MenuItem value="none">Без доп. услуг</MenuItem>
+            <MenuItem value="tshirts">
+              Манишки на {peopleAmount}{" "}
+              {peopleAmount === 1 ? "человека" : "человек"}
+            </MenuItem>
+          </Select>
+        </Stack>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={handleClose} color="error" variant="contained">
+          Отмена
+        </Button>
+        <Button onClick={handleReserve} color="success" variant="contained">
+          Забронировать
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
+};
 
 const App = (props) => {
   /* period.indexOf(time) >= 0 || period.length === 2 && (converter(time) > converter(period[0]) && converter(time) < converter(period[1])) ? "selected-div" : ""*/
   /*time === hovered || period.length === 1 && (converter(time) > Math.min(converter(period[0]), converter(hovered)) && converter(time) < Math.max(converter(period[0]), converter(hovered))) ? "hovered-div" : ""*/
-  
+
   const step = 30;
   const settings = {
     classes: {
       btn: {
         default: props.customClasses?.btn?.default || "btn",
         reserve: props.customClasses?.btn?.reserved || "btn--reserved",
-        currentReserve: props.customClasses?.btn.currentReserve || "btn--current-reserve",
+        currentReserve:
+          props.customClasses?.btn.currentReserve || "btn--current-reserve",
         hovered: props.customClasses?.btn.hovered || "btn--hovered",
         selected: props.customClasses?.btn.seleted || "btn--selected",
         flexDiv: props.customClasses?.btn.flexDiv || "btn--flex-div",
         book: props.customClasses?.btn.book || "btn--book",
-        delete: props.customClasses?.btn.delete || "btn--delete"
+        delete: props.customClasses?.btn.delete || "btn--delete",
       },
       dropdown: {
-        userList: props.customClasses?.dropdown.userList || "dropdown--user-list",
+        userList:
+          props.customClasses?.dropdown.userList || "dropdown--user-list",
         userDiv: props.customClasses?.dropdown.userDiv || "dropdown--user-div",
-        logo: props.customClasses?.dropdown.logo || "dropdown--user-logo"
-      }
-
-    }
-  }
+        logo: props.customClasses?.dropdown.logo || "dropdown--user-logo",
+      },
+    },
+  };
   const [period, setPeriod] = React.useState([]);
   const [hovered, setHovered] = React.useState("");
   const [reserves, setReserves] = React.useState([]);
@@ -42,14 +127,14 @@ const App = (props) => {
     {
       name: "Ческидов Александр Леонидович",
       id: "4937",
-      logo: "https://avatars.mds.yandex.net/i?id=238b2b70a2e06e504bb39372d79b19a8_l-3598775-images-thumbs&n=13"
+      logo: "https://avatars.mds.yandex.net/i?id=238b2b70a2e06e504bb39372d79b19a8_l-3598775-images-thumbs&n=13",
     },
     {
       name: "Иванов Андрей Петрович",
       id: "78",
-      logo: "https://i.pinimg.com/originals/82/ec/87/82ec8770fec12e698bd634de368cfa9a.jpg"
-    }
-  ])
+      logo: "https://i.pinimg.com/originals/82/ec/87/82ec8770fec12e698bd634de368cfa9a.jpg",
+    },
+  ]);
   const [currentDate, setCurrentDate] = React.useState(dayjs(Date.now()));
   const [currentUserId, setCurrentUserId] = React.useState(0);
   const [currentUser, setCurrentUser] = React.useState(users[currentUserId]);
@@ -57,45 +142,71 @@ const App = (props) => {
   const [position, setPosition] = React.useState({ x: 0, y: 0 });
   const [reserveForDel, setReserveForDel] = React.useState({});
   const [open, setOpen] = React.useState(false);
-  const [peopleAmount, setPeopleAmount] = React.useState(1);
-  const [inventory, setInventory] = React.useState("none");
-  const [personReserve, setPersonReserve] = React.useState(
-    {
-      person: {
-        inventory: false,
-        people: 1
-      }
-    }
-  )
-  
-  
+  const [personReserve, setPersonReserve] = React.useState({
+    person: {
+      inventory: false,
+      people: 1,
+    },
+  });
 
-  
+  const handleReserve = async (peopleAmount, inventory) => {
+    const duration =
+      period.length === 2
+        ? converter(period[1]) - converter(period[0]) + step
+        : step;
+
+    const reserve = {
+      id: null,
+      date: getFormatDate(currentDate),
+      time: { start: period[0], duration: duration },
+      free: false,
+      person: {
+        id: currentUser.id,
+      },
+      options: {
+        visitors: [
+          {
+            name: "adult",
+            count: peopleAmount,
+          },
+        ],
+        inventory: [
+          {
+            name: inventory,
+            count: null,
+          },
+        ],
+      },
+    };
+    addReserve(reserve);
+    getReserves();
+
+    setOpen(false);
+  };
+
   const contextMenuClick = (e, action = "default") => {
     e.stopPropagation();
-    switch(action){
-    case "delete" :   deleteReserve(e, reserveForDel);
-    default: console.log("default")
+    switch (action) {
+      case "delete":
+        deleteReserve(e, reserveForDel);
+      default:
+        console.log("default");
     }
-  }
+  };
 
   const handleContextMenu = (e, isCurrentUser) => {
-    if(isCurrentUser){
-    e.preventDefault();
-    const id = e.currentTarget.dataset.id
-    setReserveForDel(...reserves.filter((el) => el.id === id))
-    setPosition({x : e.clientX, y:e.clientY});
-    setIsVisible(true);
+    if (isCurrentUser) {
+      e.preventDefault();
+      const id = e.currentTarget.dataset.id;
+      setReserveForDel(...reserves.filter((el) => el.id === id));
+      setPosition({ x: e.clientX, y: e.clientY });
+      setIsVisible(true);
     }
-
-    
-  }
-
-
+  };
 
   const handleMouseEnter = (e) => {
-    e.preventDefault()
-    e.stopPropagation()
+    e.preventDefault();
+    e.stopPropagation();
     e.currentTarget.classList.add("hovered-div");
     const currentTime = e.currentTarget.dataset.time;
     if (period.length === 1) {
@@ -110,8 +221,7 @@ const App = (props) => {
           setHovered("");
         }
       } else {
-        if (!isReserved(arrPeriodTime, arraySelectTime).result
-      ) {
+        if (!isReserved(arrPeriodTime, arraySelectTime).result) {
           setHovered(currentTime);
         } else {
           setHovered("");
@@ -147,21 +257,14 @@ const App = (props) => {
   };
 
   const handleClick = (event) => {
-    
     const currentTime = event.currentTarget.dataset.time;
     // setSelectedButton([currentTime]);
     comparePeriod(currentTime);
-    
-
-
-
-
-
   };
 
   const contextMenuDiv = (e) => {
-    e.preventDefault()
-  }
+    e.preventDefault();
+  };
 
   const comparePeriod = (time) => {
     if (period.length === 0 || period.length === 2) {
@@ -174,14 +277,12 @@ const App = (props) => {
       const arraySelectTime = time.split(":").map((el) => Number(el));
       const arrPeriodTime = period[0].split(":").map((el) => Number(el));
       if (selectedTime < periodTime) {
-        
         if (!isReserved(arraySelectTime, arrPeriodTime).result) {
           setPeriod((prev) => [time, ...prev]);
         } else {
           setPeriod([time]);
         }
       } else {
-        
         if (!isReserved(arrPeriodTime, arraySelectTime).result) {
           setPeriod((prev) => [...prev, time]);
         } else {
@@ -214,81 +315,72 @@ const App = (props) => {
     return Number(min) + Number(m);
   };
 
-
   const getFormatDate = (date) => {
-    const formatDate = date.format('YYYY-MM-DD')
+    const formatDate = date.format("YYYY-MM-DD");
     return formatDate;
   };
 
   const getReserves = async () => {
     console.log(currentDate);
-    await fetch(`http://localhost:8080/https://molot.papillon.ru/rty/wht/reserv/get.php?dates=[${getFormatDate(currentDate)}]&box=1`,{
-   headers: {
-    'Content-Type': 'application/json',
-    'X-Requested-With': 'XMLHttpRequest', 
-  }, 
-  }).then((data) => data.json()).then((data) => setReserves(
-    data[0]?.intervals
-    // reservedTime.filter((el) => el.date === getFormatDate(currentDate))[0]?.reserves
-  ))
-  // console.log(data)  
-  // if (currentDate) {
-      
-  //   }
+    await fetch(
+      `http://localhost:8080/https://molot.papillon.ru/rty/wht/reserv/get.php?dates=[${getFormatDate(
+        currentDate
+      )}]&box=1`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "X-Requested-With": "XMLHttpRequest",
+        },
+      }
+    )
+      .then((data) => data.json())
+      .then((data) =>
+        setReserves(
+          data[0]?.intervals
+          // reservedTime.filter((el) => el.date === getFormatDate(currentDate))[0]?.reserves
+        )
+      );
+    // console.log(data)
+    // if (currentDate) {
+
+    //   }
   };
 
   const deleteReserve = async (e, currentReserve) => {
-    e.preventDefault()
+    e.preventDefault();
     const reserve = {
       ...currentReserve,
-      free: true  
-    }
-    
-      
-      await fetch(`http://localhost:8080/https://molot.papillon.ru/rty/wht/reserv/set.php?box=1`,
-        {
-          method: "POST",
-          headers: {
-            'Content-Type': 'application/json',
-            'X-Requested-With': 'XMLHttpRequest', 
-          }, 
-          body: JSON.stringify(reserve)
-        }
-      ).then(data => console.log(data))
-      await getReserves()
-      console.log(reserve)
-  }
+      free: true,
+    };
 
-  const addReserve = async () => {
-
-    const duration =
-      period.length === 2
-        ? converter(period[1]) - converter(period[0]) + step
-        : step
-
-    
-    const reserve = {
-      id: null,
-      date: getFormatDate(currentDate),
-      time: { start: period[0], duration: duration },
-      free: false,
-      person: {
-        id: currentUser.id,
-      },
-    }
-
-    
-    await fetch(`http://localhost:8080/https://molot.papillon.ru/rty/wht/reserv/set.php?box=1`,
+    await fetch(
+      `http://localhost:8080/https://molot.papillon.ru/rty/wht/reserv/set.php?box=1`,
       {
         method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-          'X-Requested-With': 'XMLHttpRequest', 
-        }, 
-        body: JSON.stringify(reserve)
+          "Content-Type": "application/json",
+          "X-Requested-With": "XMLHttpRequest",
+        },
+        body: JSON.stringify(reserve),
       }
-    )
-  }
+    ).then((data) => console.log(data));
+    await getReserves();
+    console.log(reserve);
+  };
+
+  const addReserve = async (reserve) => {
+    await fetch(
+      `http://localhost:8080/https://molot.papillon.ru/rty/wht/reserv/set.php?box=1`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-Requested-With": "XMLHttpRequest",
+        },
+        body: JSON.stringify(reserve),
+      }
+    );
+  };
 
   const getCurDate = (arg) => {
     console.log(new Date(arg.$d).getTime());
@@ -296,13 +388,11 @@ const App = (props) => {
   };
 
   const paintYellowDiv = (time) => {
-    
-    if ( 
+    if (
       period.indexOf(time) >= 0 ||
       (period.length === 2 &&
         converter(time) > converter(period[0]) &&
         converter(time) < converter(period[1]))
-
     ) {
       return settings.classes.btn.selected;
     } else {
@@ -314,7 +404,6 @@ const App = (props) => {
     await addReserve();
     setPeriod([]);
     await getReserves();
-    
   };
 
   const paintBlueDiv = (time) => {
@@ -346,7 +435,7 @@ const App = (props) => {
   }, [period]);
 
   React.useEffect(() => {
-    console.log(currentUser)
+    console.log(currentUser);
   }, [currentUser]);
 
   const increaseTime = (h, m, step) => {
@@ -356,15 +445,17 @@ const App = (props) => {
       h += 1;
       m -= 60;
     }
+    // if(h >= 24){
+    //   h = h - 24; 
+    // }
     return [h, m];
   };
 
   const isReserved = (t1, t2) => {
     if (reserves) {
       for (const reserve of reserves) {
+        const { start, duration } = reserve.time;
 
-        const {start, duration} = reserve.time
-        
         const [startH, startM] = start.split(":").map(Number);
         const [endH, endM] = increaseTime(startH, startM, Number(duration));
 
@@ -385,8 +476,8 @@ const App = (props) => {
       }
     }
     return {
-      result: false
-    }
+      result: false,
+    };
   };
 
   const paintUserDiv = (isCurrentUser) => {
@@ -398,13 +489,14 @@ const App = (props) => {
     //   else{
     //   return "reserved-div"
     // }
-    return isCurrentUser ? settings.classes.btn.currentReserve : settings.classes.btn.reserve
-  }
-  
+    return isCurrentUser
+      ? settings.classes.btn.currentReserve
+      : settings.classes.btn.reserve;
+  };
 
-  const CreateTimeBtns = (startTime, endTime, step) => {
+  const createTimeBtns = (startTime, endTime, step) => {
     let timeBtns = [];
-    
+
     let [currentHours, currentMinutes] = String(startTime)
       .split(":")
       .map((el) => Number(el));
@@ -413,36 +505,144 @@ const App = (props) => {
       currentHours < endHours ||
       (currentHours === endHours && currentMinutes <= endMinutes)
     ) {
-      
       const newTime = increaseTime(currentHours, currentMinutes, step);
       const [newHours, newMinutes] = newTime;
-      
-      const time = String(currentHours).padStart(2,'0') + ":" + String(currentMinutes).padStart(2,'0');
-      const endTime = String(newHours).padStart(2,'0') + ":" + String(newMinutes).padStart(2,'0');
-      const reserved = isReserved([currentHours, currentMinutes], newTime)
+
+      const time =
+        String(currentHours).padStart(2, "0") +
+        ":" +
+        String(currentMinutes).padStart(2, "0");
+      const endTime =
+        String(newHours).padStart(2, "0") +
+        ":" +
+        String(newMinutes).padStart(2, "0");
+      const reserved = isReserved([currentHours, currentMinutes], newTime);
       const btn = reserved.result ? (
-        <div data-id={reserved.reserveId} onContextMenu={(e) => handleContextMenu(e, reserved.isCurrentUser)} className={`${settings.classes.btn.default} ${paintUserDiv(reserved.isCurrentUser)}`}>{time} - {endTime}</div>
+        <Button variant="contained" disabled
+          data-id={reserved.reserveId}
+          onContextMenu={(e) => handleContextMenu(e, reserved.isCurrentUser)}
+          className={`${settings.classes.btn.default} ${paintUserDiv(
+            reserved.isCurrentUser
+          )}`}
+        >
+          {time} - {endTime}
+        </Button>
       ) : (
-        <div
+        <Button
+        
           onContextMenu={contextMenuDiv}
           data-time={time}
           onMouseLeave={handleMouseLeave}
           onMouseEnter={handleMouseEnter}
           onClick={handleClick}
-          className={`${settings.classes.btn.default} ${paintYellowDiv(time)} ${paintBlueDiv(time)}`}
+          className={`${settings.classes.btn.default} ${paintYellowDiv(
+            time
+          )} ${paintBlueDiv(time)}`}
         >
           {time} - {endTime}
-        </div>
+        </Button>
       );
-      
+
       timeBtns.push(btn);
-      currentHours = newHours
-      currentMinutes = newMinutes
+      currentHours = newHours;
+      currentMinutes = newMinutes;
     }
     return timeBtns;
   };
 
+
+  const hamamTimeButtons = (startTime, endTime, options ) => {
+    const convert = (string) => {
+      return string.split(":").map((el, idx) => idx === 0 ? Number(el) * 60: Number(el)).reduce((acc, el) => acc + el, 0)
+    }
+    
+    let timeBtns = [];
+    let [currentHours, currentMinutes] = String(startTime).split(":").map((el) => Number(el))
+    options.forEach(element => {
+      let step = element.step;
+    let count = element.count || -1;
+    const clean = element.clean || 0;
+    
+    const [endHours, endMinutes] = String(endTime).split(":").map((el) => Number(el))
+    if(convert(startTime) > convert(endTime)){
+      while(count !== 0 && (currentHours + Math.floor(step / 60)) < 23 || ((currentHours + Math.floor(step / 60)) === 23 && currentMinutes + Math.floor(step % 60) <= 59)){
+        count -= 1;
+        const newTime = increaseTime(currentHours, currentMinutes, step) 
+        const [newHours, newMinutes] = newTime;
+        const finalTime = increaseTime(newHours, newMinutes, clean)
+        const [finalHours, finalMinutes] = finalTime;
+        const time =
+          String(currentHours).padStart(2, "0") +
+          ":" +
+          String(currentMinutes).padStart(2, "0");
+        const endTime =
+          String(newHours).padStart(2, "0") +
+          ":" +
+          String(newMinutes).padStart(2, "0");
+  
+        const btn = <Button>{time} - {endTime}</Button>
+  
+        timeBtns.push(btn)
+        currentHours = finalHours;
+        currentMinutes = finalMinutes;
+  
+      }
+      while(count !== 0 && (currentHours + Math.floor(step / 60)) < endHours + 24 || ((currentHours + Math.floor(step / 60)) === endHours + 24 && currentMinutes + Math.floor(step % 60) <= endMinutes)){
+        count -= 1;
+        
+        const newTime = increaseTime(currentHours, currentMinutes, step) 
+        const [newHours, newMinutes] = newTime;
+        const finalTime = increaseTime(newHours, newMinutes, clean)
+        const [finalHours, finalMinutes] = finalTime;
+        const time =
+          String(currentHours >= 24 ? currentHours - 24 : currentHours).padStart(2, "0") +
+          ":" +
+          String(currentMinutes).padStart(2, "0");
+        const endTime =
+          String(newHours - 24).padStart(2, "0") +
+          ":" +
+          String(newMinutes).padStart(2, "0");
+  
+        const btn = <Button>{time} - {endTime}</Button>
+  
+        timeBtns.push(btn)
+        currentHours = finalHours;
+        currentMinutes = finalMinutes;
+  
+      }
+    }
+    else while(count !== 0 && (currentHours + Math.floor(step / 60)) < endHours || ((currentHours + Math.floor(step / 60)) === endHours && currentMinutes + Math.floor(step % 60) <= endMinutes)){
+
+      count -= 1;
+      
+      const newTime = increaseTime(currentHours, currentMinutes, step) 
+      const [newHours, newMinutes] = newTime;
+      const finalTime = increaseTime(newHours, newMinutes, clean)
+      const [finalHours, finalMinutes] = finalTime;
+      const time =
+        String(currentHours).padStart(2, "0") +
+        ":" +
+        String(currentMinutes).padStart(2, "0");
+      const endTime =
+        String(newHours).padStart(2, "0") +
+        ":" +
+        String(newMinutes).padStart(2, "0");
+
+      const btn = <Button>{time} - {endTime}</Button>
+
+      timeBtns.push(btn)
+      currentHours = finalHours;
+      currentMinutes = finalMinutes;
+
+    }
+    });
+
+    
+    return timeBtns
+  }
+
   const CreateTimeButtons = () => {
+    // return hamamTimeButtons("8:00", "01:00", [{step: 90, clean: 30, count: 1}, {step: 180, clean: 60}])
     // const createTime = timeList.map((time, index) => {
     //   const [hours, minutes] = time.split(":").map((el) => Number(el));
     //   const newTime = increaseTime(hours, minutes, step);
@@ -458,134 +658,82 @@ const App = (props) => {
     // });
 
     // return createTime;
-    return CreateTimeBtns("06:00", "23:30", step);
+    return hamamTimeButtons("06:00", "23:00", [{step:30}]);
   };
 
-  
-
   const changeUser = (event) => {
-    
-    const id = event.currentTarget.value
-    setCurrentUserId(id)
-    setCurrentUser(
-      users[id]
-    )
-  }
+    const id = event.currentTarget.value;
+    setCurrentUserId(id);
+    setCurrentUser(users[id]);
+  };
 
   React.useEffect(() => {
-    
-    console.log(reserves)
+    console.log(reserves);
   }, [changeUser]);
 
-  
   const UserLogo = (props) => {
-    return(
+    return (
       <div>
         <img className={settings.classes.dropdown.logo} src={props.logo}></img>
       </div>
-    )
-  }
+    );
+  };
 
   const UserDropdown = (props) => {
-    return(
-      <div>
-          <select name="select-user" className={settings.classes.dropdown.userList} 
-          onChange={props.changeUser} 
-          // value={currentUser.name}
-          value={props.id}
-          id="users">
-            {props.users.map((e, idx) => <option value={idx} key={idx}>{e.name}</option>)}
-          </select>
-        </div>
-    )
-  }
-  
-  
-
-  const getPeopleNumber = (e) => {
-    const people = e.target.value
-    setPeopleAmount(people)
-    setPersonReserve((prev) => ({
-      ...prev,
-      person: {
-        ...prev.person,
-        people: people
-      }
-    }))
-  }
-
-  
-
-  const getInventory = (e) => {
-    const inventory = e.target.value
-    setInventory(inventory)
-    setPersonReserve((prev) => ({
-      ...prev,
-      person: {
-        ...prev.person,
-        inventory: inventory
-      }
-    }))
-  }
-
-  const demoReserve = () => {
-    console.log(personReserve)
-  }
-
-
-  const Modalpopup = (props) => {
     return (
       <div>
-        <Button onClick={() => period.length > 1 ? setOpen(true) : alert("Выберите время начала и время окончания!")} variant="contained">Перейти к бронированию</Button>
-        <Dialog open={open} fullWidth>
-          <DialogTitle>Бронирование с {props.period[0]} по {props.period[1]}<IconButton style={{float:'right'}}><CloseIcon onClick={() => setOpen(false)} color="primary"></CloseIcon></IconButton></DialogTitle>
-          <DialogContent>
-            <Stack spacing={2} margin={2}>
-              <InputLabel id="peopleAmount">Выберите количество человек</InputLabel>
-              <Select
-              
-              value={peopleAmount}
-              onChange={getPeopleNumber}
-              >
-                <MenuItem value={1}>1</MenuItem>
-                <MenuItem value={2}>2</MenuItem>
-                <MenuItem value={3}>3</MenuItem>
-                <MenuItem value={4}>4</MenuItem>
-                <MenuItem value={5}>5</MenuItem>
-                <MenuItem value={6}>6</MenuItem>
-                <MenuItem value={7}>7</MenuItem>
-                <MenuItem value={8}>8</MenuItem>
-                <MenuItem value={9}>9</MenuItem>
-                <MenuItem value={10}>10</MenuItem>
-                <MenuItem value={11}>11</MenuItem>
-                <MenuItem value={12}>12</MenuItem>
-              </Select>
-              <InputLabel>Дополнительные услуги</InputLabel>
-              <Select
-              value={inventory}
-              onChange={getInventory}
-              >
-                <MenuItem value="none">Без доп. услуг</MenuItem>
-                <MenuItem value="tshirts">Манишки на {peopleAmount} {peopleAmount === 1 ? "человека" : "человек"}</MenuItem>
-              </Select>
-            </Stack>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={() => setOpen(false)} color="error" variant="contained">Отмена</Button>
-            <Button onClick={demoReserve} color="success" variant="contained">Забронировать</Button>
-          </DialogActions>
-        </Dialog>
+        <select
+          name="select-user"
+          className={settings.classes.dropdown.userList}
+          onChange={props.changeUser}
+          // value={currentUser.name}
+          value={props.id}
+          id="users"
+        >
+          {props.users.map((e, idx) => (
+            <option value={idx} key={idx}>
+              {e.name}
+            </option>
+          ))}
+        </select>
       </div>
     );
+  };
 
-  }
+  // const getPeopleNumber = (e) => {
+  //   const people = e.target.value
+  //   setPeopleAmount(people)
+  //   setPersonReserve((prev) => ({
+  //     ...prev,
+  //     person: {
+  //       ...prev.person,
+  //       people: people
+  //     }
+  //   }))
+  // }
+
+  // const getInventory = (e) => {
+  //   const inventory = e.target.value
+  //   setInventory(inventory)
+  //   setPersonReserve((prev) => ({
+  //     ...prev,
+  //     person: {
+  //       ...prev.person,
+  //       inventory: inventory
+  //     }
+  //   }))
+  // }
+
+  const demoReserve = () => {
+    console.log(personReserve);
+  };
 
   const BasicDatePicker = () => {
     return (
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <DemoContainer components={["DatePicker"]}>
           <DatePicker
-            style={{width: "max-content"}}
+            style={{ width: "max-content" }}
             label="Введите дату"
             format="DD.MM.YYYY"
             /*defaultValue={dayjs(Date.now())}*/
@@ -598,29 +746,64 @@ const App = (props) => {
   };
 
   return (
-    <div  onClick={() => setIsVisible(false)}>
-      <div onClick={contextMenuClick}>
+    <div onClick={() => setIsVisible(false)}>
+      <div>
         {isVisible && (
-        <ul className="context" style={{top: position.y - 25, left: position.x -30, zIndex:1000}}>
-          <li title={`Дата: ${reserveForDel.date.split('-').reverse().join('.')}\nВремя начала: ${reserveForDel.time.start}\nПродолжительность: ${reserveForDel.time.duration} минут`} className="context__item" onClick={(e) => contextMenuClick(e, "delete")}>Удалить</li>
-        </ul>
+          <ul
+            className="context"
+            style={{
+              top: position.y - 25,
+              left: position.x - 30,
+              zIndex: 1000,
+            }}
+          >
+            <li
+              title={`Дата: ${reserveForDel.date
+                .split("-")
+                .reverse()
+                .join(".")}\nВремя начала: ${
+                reserveForDel.time.start
+              }\nПродолжительность: ${reserveForDel.time.duration} минут`}
+              className="context__item"
+              onClick={(e) => contextMenuClick(e, "delete")}
+            >
+              Удалить
+            </li>
+          </ul>
         )}
       </div>
       <div className={settings.classes.dropdown.userDiv}>
-      <UserLogo logo={currentUser.logo} />
-      <UserDropdown users={users} changeUser={changeUser} id={currentUserId}/>
+        <UserLogo logo={currentUser.logo} />
+        <UserDropdown
+          users={users}
+          changeUser={changeUser}
+          id={currentUserId}
+        />
       </div>
-      
+
       <BasicDatePicker />
       <div className={settings.classes.btn.flexDiv}>
         <CreateTimeButtons />
         {/* <button onClick={deleteReserve}>Удалить</button> */}
       </div>
+      <Button
+        onClick={() =>
+          period.length > 1
+            ? setOpen(true)
+            : alert("Выберите время начала и время окончания!")
+        }
+        variant="contained"
+      >
+        Перейти к бронированию
+      </Button>
       {/* <button className={settings.classes.btn.book} onClick={reserveTime}>Забронировать</button> */}
-      <Modalpopup period={period} />
-      
-        
-        
+      <Modalpopup
+        date={getFormatDate(currentDate)}
+        onReserve={handleReserve}
+        onClose={() => setOpen(false)}
+        isOpen={open}
+        period={period}
+      />
     </div>
   );
 };

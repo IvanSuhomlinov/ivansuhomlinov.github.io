@@ -61,7 +61,7 @@
 .btn--flex-div{
     position: relative;
     display: flex;
-    width: 750px;
+    width: 500px;
     flex-direction: row;
     gap: 5px;
     flex-wrap: wrap;
