@@ -207,7 +207,7 @@ const App = (props) => {
   const handleMouseEnter = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    e.currentTarget.classList.add("hovered-div");
+    e.currentTarget.style.color = "aquamarine"
     const currentTime = e.currentTarget.dataset.time;
     if (period.length === 1) {
       const selectedTime = converter(currentTime);
@@ -550,6 +550,10 @@ const App = (props) => {
     return timeBtns;
   };
 
+  const reservationBody = () => {
+    
+  }
+
 
   const hamamTimeButtons = (startTime, endTime, options ) => {
     const convert = (string) => {
@@ -579,8 +583,34 @@ const App = (props) => {
           String(newHours).padStart(2, "0") +
           ":" +
           String(newMinutes).padStart(2, "0");
-  
-        const btn = <Button>{time} - {endTime}</Button>
+        
+          const reserved = isReserved([currentHours, currentMinutes], newTime);
+          const btn = reserved.result ? (
+            <Button variant="contained" disabled
+              data-id={reserved.reserveId}
+              onContextMenu={(e) => handleContextMenu(e, reserved.isCurrentUser)}
+              className={`${settings.classes.btn.default} ${paintUserDiv(
+                reserved.isCurrentUser
+              )}`}
+            
+            >
+              {time} - {endTime}
+            </Button>
+          ) : (
+            <Button
+              
+              onContextMenu={contextMenuDiv}
+              data-time={time}
+              onMouseLeave={handleMouseLeave}
+              onMouseEnter={handleMouseEnter}
+              onClick={handleClick}
+              className={`${settings.classes.btn.default} ${paintYellowDiv(
+                time
+              )} ${paintBlueDiv(time)}`}
+            >
+              {time} - {endTime}
+            </Button>
+          )
   
         timeBtns.push(btn)
         currentHours = finalHours;
@@ -602,8 +632,34 @@ const App = (props) => {
           String(newHours - 24).padStart(2, "0") +
           ":" +
           String(newMinutes).padStart(2, "0");
-  
-        const btn = <Button>{time} - {endTime}</Button>
+          const reserved = isReserved([currentHours, currentMinutes], newTime);
+          const btn = reserved.result ? (
+            <Button variant="contained" disabled
+              data-id={reserved.reserveId}
+              onContextMenu={(e) => handleContextMenu(e, reserved.isCurrentUser)}
+              className={`${settings.classes.btn.default} ${paintUserDiv(
+                reserved.isCurrentUser
+              )}`}
+              
+
+            >
+              {time} - {endTime}
+            </Button>
+          ) : (
+            <Button
+            
+              onContextMenu={contextMenuDiv}
+              data-time={time}
+              onMouseLeave={handleMouseLeave}
+              onMouseEnter={handleMouseEnter}
+              onClick={handleClick}
+              className={`${settings.classes.btn.default} ${paintYellowDiv(
+                time
+              )} ${paintBlueDiv(time)}`}
+            >
+              {time} - {endTime}
+            </Button>
+          )
   
         timeBtns.push(btn)
         currentHours = finalHours;
@@ -627,9 +683,34 @@ const App = (props) => {
         String(newHours).padStart(2, "0") +
         ":" +
         String(newMinutes).padStart(2, "0");
+        const reserved = isReserved([currentHours, currentMinutes], newTime);
+        const btn = reserved.result ? (
+          <Button variant="contained" disabled
+            data-id={reserved.reserveId}
+            onContextMenu={(e) => handleContextMenu(e, reserved.isCurrentUser)}
+            className={`${settings.classes.btn.default} ${paintUserDiv(
+              reserved.isCurrentUser
+            )}`}
+            
+          >
+            {time} - {endTime}
+          </Button>
+        ) : (
+          <Button
+          
+            onContextMenu={contextMenuDiv}
+            data-time={time}
+            onMouseLeave={handleMouseLeave}
+            onMouseEnter={handleMouseEnter}
+            onClick={handleClick}
+            className={`${settings.classes.btn.default} ${paintYellowDiv(
+              time
+            )} ${paintBlueDiv(time)}`}
 
-      const btn = <Button>{time} - {endTime}</Button>
-
+          >
+            {time} - {endTime}
+          </Button>
+        )
       timeBtns.push(btn)
       currentHours = finalHours;
       currentMinutes = finalMinutes;
@@ -659,6 +740,7 @@ const App = (props) => {
 
     // return createTime;
     return hamamTimeButtons("06:00", "23:00", [{step:30}]);
+    // return hamamTimeButtons("8:00", "01:00", [{step: 90, clean: 30, count: 1}, {step: 180, clean: 60}])
   };
 
   const changeUser = (event) => {
