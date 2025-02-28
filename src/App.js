@@ -48,6 +48,8 @@ const Modalpopup = (props) => {
     props.onClose();
   };
 
+  const peopleSelector = [1,2,3,4,5,6,7,8,9, "10 и более"]
+
   return (
     <Dialog open={props.isOpen} fullWidth>
       <DialogTitle>
@@ -60,23 +62,20 @@ const Modalpopup = (props) => {
       <DialogContent>
         <Stack spacing={2} margin={2}>
           <InputLabel id="peopleAmount">Выберите количество человек</InputLabel>
+          
           <Select value={peopleAmount} onChange={handlePeopleChange}>
-            <MenuItem value={1}>1</MenuItem>
-            <MenuItem value={2}>2</MenuItem>
-            <MenuItem value={3}>3</MenuItem>
-            <MenuItem value={4}>4</MenuItem>
-            <MenuItem value={5}>5</MenuItem>
-            <MenuItem value={6}>6</MenuItem>
-            <MenuItem value={7}>7</MenuItem>
-            <MenuItem value={8}>8</MenuItem>
-            <MenuItem value={9}>9</MenuItem>
-            <MenuItem value={10}>10 и более</MenuItem>
+            {peopleSelector.map((e, idx) => {
+              return(
+              <MenuItem value={idx}>{e}</MenuItem>
+              )
+            })}
+            
           </Select>
           <InputLabel>Дополнительные услуги</InputLabel>
           <Select value={inventory} onChange={handleInventoryChange}>
             <MenuItem value="none">Без доп. услуг</MenuItem>
             <MenuItem value="tshirts">
-              Манишки на {peopleAmount}{" "}
+              Манишки на {peopleAmount + 1}{" "}
               {peopleAmount === 1 ? "человека" : "человек"}
             </MenuItem>
           </Select>
@@ -100,12 +99,15 @@ const App = (props) => {
 
   const step = 30;
   const settings = {
+    styles: {
+      btn:{
+        default: props.customStyles?.btn?.default || {width: "120px", borderRadius: "100px", backgroundColor:"#e8e8e8", color: "#333", boxShadow: "0 0 0 0 #fff"}
+      }
+    },
     classes: {
-      btn: {
-        default: props.customClasses?.btn?.default || "btn",
+      btn: {        
         reserve: props.customClasses?.btn?.reserved || "btn--reserved",
-        currentReserve:
-          props.customClasses?.btn.currentReserve || "btn--current-reserve",
+        currentReserve: props.customClasses?.btn.currentReserve || "btn--current-reserve",
         hovered: props.customClasses?.btn.hovered || "btn--hovered",
         selected: props.customClasses?.btn.seleted || "btn--selected",
         flexDiv: props.customClasses?.btn.flexDiv || "btn--flex-div",
@@ -123,6 +125,8 @@ const App = (props) => {
   const [period, setPeriod] = React.useState([]);
   const [hovered, setHovered] = React.useState("");
   const [reserves, setReserves] = React.useState([]);
+  const halls = ["Зал", "Хамам", "Автомойка"]
+  const [currentSport, setCurrentSport] = React.useState("Зал");
   const [users, setUsers] = React.useState([
     {
       name: "Ческидов Александр Леонидович",
@@ -178,8 +182,8 @@ const App = (props) => {
         ],
       },
     };
-    addReserve(reserve);
-    getReserves();
+    await addReserve(reserve);
+    await getReserves();
 
     setOpen(false);
   };
@@ -199,7 +203,7 @@ const App = (props) => {
       e.preventDefault();
       const id = e.currentTarget.dataset.id;
       setReserveForDel(...reserves.filter((el) => el.id === id));
-      setPosition({ x: e.clientX, y: e.clientY });
+      setPosition({x: e.clientX, y: e.clientY});
       setIsVisible(true);
     }
   };
@@ -207,7 +211,7 @@ const App = (props) => {
   const handleMouseEnter = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    e.currentTarget.style.color = "aquamarine"
+    // e.currentTarget.style.color = "aquamarine"
     const currentTime = e.currentTarget.dataset.time;
     if (period.length === 1) {
       const selectedTime = converter(currentTime);
@@ -387,35 +391,35 @@ const App = (props) => {
     setCurrentDate(dayjs(new Date(arg.$d).getTime()));
   };
 
-  const paintYellowDiv = (time) => {
+  const getActiveStyle = (time) => {
     if (
       period.indexOf(time) >= 0 ||
       (period.length === 2 &&
         converter(time) > converter(period[0]) &&
         converter(time) < converter(period[1]))
     ) {
-      return settings.classes.btn.selected;
+      return {backgroundColor: "yellow"};
     } else {
-      return "";
+      return {};
     }
   };
 
-  const reserveTime = async (e) => {
-    await addReserve();
-    setPeriod([]);
-    await getReserves();
-  };
+  // const reserveTime = async (e) => {
+  //   await addReserve();
+  //   setPeriod([]);
+  //   await getReserves();
+  // };
 
-  const paintBlueDiv = (time) => {
+  const getHoveredStyle = (time) => {
     if (
       time === hovered ||
       (period.length === 1 &&
         converter(time) > Math.min(converter(period[0]), converter(hovered)) &&
         converter(time) < Math.max(converter(period[0]), converter(hovered)))
     ) {
-      return settings.classes.btn.hovered;
+      return {backgroundColor: "aquamarine"};
     } else {
-      return "";
+      return {};
     }
   };
 
@@ -437,6 +441,10 @@ const App = (props) => {
   React.useEffect(() => {
     console.log(currentUser);
   }, [currentUser]);
+
+  React.useEffect(() => {
+  console.log(currentSport)
+  }, [currentSport]);
 
   const increaseTime = (h, m, step) => {
     h = Number(h) + Math.floor(step / 60);
@@ -480,7 +488,7 @@ const App = (props) => {
     };
   };
 
-  const paintUserDiv = (isCurrentUser) => {
+  const getCurrentReserveStyle = (isCurrentUser) => {
     // currentUser?.id === reserves?.person?.id ? "reserved-div div-time" : "current-userDiv div-time";
     // for(let i = 0; i < reserves.length; i++){
     //  if(currentUser.id === reserves[i].person.id){
@@ -490,8 +498,8 @@ const App = (props) => {
     //   return "reserved-div"
     // }
     return isCurrentUser
-      ? settings.classes.btn.currentReserve
-      : settings.classes.btn.reserve;
+      ? {backgroundColor: "#72dc74"}
+      : {backgroundColor: "#b2b2b2", color: "#77787a"};
   };
 
   const createTimeBtns = (startTime, endTime, step) => {
@@ -521,7 +529,7 @@ const App = (props) => {
         <Button variant="contained" disabled
           data-id={reserved.reserveId}
           onContextMenu={(e) => handleContextMenu(e, reserved.isCurrentUser)}
-          className={`${settings.classes.btn.default} ${paintUserDiv(
+          className={`${settings.classes.btn.default} ${getCurrentReserveStyle(
             reserved.isCurrentUser
           )}`}
         >
@@ -535,9 +543,9 @@ const App = (props) => {
           onMouseLeave={handleMouseLeave}
           onMouseEnter={handleMouseEnter}
           onClick={handleClick}
-          className={`${settings.classes.btn.default} ${paintYellowDiv(
+          className={`${settings.classes.btn.default} ${getActiveStyle(
             time
-          )} ${paintBlueDiv(time)}`}
+          )} ${getHoveredStyle(time)}`}
         >
           {time} - {endTime}
         </Button>
@@ -550,27 +558,8 @@ const App = (props) => {
     return timeBtns;
   };
 
-  const reservationBody = () => {
-    
-  }
-
-
-  const hamamTimeButtons = (startTime, endTime, options ) => {
-    const convert = (string) => {
-      return string.split(":").map((el, idx) => idx === 0 ? Number(el) * 60: Number(el)).reduce((acc, el) => acc + el, 0)
-    }
-    
-    let timeBtns = [];
-    let [currentHours, currentMinutes] = String(startTime).split(":").map((el) => Number(el))
-    options.forEach(element => {
-      let step = element.step;
-    let count = element.count || -1;
-    const clean = element.clean || 0;
-    
-    const [endHours, endMinutes] = String(endTime).split(":").map((el) => Number(el))
-    if(convert(startTime) > convert(endTime)){
-      while(count !== 0 && (currentHours + Math.floor(step / 60)) < 23 || ((currentHours + Math.floor(step / 60)) === 23 && currentMinutes + Math.floor(step % 60) <= 59)){
-        count -= 1;
+  const reservationBody = (count, currentHours, currentMinutes, clean, timeBtns, step) => {
+    count -= 1;
         const newTime = increaseTime(currentHours, currentMinutes, step) 
         const [newHours, newMinutes] = newTime;
         const finalTime = increaseTime(newHours, newMinutes, clean)
@@ -586,27 +575,29 @@ const App = (props) => {
         
           const reserved = isReserved([currentHours, currentMinutes], newTime);
           const btn = reserved.result ? (
-            <Button variant="contained" disabled
+            <Button variant="contained" 
+            style={{...settings.styles.btn.default, ...getCurrentReserveStyle(reserved.isCurrentUser)}}
               data-id={reserved.reserveId}
               onContextMenu={(e) => handleContextMenu(e, reserved.isCurrentUser)}
-              className={`${settings.classes.btn.default} ${paintUserDiv(
-                reserved.isCurrentUser
-              )}`}
+              // className={`${settings.classes.btn.default} ${getCurrentReserveStyle(
+              //   reserved.isCurrentUser
+              // )}`}
             
             >
               {time} - {endTime}
             </Button>
           ) : (
             <Button
-              
+            variant="contained"
+              style={{...settings.styles.btn.default, ...getHoveredStyle(time), ...getActiveStyle(time)}}
               onContextMenu={contextMenuDiv}
               data-time={time}
               onMouseLeave={handleMouseLeave}
               onMouseEnter={handleMouseEnter}
               onClick={handleClick}
-              className={`${settings.classes.btn.default} ${paintYellowDiv(
-                time
-              )} ${paintBlueDiv(time)}`}
+              // className={`${settings.classes.btn.default} ${getActiveStyle(
+              //   time
+              // )} ${getHoveredStyle(time)}`}
             >
               {time} - {endTime}
             </Button>
@@ -615,111 +606,42 @@ const App = (props) => {
         timeBtns.push(btn)
         currentHours = finalHours;
         currentMinutes = finalMinutes;
-  
+        return [count, currentHours, currentMinutes]
+  }
+
+
+  const hamamTimeButtons = (startTime, endTime, options) => {
+    const convert = (string) => {
+      return string.split(":").map((el, idx) => idx === 0 ? Number(el) * 60: Number(el)).reduce((acc, el) => acc + el, 0)
+    }
+    
+    let timeBtns = [];
+    let [currentHours, currentMinutes] = String(startTime).split(":").map((el) => Number(el))
+    options.forEach(element => {
+    let step = element.step;
+    let count = element.count || -1;
+    const clean = element.clean || 0;
+    
+    const [endHours, endMinutes] = String(endTime).split(":").map((el) => Number(el))
+    if(convert(startTime) >= convert(endTime)){
+      while(count !== 0 && (currentHours + Math.floor(step / 60)) < 23 || ((currentHours + Math.floor(step / 60)) === 23 && currentMinutes + Math.floor(step % 60) <= 59)){
+        [count, currentHours, currentMinutes] = reservationBody(count, currentHours, currentMinutes, clean, timeBtns, step)
       }
       while(count !== 0 && (currentHours + Math.floor(step / 60)) < endHours + 24 || ((currentHours + Math.floor(step / 60)) === endHours + 24 && currentMinutes + Math.floor(step % 60) <= endMinutes)){
-        count -= 1;
-        
-        const newTime = increaseTime(currentHours, currentMinutes, step) 
-        const [newHours, newMinutes] = newTime;
-        const finalTime = increaseTime(newHours, newMinutes, clean)
-        const [finalHours, finalMinutes] = finalTime;
-        const time =
-          String(currentHours >= 24 ? currentHours - 24 : currentHours).padStart(2, "0") +
-          ":" +
-          String(currentMinutes).padStart(2, "0");
-        const endTime =
-          String(newHours - 24).padStart(2, "0") +
-          ":" +
-          String(newMinutes).padStart(2, "0");
-          const reserved = isReserved([currentHours, currentMinutes], newTime);
-          const btn = reserved.result ? (
-            <Button variant="contained" disabled
-              data-id={reserved.reserveId}
-              onContextMenu={(e) => handleContextMenu(e, reserved.isCurrentUser)}
-              className={`${settings.classes.btn.default} ${paintUserDiv(
-                reserved.isCurrentUser
-              )}`}
-              
-
-            >
-              {time} - {endTime}
-            </Button>
-          ) : (
-            <Button
-            
-              onContextMenu={contextMenuDiv}
-              data-time={time}
-              onMouseLeave={handleMouseLeave}
-              onMouseEnter={handleMouseEnter}
-              onClick={handleClick}
-              className={`${settings.classes.btn.default} ${paintYellowDiv(
-                time
-              )} ${paintBlueDiv(time)}`}
-            >
-              {time} - {endTime}
-            </Button>
-          )
-  
-        timeBtns.push(btn)
-        currentHours = finalHours;
-        currentMinutes = finalMinutes;
-  
+        [count, currentHours, currentMinutes] = reservationBody(count, currentHours, currentMinutes, clean, timeBtns, step)
       }
     }
     else while(count !== 0 && (currentHours + Math.floor(step / 60)) < endHours || ((currentHours + Math.floor(step / 60)) === endHours && currentMinutes + Math.floor(step % 60) <= endMinutes)){
-
-      count -= 1;
-      
-      const newTime = increaseTime(currentHours, currentMinutes, step) 
-      const [newHours, newMinutes] = newTime;
-      const finalTime = increaseTime(newHours, newMinutes, clean)
-      const [finalHours, finalMinutes] = finalTime;
-      const time =
-        String(currentHours).padStart(2, "0") +
-        ":" +
-        String(currentMinutes).padStart(2, "0");
-      const endTime =
-        String(newHours).padStart(2, "0") +
-        ":" +
-        String(newMinutes).padStart(2, "0");
-        const reserved = isReserved([currentHours, currentMinutes], newTime);
-        const btn = reserved.result ? (
-          <Button variant="contained" disabled
-            data-id={reserved.reserveId}
-            onContextMenu={(e) => handleContextMenu(e, reserved.isCurrentUser)}
-            className={`${settings.classes.btn.default} ${paintUserDiv(
-              reserved.isCurrentUser
-            )}`}
-            
-          >
-            {time} - {endTime}
-          </Button>
-        ) : (
-          <Button
-          
-            onContextMenu={contextMenuDiv}
-            data-time={time}
-            onMouseLeave={handleMouseLeave}
-            onMouseEnter={handleMouseEnter}
-            onClick={handleClick}
-            className={`${settings.classes.btn.default} ${paintYellowDiv(
-              time
-            )} ${paintBlueDiv(time)}`}
-
-          >
-            {time} - {endTime}
-          </Button>
-        )
-      timeBtns.push(btn)
-      currentHours = finalHours;
-      currentMinutes = finalMinutes;
-
+        [count, currentHours, currentMinutes] = reservationBody(count, currentHours, currentMinutes, clean, timeBtns, step)
     }
     });
 
     
     return timeBtns
+  }
+
+  const priceCalc = () => {
+    
   }
 
   const CreateTimeButtons = () => {
@@ -732,15 +654,24 @@ const App = (props) => {
     //   ) : (
 
     //     <div id={index} data-time={time} onMouseLeave={handleMouseLeave} onMouseEnter={handleMouseEnter} onClick={handleClick}
-    //     className={`div-time ${paintYellowDiv(time)} ${paintBlueDiv(time)}`}>
+    //     className={`div-time ${getActiveStyle(time)} ${getHoveredStyle(time)}`}>
     //       {time}
     //     </div>
     //   );
     // });
-
+    if(currentSport === "Зал"){
+      return hamamTimeButtons("06:00", "23:00", [{step:30}]);
+    }
+    else if(currentSport === "Хамам"){
+      return hamamTimeButtons("8:00", "01:00", [{step: 90, clean: 30, count: 1}, {step: 180, clean: 60}])
+    }
+    else{
+      return hamamTimeButtons("00:00", "00:00", [{step:15}]);
+    }
     // return createTime;
-    return hamamTimeButtons("06:00", "23:00", [{step:30}]);
-    // return hamamTimeButtons("8:00", "01:00", [{step: 90, clean: 30, count: 1}, {step: 180, clean: 60}])
+    
+    
+    
   };
 
   const changeUser = (event) => {
@@ -805,9 +736,25 @@ const App = (props) => {
   //     }
   //   }))
   // }
+  
+  
+  const changeSport = (e) => {
+    setCurrentSport(e.target.value)
+  }
 
-  const demoReserve = () => {
-    console.log(personReserve);
+
+  const SportDropdown = (props) => {
+    return(
+      <div>
+        <select value={currentSport} className={settings.classes.dropdown.userList} onChange={props.changeSport}>
+          {props.halls.map((e, idx) => (
+            <option value={e} key={idx}>
+              {e}
+            </option>
+          ))}
+        </select>
+      </div>
+    );
   };
 
   const BasicDatePicker = () => {
@@ -864,6 +811,8 @@ const App = (props) => {
       </div>
 
       <BasicDatePicker />
+
+      <SportDropdown changeSport={changeSport} halls={halls} />
       <div className={settings.classes.btn.flexDiv}>
         <CreateTimeButtons />
         {/* <button onClick={deleteReserve}>Удалить</button> */}

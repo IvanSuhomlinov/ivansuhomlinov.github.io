@@ -79,10 +79,11 @@
 .dropdown--user-list{
     width: 200px;
     height: 30px;
-    background-color: antiquewhite;
+    background-color: rgb(144, 144, 144);
     border-radius: 20px;
     margin: 5px;
     font-family: Arial, Helvetica, sans-serif;
+    
 }
 
 .dropdown--user-div{
