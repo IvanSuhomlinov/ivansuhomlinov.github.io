@@ -21,6 +21,13 @@ import {
   Stack,
   TextField,
 } from "@mui/material";
+import 'dayjs/locale/ru';
+import updateLocale from 'dayjs/plugin/updateLocale';
+import { Padding } from "@mui/icons-material";
+dayjs.extend(updateLocale);
+
+
+
 
 const Modalpopup = (props) => {
   const [peopleAmount, setPeopleAmount] = React.useState(1);
@@ -47,8 +54,8 @@ const Modalpopup = (props) => {
     refresh();
     props.onClose();
   };
-
-  const peopleSelector = [1,2,3,4,5,6,7,8,9, "10 и более"]
+  const childrenSelector = [1,2,3,4,5,6,7,8]
+  const peopleSelector = [1,2,3,4,5,6,7,8]
 
   return (
     <Dialog open={props.isOpen} fullWidth>
@@ -101,7 +108,21 @@ const App = (props) => {
   const settings = {
     styles: {
       btn:{
-        default: props.customStyles?.btn?.default || {width: "120px", borderRadius: "100px", backgroundColor:"#e8e8e8", color: "#333", boxShadow: "0 0 0 0 #fff"}
+        default: {width: "120px", borderRadius: "100px", backgroundColor:"#e8e8e8", color: "#333", boxShadow: "0 0 0 0 #fff",  ...props.customStyles?.btn?.default},
+        reserved: {backgroundColor: rgba(0, 0, 0, .3), cursor: "not-allowed", ...props.customStyles?.btn?.reserved},
+        hovered: {backgroundColor: "aquamarine", ...props.customStyles?.btn?.hovered},
+        delete: {borderRadius: "15px", borderWidth: "1px", fontFamily: "Arial, Helvetica, sans-serif", ...props.customStyles?.btn?.delete},
+        book: {borderRadius:"15px", fontFamily: "Arial, Helvetica, sans-serif", fontSize:"15px", ...props.customStyles?.btn?.book},
+        selected: {backgroundColor: rgb(255,255,107), ...props.customStyles?.btn?.selected},
+        currentReserve: {backgroundColor: rgb(65,251,65), ...props.customStyles?.btn?.currentReserve}
+      },
+      dropdown:{
+        userLogo: {height: "30px", width:"30px", borderRadius:"50%", margin:"5px", ...props.customStyles?.dropdown?.userLogo},
+        userList: {height: "30px", width:"200px", backgroundColor: rgb(144,144,144), fontFamily: "Arial, Helvetica, sans-serif", borderRadius:"20px", margin:"5px", ...props.customStyles?.dropdown?.userList}
+      },
+      context:{
+        context:{backgroundColor:"white", border:"1px solid grey", padding:"0", position:"absolute", borderRadius:"2px", width:"100px", ...props.customStyles?.context?.context},
+        contextItem: {width: "Calc(100%-20px)", cursor:"pointer", listStyle:"none", margin:"0", padding:"10px 20px", ...props.customStyles?.context?.contextItem}
       }
     },
     classes: {
@@ -152,6 +173,8 @@ const App = (props) => {
       people: 1,
     },
   });
+
+
 
   const handleReserve = async (peopleAmount, inventory) => {
     const duration =
@@ -386,9 +409,10 @@ const App = (props) => {
     );
   };
 
-  const getCurDate = (arg) => {
-    console.log(new Date(arg.$d).getTime());
-    setCurrentDate(dayjs(new Date(arg.$d).getTime()));
+  const getCurDate = (date) => {
+    console.log(date.day())
+    setCurrentDate(date);
+    
   };
 
   const getActiveStyle = (time) => {
@@ -559,24 +583,27 @@ const App = (props) => {
   };
 
   const reservationBody = (count, currentHours, currentMinutes, clean, timeBtns, step) => {
-    count -= 1;
+    count -= 1;        
         const newTime = increaseTime(currentHours, currentMinutes, step) 
-        const [newHours, newMinutes] = newTime;
+        let [newHours, newMinutes] = newTime;
         const finalTime = increaseTime(newHours, newMinutes, clean)
         const [finalHours, finalMinutes] = finalTime;
         const time =
-          String(currentHours).padStart(2, "0") +
+          String(currentHours  >= 24 ? currentHours - 24 : currentHours).padStart(2, "0") +
           ":" +
           String(currentMinutes).padStart(2, "0");
         const endTime =
-          String(newHours).padStart(2, "0") +
+          String(newHours >= 24 ? newHours - 24 : newHours).padStart(2, "0") +
           ":" +
           String(newMinutes).padStart(2, "0");
-        
+          const curTime = currentDate.toDate()
+          curTime.setHours(currentHours)
+          curTime.setMinutes(currentMinutes)
+          const isCorrectTime =  curTime.getTime() > Date.now()
           const reserved = isReserved([currentHours, currentMinutes], newTime);
-          const btn = reserved.result ? (
+          const btn = reserved.result || !isCorrectTime ? (
             <Button variant="contained" 
-            style={{...settings.styles.btn.default, ...getCurrentReserveStyle(reserved.isCurrentUser)}}
+            style={{...settings.styles.btn.default, ...getCurrentReserveStyle(reserved.isCurrentUser && isCorrectTime)}}
               data-id={reserved.reserveId}
               onContextMenu={(e) => handleContextMenu(e, reserved.isCurrentUser)}
               // className={`${settings.classes.btn.default} ${getCurrentReserveStyle(
@@ -627,8 +654,9 @@ const App = (props) => {
       while(count !== 0 && (currentHours + Math.floor(step / 60)) < 23 || ((currentHours + Math.floor(step / 60)) === 23 && currentMinutes + Math.floor(step % 60) <= 59)){
         [count, currentHours, currentMinutes] = reservationBody(count, currentHours, currentMinutes, clean, timeBtns, step)
       }
+     
       while(count !== 0 && (currentHours + Math.floor(step / 60)) < endHours + 24 || ((currentHours + Math.floor(step / 60)) === endHours + 24 && currentMinutes + Math.floor(step % 60) <= endMinutes)){
-        [count, currentHours, currentMinutes] = reservationBody(count, currentHours, currentMinutes, clean, timeBtns, step)
+      [count, currentHours, currentMinutes] = reservationBody(count, currentHours, currentMinutes, clean, timeBtns, step)
       }
     }
     else while(count !== 0 && (currentHours + Math.floor(step / 60)) < endHours || ((currentHours + Math.floor(step / 60)) === endHours && currentMinutes + Math.floor(step % 60) <= endMinutes)){
@@ -683,6 +711,7 @@ const App = (props) => {
   React.useEffect(() => {
     console.log(reserves);
   }, [changeUser]);
+  
 
   const UserLogo = (props) => {
     return (
@@ -757,12 +786,13 @@ const App = (props) => {
     );
   };
 
+  
   const BasicDatePicker = () => {
     return (
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="ru">
         <DemoContainer components={["DatePicker"]}>
           <DatePicker
-            style={{ width: "max-content" }}
+            style={{ width: "max-content"}}
             label="Введите дату"
             format="DD.MM.YYYY"
             /*defaultValue={dayjs(Date.now())}*/

@@ -2,8 +2,28 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
+const customStyles = {
+  btn:{
+      default: {},
+      reserved: {},
+      hovered: {},
+      delete: {},
+      book: {},
+      selected: {},
+      currentReserve: {}
+  },
+  dropdown:{
+    userLogo: {},
+    userList: {}
+  },
+  context:{
+    context: {},
+    contextItem: {}
+  }
+}
 
 const customClasses = {
+  
   btn: {
     default: "btn",
     reserved: "btn--reserved",
@@ -25,7 +45,7 @@ const customClasses = {
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <App customClasses={customClasses} />
+    <App customClasses={customClasses} customStyles={customStyles} />
   </React.StrictMode>
 );
 
