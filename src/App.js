@@ -12,11 +12,11 @@ import BasicDatePicker from "./Components/BasicDataPicker";
 dayjs.extend(updateLocale);
 
 
-const App = ({step = 30, ...props}) => {
+const App = ({...props}) => {
   /* period.indexOf(time) >= 0 || period.length === 2 && (converter(time) > converter(period[0]) && converter(time) < converter(period[1])) ? "selected-div" : ""*/
   /*time === hovered || period.length === 1 && (converter(time) > Math.min(converter(period[0]), converter(hovered)) && converter(time) < Math.max(converter(period[0]), converter(hovered))) ? "hovered-div" : ""*/
   
-  
+  const [step, setStep] = React.useState(30);
   const [period, setPeriod] = React.useState([]);
   const [hovered, setHovered] = React.useState("");
   const [reserves, setReserves] = React.useState([]);
@@ -619,7 +619,7 @@ const App = ({step = 30, ...props}) => {
   }
 
 
-  const hamamTimeButtons = (startTime, endTime, options) => {
+  const timeButtons = (startTime, endTime, options) => {
     const convert = (string) => {
       return string.split(":").map((el, idx) => idx === 0 ? Number(el) * 60: Number(el)).reduce((acc, el) => acc + el, 0)
     }
@@ -668,15 +668,18 @@ const App = ({step = 30, ...props}) => {
     // });
     if(currentSport === "Зал"){
       setMode(2)
-      return hamamTimeButtons("06:00", "23:00", [{step:30}]);
+      setStep(30)
+      return timeButtons("06:00", "23:00", [{step:30}]);
     }
     else if(currentSport === "Хамам"){
       setMode(1)
-      return hamamTimeButtons("8:00", "01:00", [{step: 90, clean: 30, count: 1}, {step: 180, clean: 60}])
+      setStep(180)
+      return timeButtons("8:00", "01:00", [{step: 90, clean: 30, count: 1}, {step: 180, clean: 60}])
     }
     else{
       setMode(0)
-      return hamamTimeButtons("00:00", "00:00", [{step:15}]);
+      setStep(15)
+      return timeButtons("00:00", "00:00", [{step:15}]);
     }
     // return createTime;
     
@@ -688,13 +691,15 @@ const App = ({step = 30, ...props}) => {
     const id = event.currentTarget.value;
     setCurrentUserId(id);
     setCurrentUser(users[id]);
-    
-    
   };
 
   React.useEffect(() => {
     console.log(reserves);
   }, [changeUser]);
+
+  React.useEffect(() =>{
+    setPeriod([])
+  },[currentDate, mode])
   
 
   const UserLogo = (props) => {

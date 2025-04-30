@@ -8,6 +8,8 @@ import {
     
     DialogTitle,
     
+    duration,
+    
     IconButton,
     InputLabel,
 
@@ -71,7 +73,7 @@ const Modalpopup = (props) => {
   return (
     <Dialog open={props.isOpen} fullWidth>
       <DialogTitle>
-        Бронирование с {props.period[0]} по {props.period[0] && props.increaseTime(...props.period[0]?.split(":").map((e) => Number(e)), props.duration).join(":")} на дату{" "}
+        Бронирование с {props.period[0]} на {props.duration <= 60 ?  props.duration + " минут" : (props.duration / 60) <= 4 ? (props.duration / 60) + " часа" : (props.duration / 60) + " часов"} на дату{" "}
         {props.date.split("-").reverse().join(".")}
         <IconButton style={{ float: "right" }}>
           <CloseIcon onClick={handleClose} color="primary"></CloseIcon>
