@@ -280,7 +280,7 @@ const App = ({...props}) => {
     //   }
   };
 
-  const priceCounter = async (startTime, peopleAmount, mode, reservationDate, robe) => {
+  const priceCounter = async (startTime, peopleAmount, adultRobe, mode, reservationDate) => {
     console.log(startTime)
     if(!startTime){
       return ""
@@ -298,7 +298,7 @@ const App = ({...props}) => {
       time_long: -1,
       count_user: peopleAmount,
       count_child: 0,
-      robe1: robe,
+      robe1: adultRobe,
       robe2: 0,
     };
     // const data = {
@@ -334,7 +334,8 @@ const App = ({...props}) => {
       formData.append(k,v)
     }
     
-    
+  
+    console.log(data) 
     return await fetch('http://localhost:8080/https://rider74.ru/rty/api74.php?put=1', {
       method: 'POST', // Указываем метод POST
       // headers: {

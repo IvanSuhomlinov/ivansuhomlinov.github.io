@@ -26,7 +26,7 @@ const Modalpopup = (props) => {
     setPeopleAmount(e.target.value);
   };
 
-  const handleInventoryChange = (e) => {
+  const handleRobeChange = (e) => {
     setAdultRobe(e.target.value);
   };
 
@@ -46,7 +46,7 @@ const Modalpopup = (props) => {
       const match = str.match(regex);
       return match ? match[0] : null;
   }
-    const priceData = await props.priceCounter(props.period[0], peopleAmount, props.mode, props.date?.split(".").reverse().join("-"), adultRobe)
+    const priceData = await props.priceCounter(props.period[0], peopleAmount, adultRobe, props.mode, props.date?.split(".").reverse().join("-"))
     const price = extractString(priceData)
     setPrice(price);
     // console.log(await props.priceCounter(props.period[0], peopleAmount, props.mode, props.date?.split(".").reverse().join("-")))
@@ -61,6 +61,10 @@ const Modalpopup = (props) => {
   React.useEffect(() => {
     changePrice()
   }, [peopleAmount]);
+
+  React.useEffect(() => {
+    changePrice()
+  }, [adultRobe]);
 
   const childrenSelector = [1,2,3,4,5,6,7,8]
   const peopleSelector = [1,2,3,4,5,6,7,8]
@@ -89,7 +93,7 @@ const Modalpopup = (props) => {
           </Select>
           
           <InputLabel>Выберите количество халатов</InputLabel>
-          <Select value={adultRobe} onChange={handleInventoryChange}>
+          <Select value={adultRobe} onChange={handleRobeChange}>
             <MenuItem value="none">Без халатов</MenuItem>
             {robe.map((e, idx) => {
               return(
