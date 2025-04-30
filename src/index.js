@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
+import {step} from "./settings.js"
 const customStyles = {
   btn:{
       default: {},
@@ -45,7 +46,7 @@ const customClasses = {
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <App customClasses={customClasses} customStyles={customStyles} />
+    <App step={step} customClasses={customClasses} customStyles={customStyles} />
   </React.StrictMode>
 );
 

@@ -1,148 +1,22 @@
 import * as React from "react";
-import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
-import CloseIcon from "@mui/icons-material/Close";
-import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  FormControl,
-  IconButton,
-  InputLabel,
-  List,
-  MenuItem,
-  Select,
-  Stack,
-  TextField,
-} from "@mui/material";
+import {Button} from "@mui/material";
 import 'dayjs/locale/ru';
 import updateLocale from 'dayjs/plugin/updateLocale';
-import { Padding } from "@mui/icons-material";
+import { Iso, Padding } from "@mui/icons-material";
+import Modalpopup from "./Components/Modalpopup";
+import BasicDatePicker from "./Components/BasicDataPicker";
+
+
+
 dayjs.extend(updateLocale);
 
 
-
-
-const Modalpopup = (props) => {
-  const [peopleAmount, setPeopleAmount] = React.useState(1);
-  const [inventory, setInventory] = React.useState("none");
-  const handleReserve = React.useCallback(() => {
-    props.onReserve(peopleAmount, inventory);
-    refresh();
-  }, [peopleAmount, inventory, props.onReserve]);
-
-  const handlePeopleChange = (e) => {
-    setPeopleAmount(e.target.value);
-  };
-
-  const handleInventoryChange = (e) => {
-    setInventory(e.target.value);
-  };
-
-  const refresh = () => {
-    setPeopleAmount(1);
-    setInventory("none");
-  };
-
-  const handleClose = () => {
-    refresh();
-    props.onClose();
-  };
-  const childrenSelector = [1,2,3,4,5,6,7,8]
-  const peopleSelector = [1,2,3,4,5,6,7,8]
-
-  return (
-    <Dialog open={props.isOpen} fullWidth>
-      <DialogTitle>
-        Бронирование с {props.period[0]} по {props.period[1]} на дату{" "}
-        {props.date.split("-").reverse().join(".")}
-        <IconButton style={{ float: "right" }}>
-          <CloseIcon onClick={handleClose} color="primary"></CloseIcon>
-        </IconButton>
-      </DialogTitle>
-      <DialogContent>
-        <Stack spacing={2} margin={2}>
-          <InputLabel id="peopleAmount">Выберите количество человек</InputLabel>
-          
-          <Select value={peopleAmount} onChange={handlePeopleChange}>
-            {peopleSelector.map((e, idx) => {
-              return(
-              <MenuItem value={idx}>{e}</MenuItem>
-              )
-            })}
-            
-          </Select>
-          <InputLabel>Дополнительные услуги</InputLabel>
-          <Select value={inventory} onChange={handleInventoryChange}>
-            <MenuItem value="none">Без доп. услуг</MenuItem>
-            <MenuItem value="tshirts">
-              Манишки на {peopleAmount + 1}{" "}
-              {peopleAmount === 1 ? "человека" : "человек"}
-            </MenuItem>
-          </Select>
-        </Stack>
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={handleClose} color="error" variant="contained">
-          Отмена
-        </Button>
-        <Button onClick={handleReserve} color="success" variant="contained">
-          Забронировать
-        </Button>
-      </DialogActions>
-    </Dialog>
-  );
-};
-
-const App = (props) => {
+const App = ({step = 30, ...props}) => {
   /* period.indexOf(time) >= 0 || period.length === 2 && (converter(time) > converter(period[0]) && converter(time) < converter(period[1])) ? "selected-div" : ""*/
   /*time === hovered || period.length === 1 && (converter(time) > Math.min(converter(period[0]), converter(hovered)) && converter(time) < Math.max(converter(period[0]), converter(hovered))) ? "hovered-div" : ""*/
-
-  const step = 30;
-  const settings = {
-    styles: {
-      btn:{
-        default: {width: "120px", borderRadius: "100px", backgroundColor:"#e8e8e8", color: "#333", boxShadow: "0 0 0 0 #fff",  ...props.customStyles?.btn?.default},
-        reserved: {backgroundColor: rgba(0, 0, 0, .3), cursor: "not-allowed", ...props.customStyles?.btn?.reserved},
-        hovered: {backgroundColor: "aquamarine", ...props.customStyles?.btn?.hovered},
-        delete: {borderRadius: "15px", borderWidth: "1px", fontFamily: "Arial, Helvetica, sans-serif", ...props.customStyles?.btn?.delete},
-        book: {borderRadius:"15px", fontFamily: "Arial, Helvetica, sans-serif", fontSize:"15px", ...props.customStyles?.btn?.book},
-        selected: {backgroundColor: rgb(255,255,107), ...props.customStyles?.btn?.selected},
-        currentReserve: {backgroundColor: rgb(65,251,65), ...props.customStyles?.btn?.currentReserve}
-      },
-      dropdown:{
-        userLogo: {height: "30px", width:"30px", borderRadius:"50%", margin:"5px", ...props.customStyles?.dropdown?.userLogo},
-        userList: {height: "30px", width:"200px", backgroundColor: rgb(144,144,144), fontFamily: "Arial, Helvetica, sans-serif", borderRadius:"20px", margin:"5px", ...props.customStyles?.dropdown?.userList}
-      },
-      context:{
-        context:{backgroundColor:"white", border:"1px solid grey", padding:"0", position:"absolute", borderRadius:"2px", width:"100px", ...props.customStyles?.context?.context},
-        contextItem: {width: "Calc(100%-20px)", cursor:"pointer", listStyle:"none", margin:"0", padding:"10px 20px", ...props.customStyles?.context?.contextItem}
-      }
-    },
-    classes: {
-      btn: {        
-        reserve: props.customClasses?.btn?.reserved || "btn--reserved",
-        currentReserve: props.customClasses?.btn.currentReserve || "btn--current-reserve",
-        hovered: props.customClasses?.btn.hovered || "btn--hovered",
-        selected: props.customClasses?.btn.seleted || "btn--selected",
-        flexDiv: props.customClasses?.btn.flexDiv || "btn--flex-div",
-        book: props.customClasses?.btn.book || "btn--book",
-        delete: props.customClasses?.btn.delete || "btn--delete",
-      },
-      dropdown: {
-        userList:
-          props.customClasses?.dropdown.userList || "dropdown--user-list",
-        userDiv: props.customClasses?.dropdown.userDiv || "dropdown--user-div",
-        logo: props.customClasses?.dropdown.logo || "dropdown--user-logo",
-      },
-    },
-  };
+  
+  
   const [period, setPeriod] = React.useState([]);
   const [hovered, setHovered] = React.useState("");
   const [reserves, setReserves] = React.useState([]);
@@ -167,12 +41,52 @@ const App = (props) => {
   const [position, setPosition] = React.useState({ x: 0, y: 0 });
   const [reserveForDel, setReserveForDel] = React.useState({});
   const [open, setOpen] = React.useState(false);
-  const [personReserve, setPersonReserve] = React.useState({
-    person: {
-      inventory: false,
-      people: 1,
+  const [mode, setMode] = React.useState(2);
+
+  const settings = {
+    styles: {
+      btn:{
+        default: {width: "120px", borderRadius: "100px", backgroundColor:"#e8e8e8", color: "#333", boxShadow: "0 0 0 0 #fff",  ...props.customStyles?.btn?.default},
+        reserved: {backgroundColor: "rgba(0, 0, 0, .3)", cursor: "not-allowed", ...props.customStyles?.btn?.reserved},
+        hovered: {backgroundColor: "aquamarine", ...props.customStyles?.btn?.hovered},
+        delete: {borderRadius: "15px", borderWidth: "1px", fontFamily: "Arial, Helvetica, sans-serif", ...props.customStyles?.btn?.delete},
+        book: {borderRadius:"15px", fontFamily: "Arial, Helvetica, sans-serif", fontSize:"15px", ...props.customStyles?.btn?.book},
+        selected: {backgroundColor: "rgb(255,255,107)", ...props.customStyles?.btn?.selected},
+        currentReserve: {backgroundColor: "rgb(65,251,65)", ...props.customStyles?.btn?.currentReserve}
+      },
+      dropdown:{
+        userLogo: {height: "30px", width:"30px", borderRadius:"50%", margin:"5px", ...props.customStyles?.dropdown?.userLogo},
+        userList: {height: "30px", width:"200px", backgroundColor: "rgb(144,144,144)", fontFamily: "Arial, Helvetica, sans-serif", borderRadius:"20px", margin:"5px", ...props.customStyles?.dropdown?.userList}
+      },
+      context:{
+        context:{backgroundColor:"white", border:"1px solid grey", padding:"0", position:"absolute", borderRadius:"2px", width:"100px", ...props.customStyles?.context?.context},
+        contextItem: {width: "Calc(100%-20px)", cursor:"pointer", listStyle:"none", margin:"0", padding:"10px 20px", ...props.customStyles?.context?.contextItem}
+      }
     },
-  });
+    classes: {
+      btn: {        
+        reserve: props.customClasses?.btn?.reserved || "btn--reserved",
+        currentReserve: props.customClasses?.btn.currentReserve || "btn--current-reserve",
+        hovered: props.customClasses?.btn.hovered || "btn--hovered",
+        selected: props.customClasses?.btn.seleted || "btn--selected",
+        flexDiv: props.customClasses?.btn.flexDiv || "btn--flex-div",
+        book: props.customClasses?.btn.book || "btn--book",
+        delete: props.customClasses?.btn.delete || "btn--delete",
+      },
+      dropdown: {
+        userList:
+          props.customClasses?.dropdown.userList || "dropdown--user-list",
+        userDiv: props.customClasses?.dropdown.userDiv || "dropdown--user-div",
+        logo: props.customClasses?.dropdown.logo || "dropdown--user-logo",
+      },
+    },
+  };
+  // const [personReserve, setPersonReserve] = React.useState({
+  //   person: {
+  //     inventory: false,
+  //     people: 1,
+  //   },
+  // });
 
 
 
@@ -373,6 +287,71 @@ const App = (props) => {
     //   }
   };
 
+  const priceCounter = async (startTime, peopleAmount, mode, reservationDate) => {
+    console.log(startTime)
+    if(!startTime){
+      return ""
+    }
+
+    let [h, m] = startTime?.split(":")
+    
+    const data = {
+      utime: +new Date(`${reservationDate}T00:00:00+05:00`) / 1000,
+      // utime: 1745002800,
+      mode: mode,
+      service: 1,
+      minute1: Number(m),
+      hour1: Number(h),
+      time_long: -1,
+      count_user: peopleAmount,
+      count_child: 0,
+      robe1: 0,
+      robe2: 4,
+    };
+    // const data = {
+    //   utime: 1744052400,
+    //   mode: 1,
+    //   service: 1,
+    //   minute1: 0,
+    //   hour1: 8,
+    //   time_long: -1,
+    //   count_user: 1,
+    //   count_child: 0,
+    //   robe1: 0,
+    //   robe2: 4,
+    // };
+    const jsonData = JSON.stringify(data);
+
+    function objectToFormData(obj) {
+      const formData = new FormData();
+    
+    
+      const jsonStr = JSON.stringify(obj);
+    
+    
+      formData.append('jsonData', jsonStr);
+    
+      return formData;
+    }
+
+    const formData = objectToFormData(data);
+    // const formData = new FormData();
+    for(const [k,v] of Object.entries(data)){
+      console.log(k,": " , v)
+      formData.append(k,v)
+    }
+    
+    
+    return await fetch('http://localhost:8080/https://rider74.ru/rty/api74.php?put=1', {
+      method: 'POST', // Указываем метод POST
+      // headers: {
+      //   'Content-Type': 'application/x-www-form-urlencoded' 
+      // },
+      body: formData
+    }).then(data => data.text())
+
+  }
+
   const deleteReserve = async (e, currentReserve) => {
     e.preventDefault();
     const reserve = {
@@ -412,7 +391,6 @@ const App = (props) => {
   const getCurDate = (date) => {
     console.log(date.day())
     setCurrentDate(date);
-    
   };
 
   const getActiveStyle = (time) => {
@@ -435,6 +413,7 @@ const App = (props) => {
   // };
 
   const getHoveredStyle = (time) => {
+    
     if (
       time === hovered ||
       (period.length === 1 &&
@@ -471,8 +450,9 @@ const App = (props) => {
   }, [currentSport]);
 
   const increaseTime = (h, m, step) => {
-    h = Number(h) + Math.floor(step / 60);
-    m = Number(m) + (step % 60);
+    console.log(h,m,step)
+    h = Number(h) + Math.floor(Number(step) / 60);
+    m = Number(m) + (Number(step) % 60);
     if (m >= 60) {
       h += 1;
       m -= 60;
@@ -526,61 +506,61 @@ const App = (props) => {
       : {backgroundColor: "#b2b2b2", color: "#77787a"};
   };
 
-  const createTimeBtns = (startTime, endTime, step) => {
-    let timeBtns = [];
+  // const createTimeBtns = (startTime, endTime, step) => {
+  //   let timeBtns = [];
 
-    let [currentHours, currentMinutes] = String(startTime)
-      .split(":")
-      .map((el) => Number(el));
-    const [endHours, endMinutes] = endTime.split(":").map((el) => Number(el));
-    while (
-      currentHours < endHours ||
-      (currentHours === endHours && currentMinutes <= endMinutes)
-    ) {
-      const newTime = increaseTime(currentHours, currentMinutes, step);
-      const [newHours, newMinutes] = newTime;
+  //   let [currentHours, currentMinutes] = String(startTime)
+  //     .split(":")
+  //     .map((el) => Number(el));
+  //   const [endHours, endMinutes] = endTime.split(":").map((el) => Number(el));
+  //   while (
+  //     currentHours < endHours ||
+  //     (currentHours === endHours && currentMinutes <= endMinutes)
+  //   ) {
+  //     const newTime = increaseTime(currentHours, currentMinutes, step);
+  //     const [newHours, newMinutes] = newTime;
 
-      const time =
-        String(currentHours).padStart(2, "0") +
-        ":" +
-        String(currentMinutes).padStart(2, "0");
-      const endTime =
-        String(newHours).padStart(2, "0") +
-        ":" +
-        String(newMinutes).padStart(2, "0");
-      const reserved = isReserved([currentHours, currentMinutes], newTime);
-      const btn = reserved.result ? (
-        <Button variant="contained" disabled
-          data-id={reserved.reserveId}
-          onContextMenu={(e) => handleContextMenu(e, reserved.isCurrentUser)}
-          className={`${settings.classes.btn.default} ${getCurrentReserveStyle(
-            reserved.isCurrentUser
-          )}`}
-        >
-          {time} - {endTime}
-        </Button>
-      ) : (
-        <Button
+  //     const time =
+  //       String(currentHours).padStart(2, "0") +
+  //       ":" +
+  //       String(currentMinutes).padStart(2, "0");
+  //     const endTime =
+  //       String(newHours).padStart(2, "0") +
+  //       ":" +
+  //       String(newMinutes).padStart(2, "0");
+  //     const reserved = isReserved([currentHours, currentMinutes], newTime);
+  //     const btn = reserved.result ? (
+  //       <Button variant="contained" disabled
+  //         data-id={reserved.reserveId}
+  //         onContextMenu={(e) => handleContextMenu(e, reserved.isCurrentUser)}
+  //         className={`${settings.classes.btn.default} ${getCurrentReserveStyle(
+  //           reserved.isCurrentUser
+  //         )}`}
+  //       >
+  //         {time} - {endTime}
+  //       </Button>
+  //     ) : (
+  //       <Button
         
-          onContextMenu={contextMenuDiv}
-          data-time={time}
-          onMouseLeave={handleMouseLeave}
-          onMouseEnter={handleMouseEnter}
-          onClick={handleClick}
-          className={`${settings.classes.btn.default} ${getActiveStyle(
-            time
-          )} ${getHoveredStyle(time)}`}
-        >
-          {time} - {endTime}
-        </Button>
-      );
+  //         onContextMenu={contextMenuDiv}
+  //         data-time={time}
+  //         onMouseLeave={handleMouseLeave}
+  //         onMouseEnter={handleMouseEnter}
+  //         onClick={handleClick}
+  //         className={`${settings.classes.btn.default} ${getActiveStyle(
+  //           time
+  //         )} ${getHoveredStyle(time)}`}
+  //       >
+  //         {time} - {endTime}
+  //       </Button>
+  //     );
 
-      timeBtns.push(btn);
-      currentHours = newHours;
-      currentMinutes = newMinutes;
-    }
-    return timeBtns;
-  };
+  //     timeBtns.push(btn);
+  //     currentHours = newHours;
+  //     currentMinutes = newMinutes;
+  //   }
+  //   return timeBtns;
+  // };
 
   const reservationBody = (count, currentHours, currentMinutes, clean, timeBtns, step) => {
     count -= 1;        
@@ -619,6 +599,7 @@ const App = (props) => {
               style={{...settings.styles.btn.default, ...getHoveredStyle(time), ...getActiveStyle(time)}}
               onContextMenu={contextMenuDiv}
               data-time={time}
+              data-end-time={endTime}
               onMouseLeave={handleMouseLeave}
               onMouseEnter={handleMouseEnter}
               onClick={handleClick}
@@ -633,6 +614,7 @@ const App = (props) => {
         timeBtns.push(btn)
         currentHours = finalHours;
         currentMinutes = finalMinutes;
+        
         return [count, currentHours, currentMinutes]
   }
 
@@ -668,9 +650,6 @@ const App = (props) => {
     return timeBtns
   }
 
-  const priceCalc = () => {
-    
-  }
 
   const CreateTimeButtons = () => {
     // return hamamTimeButtons("8:00", "01:00", [{step: 90, clean: 30, count: 1}, {step: 180, clean: 60}])
@@ -688,12 +667,15 @@ const App = (props) => {
     //   );
     // });
     if(currentSport === "Зал"){
+      setMode(2)
       return hamamTimeButtons("06:00", "23:00", [{step:30}]);
     }
     else if(currentSport === "Хамам"){
+      setMode(1)
       return hamamTimeButtons("8:00", "01:00", [{step: 90, clean: 30, count: 1}, {step: 180, clean: 60}])
     }
     else{
+      setMode(0)
       return hamamTimeButtons("00:00", "00:00", [{step:15}]);
     }
     // return createTime;
@@ -706,6 +688,8 @@ const App = (props) => {
     const id = event.currentTarget.value;
     setCurrentUserId(id);
     setCurrentUser(users[id]);
+    
+    
   };
 
   React.useEffect(() => {
@@ -769,6 +753,7 @@ const App = (props) => {
   
   const changeSport = (e) => {
     setCurrentSport(e.target.value)
+    
   }
 
 
@@ -787,22 +772,7 @@ const App = (props) => {
   };
 
   
-  const BasicDatePicker = () => {
-    return (
-      <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="ru">
-        <DemoContainer components={["DatePicker"]}>
-          <DatePicker
-            style={{ width: "max-content"}}
-            label="Введите дату"
-            format="DD.MM.YYYY"
-            /*defaultValue={dayjs(Date.now())}*/
-            onChange={getCurDate}
-            value={currentDate}
-          />
-        </DemoContainer>
-      </LocalizationProvider>
-    );
-  };
+  
 
   return (
     <div onClick={() => setIsVisible(false)}>
@@ -840,7 +810,7 @@ const App = (props) => {
         />
       </div>
 
-      <BasicDatePicker />
+      <BasicDatePicker currentDate={currentDate} getCurDate={getCurDate}/>
 
       <SportDropdown changeSport={changeSport} halls={halls} />
       <div className={settings.classes.btn.flexDiv}>
@@ -857,6 +827,7 @@ const App = (props) => {
       >
         Перейти к бронированию
       </Button>
+      {/* <Button onClick={(e) => console.log(mode)}>Узнать мод</Button> */}
       {/* <button className={settings.classes.btn.book} onClick={reserveTime}>Забронировать</button> */}
       <Modalpopup
         date={getFormatDate(currentDate)}
@@ -864,6 +835,12 @@ const App = (props) => {
         onClose={() => setOpen(false)}
         isOpen={open}
         period={period}
+        priceCounter={priceCounter}
+        mode={mode}
+        increaseTime={increaseTime}
+        duration={period.length === 2
+          ? converter(period[1]) - converter(period[0]) + step
+          : step}
       />
     </div>
   );
