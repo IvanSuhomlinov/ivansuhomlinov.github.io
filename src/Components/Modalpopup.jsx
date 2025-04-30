@@ -5,14 +5,9 @@ import {
     Dialog,
     DialogActions,
     DialogContent,
-    
     DialogTitle,
-    
-    duration,
-    
     IconButton,
     InputLabel,
-
     MenuItem,
     Select,
     Stack,
@@ -20,24 +15,24 @@ import {
 
 const Modalpopup = (props) => {
   const [peopleAmount, setPeopleAmount] = React.useState(1);
-  const [inventory, setInventory] = React.useState("none");
+  const [adultRobe, setAdultRobe] = React.useState(1);
   const [price, setPrice] = React.useState("");
   const handleReserve = React.useCallback(() => {
-    props.onReserve(peopleAmount, inventory);
+    props.onReserve(peopleAmount, adultRobe);
     refresh();
-  }, [peopleAmount, inventory, props.onReserve]);
+  }, [peopleAmount, adultRobe, props.onReserve]);
 
   const handlePeopleChange = (e) => {
     setPeopleAmount(e.target.value);
   };
 
   const handleInventoryChange = (e) => {
-    setInventory(e.target.value);
+    setAdultRobe(e.target.value);
   };
 
   const refresh = () => {
     setPeopleAmount(1);
-    setInventory("none");
+    setAdultRobe(1);
   };
 
   const handleClose = () => {
@@ -51,7 +46,7 @@ const Modalpopup = (props) => {
       const match = str.match(regex);
       return match ? match[0] : null;
   }
-    const priceData = await props.priceCounter(props.period[0], peopleAmount, props.mode, props.date?.split(".").reverse().join("-"))
+    const priceData = await props.priceCounter(props.period[0], peopleAmount, props.mode, props.date?.split(".").reverse().join("-"), adultRobe)
     const price = extractString(priceData)
     setPrice(price);
     // console.log(await props.priceCounter(props.period[0], peopleAmount, props.mode, props.date?.split(".").reverse().join("-")))
@@ -69,6 +64,7 @@ const Modalpopup = (props) => {
 
   const childrenSelector = [1,2,3,4,5,6,7,8]
   const peopleSelector = [1,2,3,4,5,6,7,8]
+  const robe = [1,2,3,4,5,6,7,8]
 
   return (
     <Dialog open={props.isOpen} fullWidth>
@@ -92,13 +88,14 @@ const Modalpopup = (props) => {
             
           </Select>
           
-          <InputLabel>Дополнительные услуги</InputLabel>
-          <Select value={inventory} onChange={handleInventoryChange}>
-            <MenuItem value="none">Без доп. услуг</MenuItem>
-            <MenuItem value="tshirts">
-              Халаты на {peopleAmount}{" "}
-              {peopleAmount === 1 ? "человека" : "человек"}
-            </MenuItem>
+          <InputLabel>Выберите количество халатов</InputLabel>
+          <Select value={adultRobe} onChange={handleInventoryChange}>
+            <MenuItem value="none">Без халатов</MenuItem>
+            {robe.map((e, idx) => {
+              return(
+                <MenuItem key={idx} value={e}>{e} шт</MenuItem>
+              )
+            })}
           </Select>
           Итого: {price}
         </Stack>

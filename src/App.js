@@ -6,7 +6,8 @@ import updateLocale from 'dayjs/plugin/updateLocale';
 import { Iso, Padding } from "@mui/icons-material";
 import Modalpopup from "./Components/Modalpopup";
 import BasicDatePicker from "./Components/BasicDataPicker";
-
+import converter from "./Components/converter";
+import getFormatDate from "./Components/getFormateDate";
 
 
 dayjs.extend(updateLocale);
@@ -249,17 +250,9 @@ const App = ({...props}) => {
   }*/
   };
 
-  const converter = (time) => {
-    if (!time) return;
-    const [h, m] = time.split(":");
-    const min = Number(h) * 60;
-    return Number(min) + Number(m);
-  };
+  
 
-  const getFormatDate = (date) => {
-    const formatDate = date.format("YYYY-MM-DD");
-    return formatDate;
-  };
+  
 
   const getReserves = async () => {
     console.log(currentDate);
@@ -287,7 +280,7 @@ const App = ({...props}) => {
     //   }
   };
 
-  const priceCounter = async (startTime, peopleAmount, mode, reservationDate) => {
+  const priceCounter = async (startTime, peopleAmount, mode, reservationDate, robe) => {
     console.log(startTime)
     if(!startTime){
       return ""
@@ -305,8 +298,8 @@ const App = ({...props}) => {
       time_long: -1,
       count_user: peopleAmount,
       count_child: 0,
-      robe1: 0,
-      robe2: 4,
+      robe1: robe,
+      robe2: 0,
     };
     // const data = {
     //   utime: 1744052400,
