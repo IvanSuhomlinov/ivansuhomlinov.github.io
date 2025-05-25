@@ -307,7 +307,7 @@ const App = ({...props}) => {
     }
   }
 
-  const priceCounter = async (startTime, peopleAmount, adultRobe, mode, reservationDate, childrenAmount, timeLong) => {
+  const priceCounter = async (startTime, peopleAmount, adultRobe, mode, reservationDate, childrenAmount, childrenRobeAmount) => {
     console.log(startTime)
     if(!startTime){
       return ""
@@ -326,7 +326,7 @@ const App = ({...props}) => {
       count_user: peopleAmount,
       count_child: childrenAmount,
       robe1: adultRobe,
-      robe2: 0,
+      robe2: childrenRobeAmount,
     };
     // const data = {
     //   utime: 1744052400,

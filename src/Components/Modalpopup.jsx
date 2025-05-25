@@ -17,6 +17,7 @@ const Modalpopup = (props) => {
   const [childrenAmount, setChildrenAmount] = React.useState(1);
   const [adultRobe, setAdultRobe] = React.useState(1);
   const [price, setPrice] = React.useState("");
+  const [childrenRobeAmount, setChildrenRobeAmount] = React.useState(1)
   const handleReserve = React.useCallback(() => {
     props.onReserve(peopleAmount, adultRobe);
     refresh();
@@ -44,13 +45,17 @@ const Modalpopup = (props) => {
     props.onClose();
   };
 
+  const handleChildrenRobe = (e) => {
+    setChildrenRobeAmount(e.target.value)
+  }
+
   const changePrice = async () => {
     function extractString(str) {
       const regex = /(?<=:)(.*?)(?=Р)/;
       const match = str.match(regex);
       return match ? match[0] : null;
   }
-    const priceData = await props.priceCounter(props.period[0], peopleAmount, adultRobe, props.mode, props.date?.split(".").reverse().join("-"), childrenAmount)
+    const priceData = await props.priceCounter(props.period[0], peopleAmount, adultRobe, props.mode, props.date?.split(".").reverse().join("-"), childrenAmount, childrenRobeAmount)
     const price = extractString(priceData)
     setPrice(price);
     // console.log(await props.priceCounter(props.period[0], peopleAmount, props.mode, props.date?.split(".").reverse().join("-")))
@@ -72,13 +77,17 @@ const Modalpopup = (props) => {
 
   React.useEffect(() => {
     changePrice()
+  }, [childrenRobeAmount])
+
+  React.useEffect(() => {
+    changePrice()
   }, [adultRobe]);
 
   const childrenSelector = [1,2,3,4,5,6,7,8]
   const peopleSelector = [1,2,3,4,5,6,7,8]
   const robe = [1,2,3,4,5,6,7,8]
   const childrenRobe = [1,2,3,4,5,6,7,8]
-  
+
   
   
 
@@ -114,6 +123,9 @@ const Modalpopup = (props) => {
             childrenSelector={childrenSelector}
             handleChildrenChange={handleChildrenChange}
             childrenAmount={childrenAmount}
+            childrenRobe={childrenRobe}
+            childrenRobeAmount={childrenRobeAmount}
+            handleChildrenRobe={handleChildrenRobe}
         />
       ) : <CarwashStack />}
       </DialogContent>
