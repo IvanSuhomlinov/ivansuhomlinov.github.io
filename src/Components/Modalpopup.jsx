@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import CloseIcon from "@mui/icons-material/Close";
 import {
     Button,
@@ -6,15 +6,15 @@ import {
     DialogActions,
     DialogContent,
     DialogTitle,
-    IconButton,
-    InputLabel,
-    MenuItem,
-    Select,
-    Stack,
+    IconButton
   } from "@mui/material";
+  import GymStack from './GymStack';
+  import HamamStack from './HamamStack';
+  import CarwashStack from './CarwashStack';
 
 const Modalpopup = (props) => {
   const [peopleAmount, setPeopleAmount] = React.useState(1);
+  const [childrenAmount, setChildrenAmount] = React.useState(1);
   const [adultRobe, setAdultRobe] = React.useState(1);
   const [price, setPrice] = React.useState("");
   const handleReserve = React.useCallback(() => {
@@ -25,6 +25,10 @@ const Modalpopup = (props) => {
   const handlePeopleChange = (e) => {
     setPeopleAmount(e.target.value);
   };
+
+  const handleChildrenChange = (e) => {
+    setChildrenAmount(e.target.value)
+  }
 
   const handleRobeChange = (e) => {
     setAdultRobe(e.target.value);
@@ -46,7 +50,7 @@ const Modalpopup = (props) => {
       const match = str.match(regex);
       return match ? match[0] : null;
   }
-    const priceData = await props.priceCounter(props.period[0], peopleAmount, adultRobe, props.mode, props.date?.split(".").reverse().join("-"))
+    const priceData = await props.priceCounter(props.period[0], peopleAmount, adultRobe, props.mode, props.date?.split(".").reverse().join("-"), childrenAmount)
     const price = extractString(priceData)
     setPrice(price);
     // console.log(await props.priceCounter(props.period[0], peopleAmount, props.mode, props.date?.split(".").reverse().join("-")))
@@ -64,11 +68,19 @@ const Modalpopup = (props) => {
 
   React.useEffect(() => {
     changePrice()
+  }, [childrenAmount])
+
+  React.useEffect(() => {
+    changePrice()
   }, [adultRobe]);
 
   const childrenSelector = [1,2,3,4,5,6,7,8]
   const peopleSelector = [1,2,3,4,5,6,7,8]
   const robe = [1,2,3,4,5,6,7,8]
+  const childrenRobe = [1,2,3,4,5,6,7,8]
+  
+  
+  
 
   return (
     <Dialog open={props.isOpen} fullWidth>
@@ -80,29 +92,30 @@ const Modalpopup = (props) => {
         </IconButton>
       </DialogTitle>
       <DialogContent>
-        <Stack spacing={2} margin={2}>
-          <InputLabel id="peopleAmount">Выберите количество человек</InputLabel>
-          
-          <Select value={peopleAmount} onChange={handlePeopleChange}>
-            {peopleSelector.map((e, idx) => {
-              return(
-              <MenuItem key={idx} value={e}>{e}</MenuItem>
-              )
-            })}
-            
-          </Select>
-          
-          <InputLabel>Выберите количество халатов</InputLabel>
-          <Select value={adultRobe} onChange={handleRobeChange}>
-            <MenuItem value="none">Без халатов</MenuItem>
-            {robe.map((e, idx) => {
-              return(
-                <MenuItem key={idx} value={e}>{e} шт</MenuItem>
-              )
-            })}
-          </Select>
-          Итого: {price}
-        </Stack>
+        {props.currentSport === "Зал" ? (
+          <GymStack 
+            peopleAmount={peopleAmount}
+            handlePeopleChange={handlePeopleChange}
+            peopleSelector={peopleSelector}
+            adultRobe={adultRobe}
+            handleRobeChange={handleRobeChange}
+            robe={robe}
+            price={price}
+          />
+        ) : props.currentSport === "Хамам" ? (
+        <HamamStack 
+            peopleAmount={peopleAmount}
+            handlePeopleChange={handlePeopleChange}
+            peopleSelector={peopleSelector}
+            adultRobe={adultRobe}
+            handleRobeChange={handleRobeChange}
+            robe={robe}
+            price={price}
+            childrenSelector={childrenSelector}
+            handleChildrenChange={handleChildrenChange}
+            childrenAmount={childrenAmount}
+        />
+      ) : <CarwashStack />}
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose} color="error" variant="contained">

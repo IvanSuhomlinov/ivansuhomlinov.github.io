@@ -8,7 +8,7 @@ import Modalpopup from "./Components/Modalpopup";
 import BasicDatePicker from "./Components/BasicDataPicker";
 import converter from "./Components/converter";
 import getFormatDate from "./Components/getFormateDate";
-
+import { useState } from "react";
 
 dayjs.extend(updateLocale);
 
@@ -17,12 +17,11 @@ const App = ({...props}) => {
   /* period.indexOf(time) >= 0 || period.length === 2 && (converter(time) > converter(period[0]) && converter(time) < converter(period[1])) ? "selected-div" : ""*/
   /*time === hovered || period.length === 1 && (converter(time) > Math.min(converter(period[0]), converter(hovered)) && converter(time) < Math.max(converter(period[0]), converter(hovered))) ? "hovered-div" : ""*/
   
-  const [step, setStep] = React.useState(30);
-  const [period, setPeriod] = React.useState([]);
-  const [hovered, setHovered] = React.useState("");
-  const [reserves, setReserves] = React.useState([]);
-  const halls = ["Зал", "Хамам", "Автомойка"]
-  const [currentSport, setCurrentSport] = React.useState("Зал");
+  const [step, setStep] = useState(30);
+  const [period, setPeriod] = useState([]);
+  const [hovered, setHovered] = useState("");
+  const [reserves, setReserves] = useState([]);
+  const [currentSport, setCurrentSport] = useState("Зал");
   const [users, setUsers] = React.useState([
     {
       name: "Ческидов Александр Леонидович",
@@ -43,6 +42,9 @@ const App = ({...props}) => {
   const [reserveForDel, setReserveForDel] = React.useState({});
   const [open, setOpen] = React.useState(false);
   const [mode, setMode] = React.useState(2);
+  const [timeLong, setTimeLong] = React.useState(0)
+  const [endTime, setEndTime] = React.useState("")
+  const halls = ["Зал", "Хамам", "Автомойка"]
 
   const settings = {
     styles: {
@@ -88,6 +90,7 @@ const App = ({...props}) => {
   //     people: 1,
   //   },
   // });
+
 
 
 
@@ -198,6 +201,8 @@ const App = ({...props}) => {
     }*/
   };
 
+  
+
   const handleClick = (event) => {
     const currentTime = event.currentTarget.dataset.time;
     // setSelectedButton([currentTime]);
@@ -280,7 +285,29 @@ const App = ({...props}) => {
     //   }
   };
 
-  const priceCounter = async (startTime, peopleAmount, adultRobe, mode, reservationDate) => {
+  const longCounter = () => {
+    if(currentSport === "Хамам"){
+      let long = document.querySelectorAll("[data-is-active='true']")
+      return long.length * -1
+      
+    }
+    else{
+
+      if(period.length === 2){
+
+        let long = converter(period[1]) - converter(period[0]) + step
+        return long;
+
+      }
+
+      else{
+        return step;
+      }
+      
+    }
+  }
+
+  const priceCounter = async (startTime, peopleAmount, adultRobe, mode, reservationDate, childrenAmount, timeLong) => {
     console.log(startTime)
     if(!startTime){
       return ""
@@ -295,9 +322,9 @@ const App = ({...props}) => {
       service: 1,
       minute1: Number(m),
       hour1: Number(h),
-      time_long: -1,
+      time_long: longCounter(),
       count_user: peopleAmount,
-      count_child: 0,
+      count_child: childrenAmount,
       robe1: adultRobe,
       robe2: 0,
     };
@@ -335,7 +362,7 @@ const App = ({...props}) => {
     }
     
   
-    console.log(data) 
+    // console.log("Форм дата: " + JSON.stringify(formData))
     return await fetch('http://localhost:8080/https://rider74.ru/rty/api74.php?put=1', {
       method: 'POST', // Указываем метод POST
       // headers: {
@@ -394,9 +421,15 @@ const App = ({...props}) => {
         converter(time) > converter(period[0]) &&
         converter(time) < converter(period[1]))
     ) {
-      return {backgroundColor: "yellow"};
+      return {
+        isActive: true,
+        activeStyles:{backgroundColor: "yellow"}
+      };
     } else {
-      return {};
+      return {
+        isActive: false,
+        activeStyles:{}
+      };
     }
   };
 
@@ -429,7 +462,20 @@ const App = ({...props}) => {
   }, [currentDate]);
 
   React.useEffect(() => {
-    console.log("Период равен: " + period);
+    if(period.length >= 1){
+      const activeButtons = document.querySelectorAll("[data-is-active='true']");
+    const endTimes = Array.from(activeButtons).map(button => 
+      Number(button.dataset.endTime || 0)
+    );
+    
+    const maxEndTime = endTimes.length > 0 
+      ? Math.max(...endTimes) 
+      : 0;
+    
+    console.log("Active endTimes:", endTimes); // Отладка
+    setEndTime(maxEndTime);
+    }
+
     if (period.length === 2) {
       console.log("Период равен: " + period);
     }
@@ -444,7 +490,7 @@ const App = ({...props}) => {
   }, [currentSport]);
 
   const increaseTime = (h, m, step) => {
-    console.log(h,m,step)
+    // console.log(h,m,step)
     h = Number(h) + Math.floor(Number(step) / 60);
     m = Number(m) + (Number(step) % 60);
     if (m >= 60) {
@@ -557,7 +603,7 @@ const App = ({...props}) => {
   // };
 
   const reservationBody = (count, currentHours, currentMinutes, clean, timeBtns, step) => {
-    count -= 1;        
+        count -= 1;        
         const newTime = increaseTime(currentHours, currentMinutes, step) 
         let [newHours, newMinutes] = newTime;
         const finalTime = increaseTime(newHours, newMinutes, clean)
@@ -579,6 +625,7 @@ const App = ({...props}) => {
             <Button variant="contained" 
             style={{...settings.styles.btn.default, ...getCurrentReserveStyle(reserved.isCurrentUser && isCorrectTime)}}
               data-id={reserved.reserveId}
+              data-end-time={endTime}
               onContextMenu={(e) => handleContextMenu(e, reserved.isCurrentUser)}
               // className={`${settings.classes.btn.default} ${getCurrentReserveStyle(
               //   reserved.isCurrentUser
@@ -587,13 +634,15 @@ const App = ({...props}) => {
             >
               {time} - {endTime}
             </Button>
-          ) : (
-            <Button
-            variant="contained"
-              style={{...settings.styles.btn.default, ...getHoveredStyle(time), ...getActiveStyle(time)}}
+          ) : (() => {
+            const {isActive, activeStyles} = getActiveStyle(time);
+             return <Button
+              variant="contained"
+              style={{...settings.styles.btn.default, ...getHoveredStyle(time), ...activeStyles}}
               onContextMenu={contextMenuDiv}
               data-time={time}
               data-end-time={endTime}
+              data-is-active={isActive}
               onMouseLeave={handleMouseLeave}
               onMouseEnter={handleMouseEnter}
               onClick={handleClick}
@@ -602,8 +651,8 @@ const App = ({...props}) => {
               // )} ${getHoveredStyle(time)}`}
             >
               {time} - {endTime}
-            </Button>
-          )
+            </Button>}
+          )()
   
         timeBtns.push(btn)
         currentHours = finalHours;
@@ -660,6 +709,9 @@ const App = ({...props}) => {
     //     </div>
     //   );
     // });
+
+    
+
     if(currentSport === "Зал"){
       setMode(2)
       setStep(30)
@@ -817,11 +869,13 @@ const App = ({...props}) => {
         {/* <button onClick={deleteReserve}>Удалить</button> */}
       </div>
       <Button
-        onClick={() =>
+        onClick={() =>{
+          const activeButtons = document.querySelectorAll("[data-is-active='true']")
+          console.log(activeButtons.length)
           period.length > 1
             ? setOpen(true)
             : alert("Выберите время начала и время окончания!")
-        }
+        }}
         variant="contained"
       >
         Перейти к бронированию
@@ -840,6 +894,7 @@ const App = ({...props}) => {
         duration={period.length === 2
           ? converter(period[1]) - converter(period[0]) + step
           : step}
+        currentSport={currentSport}
       />
     </div>
   );
