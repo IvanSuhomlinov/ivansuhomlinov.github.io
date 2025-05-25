@@ -3,7 +3,6 @@ import dayjs from "dayjs";
 import {Button} from "@mui/material";
 import 'dayjs/locale/ru';
 import updateLocale from 'dayjs/plugin/updateLocale';
-import { Iso, Padding } from "@mui/icons-material";
 import Modalpopup from "./Components/Modalpopup";
 import BasicDatePicker from "./Components/BasicDataPicker";
 import converter from "./Components/converter";
@@ -205,7 +204,24 @@ const App = ({...props}) => {
 
   const handleClick = (event) => {
     const currentTime = event.currentTarget.dataset.time;
-    // setSelectedButton([currentTime]);
+    const newEndTime = event.currentTarget.dataset.endTime;
+  
+ 
+  if (period.length === 0) {
+    setEndTime(newEndTime);
+  } 
+  // Если это второй клик (конец периода)
+  else if (period.length === 1) {
+    // Устанавливаем более позднее время как endTime
+    const currentEnd = converter(newEndTime);
+    const prevEnd = converter(endTime);
+    setEndTime(currentEnd > prevEnd ? newEndTime : endTime);
+  }
+  else {
+    setEndTime(newEndTime);
+  }
+    
+
     comparePeriod(currentTime);
   };
 
@@ -462,20 +478,19 @@ const App = ({...props}) => {
   }, [currentDate]);
 
   React.useEffect(() => {
-    if(period.length >= 1){
-      const activeButtons = document.querySelectorAll("[data-is-active='true']");
-    const endTimes = Array.from(activeButtons).map(button => 
-      Number(button.dataset.endTime || 0)
-    );
+    // if(period.length >= 1){
+    //   const activeButtons = document.querySelectorAll("[data-is-active='true']");
+    // const endTimes = Array.from(activeButtons).map(button => 
+    //   Number(button.dataset.endTime || 0)
+    // );
     
-    const maxEndTime = endTimes.length > 0 
-      ? Math.max(...endTimes) 
-      : 0;
+    // const maxEndTime = endTimes.length > 0 
+    //   ? Math.max(...endTimes) 
+    //   : 0;
     
-    console.log("Active endTimes:", endTimes); // Отладка
-    setEndTime(maxEndTime);
-    }
-
+    // console.log("Active endTimes:", endTimes); // Отладка
+    // setEndTime(maxEndTime);
+    // }
     if (period.length === 2) {
       console.log("Период равен: " + period);
     }
@@ -483,6 +498,7 @@ const App = ({...props}) => {
 
   React.useEffect(() => {
     console.log(currentUser);
+    console.log("последние времена: " + endTime)
   }, [currentUser]);
 
   React.useEffect(() => {
@@ -745,6 +761,7 @@ const App = ({...props}) => {
 
   React.useEffect(() =>{
     setPeriod([])
+    setEndTime("")
   },[currentDate, mode])
   
 
@@ -895,6 +912,7 @@ const App = ({...props}) => {
           ? converter(period[1]) - converter(period[0]) + step
           : step}
         currentSport={currentSport}
+        endTime={endTime}
       />
     </div>
   );
