@@ -1,8 +1,8 @@
 import * as React from "react";
 import dayjs from "dayjs";
-import {Button} from "@mui/material";
-import 'dayjs/locale/ru';
-import updateLocale from 'dayjs/plugin/updateLocale';
+import { Button } from "@mui/material";
+import "dayjs/locale/ru";
+import updateLocale from "dayjs/plugin/updateLocale";
 import Modalpopup from "./Components/Modalpopup";
 import BasicDatePicker from "./Components/BasicDataPicker";
 import converter from "./Components/converter";
@@ -11,11 +11,10 @@ import { useState } from "react";
 
 dayjs.extend(updateLocale);
 
-
-const App = ({...props}) => {
+const App = ({ ...props }) => {
   /* period.indexOf(time) >= 0 || period.length === 2 && (converter(time) > converter(period[0]) && converter(time) < converter(period[1])) ? "selected-div" : ""*/
   /*time === hovered || period.length === 1 && (converter(time) > Math.min(converter(period[0]), converter(hovered)) && converter(time) < Math.max(converter(period[0]), converter(hovered))) ? "hovered-div" : ""*/
-  
+
   const [step, setStep] = useState(30);
   const [period, setPeriod] = useState([]);
   const [hovered, setHovered] = useState("");
@@ -41,34 +40,95 @@ const App = ({...props}) => {
   const [reserveForDel, setReserveForDel] = React.useState({});
   const [open, setOpen] = React.useState(false);
   const [mode, setMode] = React.useState(2);
-  const [timeLong, setTimeLong] = React.useState(0)
-  const [endTime, setEndTime] = React.useState("")
-  const halls = ["Зал", "Хамам", "Автомойка"]
+  const [timeLong, setTimeLong] = React.useState(0);
+  const [endTime, setEndTime] = React.useState("");
+  const [currentButtonId, setCurrentButtonId] = useState(0)
+  const halls = ["Зал", "Хамам", "Автомойка"];
 
   const settings = {
     styles: {
-      btn:{
-        default: {width: "120px", borderRadius: "100px", backgroundColor:"#e8e8e8", color: "#333", boxShadow: "0 0 0 0 #fff",  ...props.customStyles?.btn?.default},
-        reserved: {backgroundColor: "rgba(0, 0, 0, .3)", cursor: "not-allowed", ...props.customStyles?.btn?.reserved},
-        hovered: {backgroundColor: "aquamarine", ...props.customStyles?.btn?.hovered},
-        delete: {borderRadius: "15px", borderWidth: "1px", fontFamily: "Arial, Helvetica, sans-serif", ...props.customStyles?.btn?.delete},
-        book: {borderRadius:"15px", fontFamily: "Arial, Helvetica, sans-serif", fontSize:"15px", ...props.customStyles?.btn?.book},
-        selected: {backgroundColor: "rgb(255,255,107)", ...props.customStyles?.btn?.selected},
-        currentReserve: {backgroundColor: "rgb(65,251,65)", ...props.customStyles?.btn?.currentReserve}
+      btn: {
+        default: {
+          width: "120px",
+          borderRadius: "100px",
+          backgroundColor: "#e8e8e8",
+          color: "#333",
+          boxShadow: "0 0 0 0 #fff",
+          ...props.customStyles?.btn?.default,
+        },
+        reserved: {
+          backgroundColor: "rgba(0, 0, 0, .3)",
+          cursor: "not-allowed",
+          ...props.customStyles?.btn?.reserved,
+        },
+        hovered: {
+          backgroundColor: "aquamarine",
+          ...props.customStyles?.btn?.hovered,
+        },
+        delete: {
+          borderRadius: "15px",
+          borderWidth: "1px",
+          fontFamily: "Arial, Helvetica, sans-serif",
+          ...props.customStyles?.btn?.delete,
+        },
+        book: {
+          borderRadius: "15px",
+          fontFamily: "Arial, Helvetica, sans-serif",
+          fontSize: "15px",
+          ...props.customStyles?.btn?.book,
+        },
+        selected: {
+          backgroundColor: "rgb(255,255,107)",
+          ...props.customStyles?.btn?.selected,
+        },
+        currentReserve: {
+          backgroundColor: "rgb(65,251,65)",
+          ...props.customStyles?.btn?.currentReserve,
+        },
       },
-      dropdown:{
-        userLogo: {height: "30px", width:"30px", borderRadius:"50%", margin:"5px", ...props.customStyles?.dropdown?.userLogo},
-        userList: {height: "30px", width:"200px", backgroundColor: "rgb(144,144,144)", fontFamily: "Arial, Helvetica, sans-serif", borderRadius:"20px", margin:"5px", ...props.customStyles?.dropdown?.userList}
+      dropdown: {
+        userLogo: {
+          height: "30px",
+          width: "30px",
+          borderRadius: "50%",
+          margin: "5px",
+          ...props.customStyles?.dropdown?.userLogo,
+        },
+        userList: {
+          height: "30px",
+          width: "200px",
+          backgroundColor: "rgb(144,144,144)",
+          fontFamily: "Arial, Helvetica, sans-serif",
+          borderRadius: "20px",
+          margin: "5px",
+          ...props.customStyles?.dropdown?.userList,
+        },
       },
-      context:{
-        context:{backgroundColor:"white", border:"1px solid grey", padding:"0", position:"absolute", borderRadius:"2px", width:"100px", ...props.customStyles?.context?.context},
-        contextItem: {width: "Calc(100%-20px)", cursor:"pointer", listStyle:"none", margin:"0", padding:"10px 20px", ...props.customStyles?.context?.contextItem}
-      }
+      context: {
+        context: {
+          backgroundColor: "white",
+          border: "1px solid grey",
+          padding: "0",
+          position: "absolute",
+          borderRadius: "2px",
+          width: "100px",
+          ...props.customStyles?.context?.context,
+        },
+        contextItem: {
+          width: "Calc(100%-20px)",
+          cursor: "pointer",
+          listStyle: "none",
+          margin: "0",
+          padding: "10px 20px",
+          ...props.customStyles?.context?.contextItem,
+        },
+      },
     },
     classes: {
-      btn: {        
+      btn: {
         reserve: props.customClasses?.btn?.reserved || "btn--reserved",
-        currentReserve: props.customClasses?.btn.currentReserve || "btn--current-reserve",
+        currentReserve:
+          props.customClasses?.btn.currentReserve || "btn--current-reserve",
         hovered: props.customClasses?.btn.hovered || "btn--hovered",
         selected: props.customClasses?.btn.seleted || "btn--selected",
         flexDiv: props.customClasses?.btn.flexDiv || "btn--flex-div",
@@ -89,9 +149,6 @@ const App = ({...props}) => {
   //     people: 1,
   //   },
   // });
-
-
-
 
   const handleReserve = async (peopleAmount, inventory) => {
     const duration =
@@ -143,7 +200,7 @@ const App = ({...props}) => {
       e.preventDefault();
       const id = e.currentTarget.dataset.id;
       setReserveForDel(...reserves.filter((el) => el.id === id));
-      setPosition({x: e.clientX, y: e.clientY});
+      setPosition({ x: e.clientX, y: e.clientY });
       setIsVisible(true);
     }
   };
@@ -200,27 +257,23 @@ const App = ({...props}) => {
     }*/
   };
 
-  
-
   const handleClick = (event) => {
     const currentTime = event.currentTarget.dataset.time;
     const newEndTime = event.currentTarget.dataset.endTime;
-  
- 
-  if (period.length === 0) {
-    setEndTime(newEndTime);
-  } 
-  // Если это второй клик (конец периода)
-  else if (period.length === 1) {
-    // Устанавливаем более позднее время как endTime
-    const currentEnd = converter(newEndTime);
-    const prevEnd = converter(endTime);
-    setEndTime(currentEnd > prevEnd ? newEndTime : endTime);
-  }
-  else {
-    setEndTime(newEndTime);
-  }
-    
+    const newButtonId = event.currentTarget.dataset.buttonId;
+
+
+    if (period.length === 0) {
+      setEndTime(newEndTime);
+      setCurrentButtonId(newButtonId)
+    } else if (period.length === 1) {
+      // const currentStart = converter(currentTime);
+      // const prevEnd = converter(endTime);
+      setEndTime(currentButtonId < newButtonId ? newEndTime : endTime);
+    } else {
+      setEndTime(newEndTime);
+      setCurrentButtonId(newButtonId)
+    }
 
     comparePeriod(currentTime);
   };
@@ -271,10 +324,6 @@ const App = ({...props}) => {
   }*/
   };
 
-  
-
-  
-
   const getReserves = async () => {
     console.log(currentDate);
     await fetch(
@@ -302,35 +351,35 @@ const App = ({...props}) => {
   };
 
   const longCounter = () => {
-    if(currentSport === "Хамам"){
-      let long = document.querySelectorAll("[data-is-active='true']")
-      return long.length * -1
-      
-    }
-    else{
-
-      if(period.length === 2){
-
-        let long = converter(period[1]) - converter(period[0]) + step
+    if (currentSport === "Хамам") {
+      let long = document.querySelectorAll("[data-is-active='true']");
+      return long.length * -1;
+    } else {
+      if (period.length === 2) {
+        let long = converter(period[1]) - converter(period[0]) + step;
         return long;
-
-      }
-
-      else{
+      } else {
         return step;
       }
-      
     }
-  }
+  };
 
-  const priceCounter = async (startTime, peopleAmount, adultRobe, mode, reservationDate, childrenAmount, childrenRobeAmount) => {
-    console.log(startTime)
-    if(!startTime){
-      return ""
+  const priceCounter = async (
+    startTime,
+    peopleAmount,
+    adultRobe,
+    mode,
+    reservationDate,
+    childrenAmount,
+    childrenRobeAmount
+  ) => {
+    console.log(startTime);
+    if (!startTime) {
+      return "";
     }
 
-    let [h, m] = startTime?.split(":")
-    
+    let [h, m] = startTime?.split(":");
+
     const data = {
       utime: +new Date(`${reservationDate}T00:00:00+05:00`) / 1000,
       // utime: 1745002800,
@@ -360,34 +409,33 @@ const App = ({...props}) => {
 
     function objectToFormData(obj) {
       const formData = new FormData();
-    
-    
+
       const jsonStr = JSON.stringify(obj);
-    
-    
-      formData.append('jsonData', jsonStr);
-    
+
+      formData.append("jsonData", jsonStr);
+
       return formData;
     }
 
     const formData = objectToFormData(data);
     // const formData = new FormData();
-    for(const [k,v] of Object.entries(data)){
-      console.log(k,": " , v)
-      formData.append(k,v)
+    for (const [k, v] of Object.entries(data)) {
+      console.log(k, ": ", v);
+      formData.append(k, v);
     }
-    
-  
-    // console.log("Форм дата: " + JSON.stringify(formData))
-    return await fetch('http://localhost:8080/https://rider74.ru/rty/api74.php?put=1', {
-      method: 'POST', // Указываем метод POST
-      // headers: {
-      //   'Content-Type': 'application/x-www-form-urlencoded' 
-      // },
-      body: formData
-    }).then(data => data.text())
 
-  }
+    // console.log("Форм дата: " + JSON.stringify(formData))
+    return await fetch(
+      "http://localhost:8080/https://rider74.ru/rty/api74.php?put=1",
+      {
+        method: "POST", // Указываем метод POST
+        // headers: {
+        //   'Content-Type': 'application/x-www-form-urlencoded'
+        // },
+        body: formData,
+      }
+    ).then((data) => data.text());
+  };
 
   const deleteReserve = async (e, currentReserve) => {
     e.preventDefault();
@@ -426,7 +474,7 @@ const App = ({...props}) => {
   };
 
   const getCurDate = (date) => {
-    console.log(date.day())
+    console.log(date.day());
     setCurrentDate(date);
   };
 
@@ -439,12 +487,12 @@ const App = ({...props}) => {
     ) {
       return {
         isActive: true,
-        activeStyles:{backgroundColor: "yellow"}
+        activeStyles: { backgroundColor: "yellow" },
       };
     } else {
       return {
         isActive: false,
-        activeStyles:{}
+        activeStyles: {},
       };
     }
   };
@@ -456,14 +504,13 @@ const App = ({...props}) => {
   // };
 
   const getHoveredStyle = (time) => {
-    
     if (
       time === hovered ||
       (period.length === 1 &&
         converter(time) > Math.min(converter(period[0]), converter(hovered)) &&
         converter(time) < Math.max(converter(period[0]), converter(hovered)))
     ) {
-      return {backgroundColor: "aquamarine"};
+      return { backgroundColor: "aquamarine" };
     } else {
       return {};
     }
@@ -480,14 +527,14 @@ const App = ({...props}) => {
   React.useEffect(() => {
     // if(period.length >= 1){
     //   const activeButtons = document.querySelectorAll("[data-is-active='true']");
-    // const endTimes = Array.from(activeButtons).map(button => 
+    // const endTimes = Array.from(activeButtons).map(button =>
     //   Number(button.dataset.endTime || 0)
     // );
-    
-    // const maxEndTime = endTimes.length > 0 
-    //   ? Math.max(...endTimes) 
+
+    // const maxEndTime = endTimes.length > 0
+    //   ? Math.max(...endTimes)
     //   : 0;
-    
+
     // console.log("Active endTimes:", endTimes); // Отладка
     // setEndTime(maxEndTime);
     // }
@@ -498,11 +545,10 @@ const App = ({...props}) => {
 
   React.useEffect(() => {
     console.log(currentUser);
-    console.log("последние времена: " + endTime)
   }, [currentUser]);
 
   React.useEffect(() => {
-  console.log(currentSport)
+    console.log(currentSport);
   }, [currentSport]);
 
   const increaseTime = (h, m, step) => {
@@ -514,7 +560,7 @@ const App = ({...props}) => {
       m -= 60;
     }
     // if(h >= 24){
-    //   h = h - 24; 
+    //   h = h - 24;
     // }
     return [h, m];
   };
@@ -558,8 +604,8 @@ const App = ({...props}) => {
     //   return "reserved-div"
     // }
     return isCurrentUser
-      ? {backgroundColor: "#72dc74"}
-      : {backgroundColor: "#b2b2b2", color: "#77787a"};
+      ? { backgroundColor: "#72dc74" }
+      : { backgroundColor: "#b2b2b2", color: "#77787a" };
   };
 
   // const createTimeBtns = (startTime, endTime, step) => {
@@ -597,7 +643,7 @@ const App = ({...props}) => {
   //       </Button>
   //     ) : (
   //       <Button
-        
+
   //         onContextMenu={contextMenuDiv}
   //         data-time={time}
   //         onMouseLeave={handleMouseLeave}
@@ -618,47 +664,70 @@ const App = ({...props}) => {
   //   return timeBtns;
   // };
 
-  const reservationBody = (count, currentHours, currentMinutes, clean, timeBtns, step) => {
-        count -= 1;        
-        const newTime = increaseTime(currentHours, currentMinutes, step) 
-        let [newHours, newMinutes] = newTime;
-        const finalTime = increaseTime(newHours, newMinutes, clean)
-        const [finalHours, finalMinutes] = finalTime;
-        const time =
-          String(currentHours  >= 24 ? currentHours - 24 : currentHours).padStart(2, "0") +
-          ":" +
-          String(currentMinutes).padStart(2, "0");
-        const endTime =
-          String(newHours >= 24 ? newHours - 24 : newHours).padStart(2, "0") +
-          ":" +
-          String(newMinutes).padStart(2, "0");
-          const curTime = currentDate.toDate()
-          curTime.setHours(currentHours)
-          curTime.setMinutes(currentMinutes)
-          const isCorrectTime =  curTime.getTime() > Date.now()
-          const reserved = isReserved([currentHours, currentMinutes], newTime);
-          const btn = reserved.result || !isCorrectTime ? (
-            <Button variant="contained" 
-            style={{...settings.styles.btn.default, ...getCurrentReserveStyle(reserved.isCurrentUser && isCorrectTime)}}
-              data-id={reserved.reserveId}
-              data-end-time={endTime}
-              onContextMenu={(e) => handleContextMenu(e, reserved.isCurrentUser)}
-              // className={`${settings.classes.btn.default} ${getCurrentReserveStyle(
-              //   reserved.isCurrentUser
-              // )}`}
-            
-            >
-              {time} - {endTime}
-            </Button>
-          ) : (() => {
-            const {isActive, activeStyles} = getActiveStyle(time);
-             return <Button
+  const reservationBody = (
+    count,
+    currentHours,
+    currentMinutes,
+    clean,
+    timeBtns,
+    step,
+    buttonIndex
+  ) => {
+    count -= 1;
+    const newTime = increaseTime(currentHours, currentMinutes, step);
+    let [newHours, newMinutes] = newTime;
+    const finalTime = increaseTime(newHours, newMinutes, clean);
+    const [finalHours, finalMinutes] = finalTime;
+    const time =
+      String(currentHours >= 24 ? currentHours - 24 : currentHours).padStart(
+        2,
+        "0"
+      ) +
+      ":" +
+      String(currentMinutes).padStart(2, "0");
+    const endTime =
+      String(newHours >= 24 ? newHours - 24 : newHours).padStart(2, "0") +
+      ":" +
+      String(newMinutes).padStart(2, "0");
+    const curTime = currentDate.toDate();
+    curTime.setHours(currentHours);
+    curTime.setMinutes(currentMinutes);
+    const isCorrectTime = curTime.getTime() > Date.now();
+    const reserved = isReserved([currentHours, currentMinutes], newTime);
+    const btn =
+      reserved.result || !isCorrectTime ? (
+        <Button
+          variant="contained"
+          style={{
+            ...settings.styles.btn.default,
+            ...getCurrentReserveStyle(reserved.isCurrentUser && isCorrectTime),
+          }}
+          data-id={reserved.reserveId}
+          data-end-time={endTime}
+          onContextMenu={(e) => handleContextMenu(e, reserved.isCurrentUser)}
+          data-button-id={buttonIndex}
+          // className={`${settings.classes.btn.default} ${getCurrentReserveStyle(
+          //   reserved.isCurrentUser
+          // )}`}
+        >
+          {time} - {endTime}
+        </Button>
+      ) : (
+        (() => {
+          const { isActive, activeStyles } = getActiveStyle(time);
+          return (
+            <Button
               variant="contained"
-              style={{...settings.styles.btn.default, ...getHoveredStyle(time), ...activeStyles}}
+              style={{
+                ...settings.styles.btn.default,
+                ...getHoveredStyle(time),
+                ...activeStyles,
+              }}
               onContextMenu={contextMenuDiv}
               data-time={time}
               data-end-time={endTime}
               data-is-active={isActive}
+              data-button-id={buttonIndex}
               onMouseLeave={handleMouseLeave}
               onMouseEnter={handleMouseEnter}
               onClick={handleClick}
@@ -667,48 +736,94 @@ const App = ({...props}) => {
               // )} ${getHoveredStyle(time)}`}
             >
               {time} - {endTime}
-            </Button>}
-          )()
-  
-        timeBtns.push(btn)
-        currentHours = finalHours;
-        currentMinutes = finalMinutes;
-        
-        return [count, currentHours, currentMinutes]
-  }
+            </Button>
+          );
+        })()
+      );
 
+    timeBtns.push(btn);
+    currentHours = finalHours;
+    currentMinutes = finalMinutes;
+
+    return [count, currentHours, currentMinutes];
+  };
 
   const timeButtons = (startTime, endTime, options) => {
     const convert = (string) => {
-      return string.split(":").map((el, idx) => idx === 0 ? Number(el) * 60: Number(el)).reduce((acc, el) => acc + el, 0)
-    }
-    
+      return string
+        .split(":")
+        .map((el, idx) => (idx === 0 ? Number(el) * 60 : Number(el)))
+        .reduce((acc, el) => acc + el, 0);
+    };
+    let buttonIndex = 0;
     let timeBtns = [];
-    let [currentHours, currentMinutes] = String(startTime).split(":").map((el) => Number(el))
-    options.forEach(element => {
-    let step = element.step;
-    let count = element.count || -1;
-    const clean = element.clean || 0;
-    
-    const [endHours, endMinutes] = String(endTime).split(":").map((el) => Number(el))
-    if(convert(startTime) >= convert(endTime)){
-      while(count !== 0 && (currentHours + Math.floor(step / 60)) < 23 || ((currentHours + Math.floor(step / 60)) === 23 && currentMinutes + Math.floor(step % 60) <= 59)){
-        [count, currentHours, currentMinutes] = reservationBody(count, currentHours, currentMinutes, clean, timeBtns, step)
-      }
-     
-      while(count !== 0 && (currentHours + Math.floor(step / 60)) < endHours + 24 || ((currentHours + Math.floor(step / 60)) === endHours + 24 && currentMinutes + Math.floor(step % 60) <= endMinutes)){
-      [count, currentHours, currentMinutes] = reservationBody(count, currentHours, currentMinutes, clean, timeBtns, step)
-      }
-    }
-    else while(count !== 0 && (currentHours + Math.floor(step / 60)) < endHours || ((currentHours + Math.floor(step / 60)) === endHours && currentMinutes + Math.floor(step % 60) <= endMinutes)){
-        [count, currentHours, currentMinutes] = reservationBody(count, currentHours, currentMinutes, clean, timeBtns, step)
-    }
+    let [currentHours, currentMinutes] = String(startTime)
+      .split(":")
+      .map((el) => Number(el));
+    options.forEach((element) => {
+      let step = element.step;
+      let count = element.count || -1;
+      const clean = element.clean || 0;
+
+      const [endHours, endMinutes] = String(endTime)
+        .split(":")
+        .map((el) => Number(el));
+      if (convert(startTime) >= convert(endTime)) {
+        while (
+          (count !== 0 && currentHours + Math.floor(step / 60) < 23) ||
+          (currentHours + Math.floor(step / 60) === 23 &&
+            currentMinutes + Math.floor(step % 60) <= 59)
+        ) {
+          [count, currentHours, currentMinutes] = reservationBody(
+            count,
+            currentHours,
+            currentMinutes,
+            clean,
+            timeBtns,
+            step,
+            buttonIndex
+          );
+          buttonIndex += 1
+        }
+
+        while (
+          (count !== 0 &&
+            currentHours + Math.floor(step / 60) < endHours + 24) ||
+          (currentHours + Math.floor(step / 60) === endHours + 24 &&
+            currentMinutes + Math.floor(step % 60) <= endMinutes)
+        ) {
+          [count, currentHours, currentMinutes] = reservationBody(
+            count,
+            currentHours,
+            currentMinutes,
+            clean,
+            timeBtns,
+            step,
+            buttonIndex
+          );
+          buttonIndex += 1
+        }
+      } else
+        while (
+          (count !== 0 && currentHours + Math.floor(step / 60) < endHours) ||
+          (currentHours + Math.floor(step / 60) === endHours &&
+            currentMinutes + Math.floor(step % 60) <= endMinutes)
+        ) {
+          [count, currentHours, currentMinutes] = reservationBody(
+            count,
+            currentHours,
+            currentMinutes,
+            clean,
+            timeBtns,
+            step
+          );
+          buttonIndex += 1
+        }
+      
     });
 
-    
-    return timeBtns
-  }
-
+    return timeBtns;
+  };
 
   const CreateTimeButtons = () => {
     // return hamamTimeButtons("8:00", "01:00", [{step: 90, clean: 30, count: 1}, {step: 180, clean: 60}])
@@ -726,27 +841,23 @@ const App = ({...props}) => {
     //   );
     // });
 
-    
-
-    if(currentSport === "Зал"){
-      setMode(2)
-      setStep(30)
-      return timeButtons("06:00", "23:00", [{step:30}]);
-    }
-    else if(currentSport === "Хамам"){
-      setMode(1)
-      setStep(180)
-      return timeButtons("8:00", "01:00", [{step: 90, clean: 30, count: 1}, {step: 180, clean: 60}])
-    }
-    else{
-      setMode(0)
-      setStep(15)
-      return timeButtons("00:00", "00:00", [{step:15}]);
+    if (currentSport === "Зал") {
+      setMode(2);
+      setStep(30);
+      return timeButtons("06:00", "23:00", [{ step: 30 }]);
+    } else if (currentSport === "Хамам") {
+      setMode(1);
+      setStep(180);
+      return timeButtons("8:00", "01:00", [
+        { step: 90, clean: 30, count: 1 },
+        { step: 180, clean: 60 },
+      ]);
+    } else {
+      setMode(0);
+      setStep(15);
+      return timeButtons("00:00", "00:00", [{ step: 15 }]);
     }
     // return createTime;
-    
-    
-    
   };
 
   const changeUser = (event) => {
@@ -759,11 +870,10 @@ const App = ({...props}) => {
     console.log(reserves);
   }, [changeUser]);
 
-  React.useEffect(() =>{
-    setPeriod([])
-    setEndTime("")
-  },[currentDate, mode])
-  
+  React.useEffect(() => {
+    setPeriod([]);
+    setEndTime("");
+  }, [currentDate, mode]);
 
   const UserLogo = (props) => {
     return (
@@ -817,18 +927,19 @@ const App = ({...props}) => {
   //     }
   //   }))
   // }
-  
-  
-  const changeSport = (e) => {
-    setCurrentSport(e.target.value)
-    
-  }
 
+  const changeSport = (e) => {
+    setCurrentSport(e.target.value);
+  };
 
   const SportDropdown = (props) => {
-    return(
+    return (
       <div>
-        <select value={currentSport} className={settings.classes.dropdown.userList} onChange={props.changeSport}>
+        <select
+          value={currentSport}
+          className={settings.classes.dropdown.userList}
+          onChange={props.changeSport}
+        >
           {props.halls.map((e, idx) => (
             <option value={e} key={idx}>
               {e}
@@ -838,9 +949,6 @@ const App = ({...props}) => {
       </div>
     );
   };
-
-  
-  
 
   return (
     <div onClick={() => setIsVisible(false)}>
@@ -878,7 +986,7 @@ const App = ({...props}) => {
         />
       </div>
 
-      <BasicDatePicker currentDate={currentDate} getCurDate={getCurDate}/>
+      <BasicDatePicker currentDate={currentDate} getCurDate={getCurDate} />
 
       <SportDropdown changeSport={changeSport} halls={halls} />
       <div className={settings.classes.btn.flexDiv}>
@@ -886,12 +994,14 @@ const App = ({...props}) => {
         {/* <button onClick={deleteReserve}>Удалить</button> */}
       </div>
       <Button
-        onClick={() =>{
-          const activeButtons = document.querySelectorAll("[data-is-active='true']")
-          console.log(activeButtons.length)
+        onClick={() => {
+          const activeButtons = document.querySelectorAll(
+            "[data-is-active='true']"
+          );
+          console.log(activeButtons.length);
           period.length > 1
             ? setOpen(true)
-            : alert("Выберите время начала и время окончания!")
+            : alert("Выберите время начала и время окончания!");
         }}
         variant="contained"
       >
@@ -908,9 +1018,11 @@ const App = ({...props}) => {
         priceCounter={priceCounter}
         mode={mode}
         increaseTime={increaseTime}
-        duration={period.length === 2
-          ? converter(period[1]) - converter(period[0]) + step
-          : step}
+        duration={
+          period.length === 2
+            ? converter(period[1]) - converter(period[0]) + step
+            : step
+        }
         currentSport={currentSport}
         endTime={endTime}
       />

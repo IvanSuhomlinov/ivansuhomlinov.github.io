@@ -18,17 +18,22 @@ const Modalpopup = (props) => {
   const [adultRobe, setAdultRobe] = React.useState(1);
   const [price, setPrice] = React.useState("");
   const [childrenRobeAmount, setChildrenRobeAmount] = React.useState(1)
+  const [commonCount, setCommonCount] = useState({children: 1, adults: 1})
+
+
   const handleReserve = React.useCallback(() => {
     props.onReserve(peopleAmount, adultRobe);
     refresh();
   }, [peopleAmount, adultRobe, props.onReserve]);
 
   const handlePeopleChange = (e) => {
+    setCommonCount(prev => ({...prev, adults:e.target.value}));
     setPeopleAmount(e.target.value);
   };
 
   const handleChildrenChange = (e) => {
-    setChildrenAmount(e.target.value)
+    setCommonCount(prev => ({...prev, children:e.target.value}));
+    setChildrenAmount(e.target.value);
   }
 
   const handleRobeChange = (e) => {
@@ -126,6 +131,7 @@ const Modalpopup = (props) => {
             childrenRobe={childrenRobe}
             childrenRobeAmount={childrenRobeAmount}
             handleChildrenRobe={handleChildrenRobe}
+            commonCount={commonCount}
         />
       ) : <CarwashStack />}
       </DialogContent>

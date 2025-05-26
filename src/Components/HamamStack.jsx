@@ -5,7 +5,7 @@ import {
     Select,
     Stack,
   } from "@mui/material";
-const HamamStack = ({peopleAmount, handlePeopleChange, peopleSelector, adultRobe, handleRobeChange, robe, price, childrenSelector, handleChildrenChange, childrenAmount, childrenRobe, handleChildrenRobe, childrenRobeAmount}) => {
+const HamamStack = ({peopleAmount, handlePeopleChange, peopleSelector, adultRobe, handleRobeChange, robe, price, childrenSelector, handleChildrenChange, childrenAmount, childrenRobe, handleChildrenRobe, childrenRobeAmount, commonCount}) => {
     return(
         <Stack spacing={2} margin={2}>
           <InputLabel id="peopleAmount">Выберите количество взрослых</InputLabel>
@@ -13,7 +13,7 @@ const HamamStack = ({peopleAmount, handlePeopleChange, peopleSelector, adultRobe
           <Select value={peopleAmount} onChange={handlePeopleChange}>
             {peopleSelector.map((e, idx) => {
               return(
-              <MenuItem key={idx} value={e}>{e}</MenuItem>
+              <MenuItem key={idx} value={e} disabled={e + commonCount.children > 8}>{e}</MenuItem>
               )
             })}
           </Select>
@@ -23,7 +23,7 @@ const HamamStack = ({peopleAmount, handlePeopleChange, peopleSelector, adultRobe
           <Select value={childrenAmount} onChange={handleChildrenChange}>
             {childrenSelector.map((e, idx) => {
               return(
-              <MenuItem key={idx} value={e}>{e}</MenuItem>
+              <MenuItem key={idx} value={e} disabled={e + commonCount.adults > 8}>{e}</MenuItem>
               )
             })}
           </Select>
