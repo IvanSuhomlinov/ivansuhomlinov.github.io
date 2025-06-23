@@ -733,7 +733,7 @@ const App = ({ ...props }) => {
               onClick={handleClick}
               // className={`${settings.classes.btn.default} ${getActiveStyle(
               //   time
-              // )} ${getHoveredStyle(time)}`}
+              // )} ${getHoveredStyle(time)}`}qwe
             >
               {time} - {endTime}
             </Button>
