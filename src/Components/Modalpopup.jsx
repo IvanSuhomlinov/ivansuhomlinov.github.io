@@ -25,6 +25,7 @@ const Modalpopup = (props) => {
     props.onReserve(peopleAmount, adultRobe);
     refresh();
   }, [peopleAmount, adultRobe, props.onReserve]);
+  // poas
 
   const handlePeopleChange = (e) => {
     setCommonCount(prev => ({...prev, adults:e.target.value}));
